@@ -82,7 +82,7 @@ public class Operations {
                         tmp = "";
                     }
                     // 判断是否为两个等号
-                    if (str.charAt(index+1) == '=') {
+                    if (index+1 < str.length() && str.charAt(index+1) == '=') {
                         index += 1;
                         tokens.add("==");
                     }
