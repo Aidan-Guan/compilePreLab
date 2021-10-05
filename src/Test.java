@@ -11,21 +11,21 @@ public class Test {
     public static void main (String[] args) throws FileNotFoundException {
 
 
-        String fileLoc = args[0];
-        in = new Scanner(new FileReader(fileLoc));
-        // 按行读取
-        while (in.hasNextLine()) {
-            String line = in.nextLine();
-            Operations.readLine(line);
-        }
-
-
-
-        // FOR DEBUG
-//        in = new Scanner(System.in);
-//        while (true) {
+//        String fileLoc = args[0];
+//        in = new Scanner(new FileReader(fileLoc));
+//        // 按行读取
+//        while (in.hasNextLine()) {
 //            String line = in.nextLine();
 //            Operations.readLine(line);
 //        }
+
+
+
+//         FOR DEBUG
+        in = new Scanner(System.in);
+        while (true) {
+            String line = in.nextLine();
+            Operations.readLine(line);
+        }
     }
 }

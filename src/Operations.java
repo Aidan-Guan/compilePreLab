@@ -120,7 +120,7 @@ public class Operations {
      * 判断token是否为无符号整数
      */
     private static boolean isDigit (String token) {
-        for (char c : token.toCharArray()) {
+        for (char c : token.trim().toCharArray()) {
             if (!Character.isDigit(c)) {
                 return false;
             }
@@ -134,7 +134,7 @@ public class Operations {
      * 判断是token是否是标识符
      */
     private static boolean isIdentifier(String token) {
-        char firstLetter = token.charAt(0);
+        char firstLetter = token.trim().charAt(0);
 
         // 判断第一个字母
         if (!(firstLetter == '_' || Character.isLetter(firstLetter))) {
@@ -148,7 +148,7 @@ public class Operations {
         }
 
         // 在长度大于1时从第二个字符开始判断
-        for (char c : token.substring(1).toCharArray()) {
+        for (char c : token.trim().substring(1).toCharArray()) {
             if (!(c == '_' || Character.isLetterOrDigit(c))) {
                 return false;
             }
