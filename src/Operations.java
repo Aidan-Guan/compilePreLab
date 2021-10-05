@@ -63,10 +63,11 @@ public class Operations {
         List<Character> opList = Arrays.asList(opStrs);
 
         // 先按照空格分，可能区分了一部分但没有完全区分的token
-        String[] priTokens = line.trim().split(" ");
+        String[] priTokens = line.trim().split("\\s");
         Vector<String> tokens = new Vector<>();
 
         for (String str : priTokens) {
+            str = str.trim();
             // 如果长度为1，不可能再分
             if (str.length() == 1) { tokens.add(str); continue; }
 
@@ -78,7 +79,7 @@ public class Operations {
                 if (str.charAt(index) == '=') {
                     // 保存之前的所有tmp 如果tmp非空
                     if (!tmp.isEmpty()) {
-                        tokens.add(tmp);
+                        tokens.add(tmp.trim());
                         tmp = "";
                     }
                     // 判断是否为两个等号
@@ -93,11 +94,11 @@ public class Operations {
                 // 出现了字符但是不是等号
                 else if (opList.contains(str.charAt(index))) {
                     if (!tmp.isEmpty()) {
-                        tokens.add(tmp);
+                        tokens.add(tmp.trim());
                         tmp = "";
                     }
                     // 向token中添加这个特殊字符
-                    tokens.add(String.valueOf(str.charAt(index)));
+                    tokens.add(String.valueOf(str.charAt(index)).trim());
                 }
                 else {
                     tmp = tmp + str.charAt(index);
@@ -105,7 +106,7 @@ public class Operations {
             }
 
             if (!tmp.isEmpty()) {
-                tokens.add(tmp);
+                tokens.add(tmp.trim());
                 tmp = "";
             }
         }
