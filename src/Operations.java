@@ -43,10 +43,10 @@ public class Operations {
                 case "<" -> { System.out.println("Lt"); }
                 case ">" -> { System.out.println("Gt"); }
                 case "==" -> { System.out.println("Eq"); }
-                default -> {
-                    System.out.println("Err");
-                    System.exit(0);
-                }
+//                default -> {
+//                    System.out.println("Err");
+//                    System.exit(0);
+//                }
             }
         }
     }
