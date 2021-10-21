@@ -1,4 +1,4 @@
-public class GrammarAnalysis {
+public class Lab1_GrammarAnalysis {
 
     // 当前的token
     static String currentSym = "";
@@ -17,20 +17,20 @@ public class GrammarAnalysis {
         funcTypeAnal();
         identAnal();
 
-        currentSym = LexicalAnalysisForGA.nextSym().trim();
+        currentSym = Lab1_LexicalAnalysisForGA.nextSym().trim();
         // 出现错误，退出
         if (!currentSym.equals("(")) {
             System.exit(1);
         }
 
-        currentSym = LexicalAnalysisForGA.nextSym().trim();
+        currentSym = Lab1_LexicalAnalysisForGA.nextSym().trim();
         if (!currentSym.equals(")")) {
             System.exit(1);
         }
 
         blockAnal();
         // 为了下一个可以直接读取
-        currentSym = LexicalAnalysisForGA.nextSym().trim();
+        currentSym = Lab1_LexicalAnalysisForGA.nextSym().trim();
     }
 
     /**
@@ -40,7 +40,7 @@ public class GrammarAnalysis {
         if (!currentSym.equals("int")) {
             System.exit(2);
         }
-        currentSym = LexicalAnalysisForGA.nextSym().trim();
+        currentSym = Lab1_LexicalAnalysisForGA.nextSym().trim();
     }
 
     /**
@@ -60,7 +60,7 @@ public class GrammarAnalysis {
             System.exit(1);
         }
 
-        currentSym = LexicalAnalysisForGA.nextSym().trim();
+        currentSym = Lab1_LexicalAnalysisForGA.nextSym().trim();
 
         stmtAnal();
 
@@ -77,13 +77,13 @@ public class GrammarAnalysis {
             System.exit(4);
         }
 
-        currentSym = LexicalAnalysisForGA.nextSym().trim();
+        currentSym = Lab1_LexicalAnalysisForGA.nextSym().trim();
 
-        if (!LexicalAnalysisForGA.isNumber(currentSym)) {
+        if (!Lab1_LexicalAnalysisForGA.isNumber(currentSym)) {
             System.exit(5);
         }
 
-        currentSym = LexicalAnalysisForGA.nextSym().trim();
+        currentSym = Lab1_LexicalAnalysisForGA.nextSym().trim();
 
         if (!currentSym.equals(";")) {
             System.exit(6);

@@ -16,7 +16,7 @@ public class Test {
         // 按行读取
         while (in.hasNextLine()) {
             String line = in.nextLine();
-            LexicalAnalysis.readLine(line);
+            Lab0_LexicalAnalysis.readLine(line);
         }
 
 
@@ -25,7 +25,7 @@ public class Test {
 //        in = new Scanner(System.in);
 //        while (true) {
 //            String line = in.nextLine();
-//            LexicalAnalysis.readLine(line);
+//            Lab0_LexicalAnalysis.readLine(line);
 //        }
 
     }
