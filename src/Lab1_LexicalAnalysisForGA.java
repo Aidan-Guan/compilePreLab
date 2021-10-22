@@ -91,7 +91,6 @@ public class Lab1_LexicalAnalysisForGA {
                 case '{' -> { return new Lab1_Token("SIGN", "{"); }
                 case '}' -> { return new Lab1_Token("SIGN", "}"); }
                 case '\uFFFF' -> {return null;}
-                default -> { System.exit(1); }
             }
         }
 

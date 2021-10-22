@@ -80,7 +80,7 @@ public class Lab1_GrammarAnalysis {
      */
     private static void blockAnal() throws IOException {
         if (currentSym == null || !currentSym.value.equals("{")) {
-            System.exit(-1);
+            System.exit(1);
         }
         Lab1_Test.outputStr += "{";
 
@@ -91,7 +91,7 @@ public class Lab1_GrammarAnalysis {
         currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
 
         if (currentSym == null || !currentSym.value.equals("}")) {
-            System.exit(-1);
+            System.exit(1);
         }
         Lab1_Test.outputStr += "}";
 
@@ -106,23 +106,21 @@ public class Lab1_GrammarAnalysis {
      */
     private static void stmtAnal() throws IOException {
         if (currentSym == null || !currentSym.value.equals("return")) {
-            System.exit(-1);
+            System.exit(4);
         }
         Lab1_Test.outputStr += "ret i32";
 
         currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
-        if (currentSym == null) {
-            System.exit(10);
-        }
+
         if (!currentSym.type.equals("NUMBER")) {
-            System.exit(-1);
+            System.exit(5);
         }
         Lab1_Test.outputStr += currentSym.value;
 
         currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
 
-        if (currentSym == null || !currentSym.value.equals(";")) {
-            System.exit(-1);
+        if (!currentSym.value.equals(";")) {
+            System.exit(6);
         }
     }
 }
