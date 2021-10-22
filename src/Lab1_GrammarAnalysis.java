@@ -31,7 +31,7 @@ public class Lab1_GrammarAnalysis {
 
         currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
         // 出现错误，退出
-        if (!currentSym.value.equals("(")) {
+        if (currentSym == null || !currentSym.value.equals("(")) {
             System.exit(1);
         }
         // 处理(的输出
@@ -39,7 +39,7 @@ public class Lab1_GrammarAnalysis {
 
 
         currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
-        if (!currentSym.value.equals(")")) {
+        if (currentSym == null || !currentSym.value.equals(")")) {
             System.exit(1);
         }
         Lab1_Test.outputStr += ")";
@@ -55,7 +55,7 @@ public class Lab1_GrammarAnalysis {
      * 处理Funcype文法
      */
     private static void funcTypeAnal() throws IOException {
-        if (!currentSym.value.equals("int")) {
+        if (currentSym == null || !currentSym.value.equals("int")) {
             System.exit(2);
         }
         Lab1_Test.outputStr += "define dso_local i32";
@@ -68,7 +68,7 @@ public class Lab1_GrammarAnalysis {
      * 处理Ident文法
      */
     private static void identAnal() {
-        if (!currentSym.value.equals("main")) {
+        if (currentSym == null || !currentSym.value.equals("main")) {
             System.exit(3);
         }
 
@@ -80,7 +80,7 @@ public class Lab1_GrammarAnalysis {
      * 处理Block文法
      */
     private static void blockAnal() throws IOException {
-        if (!currentSym.value.equals("{")) {
+        if (currentSym == null || !currentSym.value.equals("{")) {
             System.exit(1);
         }
         Lab1_Test.outputStr += "{";
@@ -91,7 +91,7 @@ public class Lab1_GrammarAnalysis {
 
         currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
 
-        if (!currentSym.value.equals("}")) {
+        if (currentSym == null || !currentSym.value.equals("}")) {
             System.exit(1);
         }
         Lab1_Test.outputStr += "}";
@@ -101,7 +101,7 @@ public class Lab1_GrammarAnalysis {
      * 处理stmt文法
      */
     private static void stmtAnal() throws IOException {
-        if (!currentSym.value.equals("return")) {
+        if (currentSym == null || !currentSym.value.equals("return")) {
             System.exit(4);
         }
         Lab1_Test.outputStr += "ret i32";
@@ -114,7 +114,7 @@ public class Lab1_GrammarAnalysis {
 
         currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
 
-        if (!currentSym.value.equals(";")) {
+        if (currentSym == null || !currentSym.value.equals(";")) {
             System.exit(6);
         }
     }
