@@ -16,10 +16,10 @@ public class Lab1_Test {
 
         String outputFileLoc = args[1];
         FileWriter fileWriter = new FileWriter(outputFileLoc, true);
-        PrintWriter printWriter = new PrintWriter(fileWriter);
-        printWriter.print(outputStr);
-        printWriter.flush();
+        fileWriter.write(outputStr.trim());
+        fileWriter.flush();
+        fileWriter.close();
 
-//        System.out.print(outputStr);
+        System.out.print(outputStr.trim());
     }
 }
