@@ -1,3 +1,2 @@
 int main() {
-    return 00x0;
-}
+    return +
