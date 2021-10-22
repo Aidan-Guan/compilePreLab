@@ -113,7 +113,7 @@ public class Lab1_GrammarAnalysis {
         currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
 
         if (currentSym==null || !currentSym.type.equals("NUMBER")) {
-            System.exit(5);
+            System.exit(0);
         }
         Lab1_Test.outputStr += currentSym.value;
 
