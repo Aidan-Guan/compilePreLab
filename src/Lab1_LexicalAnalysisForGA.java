@@ -7,14 +7,26 @@ import java.util.*;
 public class Lab1_LexicalAnalysisForGA {
 
     public static Map<String, String> tokenTable = new HashMap<>();
+    static PushbackReader in;
 
+    public static void getTokenInit (PushbackReader reader) {
+        in = reader;
+        tokenTable.put("int", "int");
+        tokenTable.put("main", "main");
+        tokenTable.put("return", "return");
+    }
 
-    public static Lab1_Token getNextToken (PushbackReader in) throws IOException {
+    public static Lab1_Token getNextToken () throws IOException {
         char tokenChar = (char) in.read();
         String tokenStr = "";
 
         // 读取空字符
-        while (Character.isWhitespace(tokenChar)) { tokenChar = (char) in.read(); }
+        while (Character.isWhitespace(tokenChar)) {
+            tokenChar = (char) in.read();
+
+            // 在读入后添加到输出字符串
+            Lab1_Test.outputStr += String.valueOf(tokenChar);
+        }
 
         // 首字符是字母
         if (Character.isLetter(tokenChar)) {
@@ -84,12 +96,12 @@ public class Lab1_LexicalAnalysisForGA {
 
 
 
-    public static String nextSym() {
-        String nextsym = "";
-
-
-        return nextsym;
-    }
+//    public static String nextSym() {
+//        String nextsym = "";
+//
+//
+//        return nextsym;
+//    }
 
 
     public static boolean isNumber (String token) {
