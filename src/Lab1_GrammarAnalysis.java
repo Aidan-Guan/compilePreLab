@@ -10,7 +10,6 @@ public class Lab1_GrammarAnalysis {
         try {
             currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
         } catch (IOException e) {
-            System.exit(-1);
         }
     }
 

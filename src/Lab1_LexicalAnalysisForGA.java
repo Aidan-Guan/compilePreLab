@@ -65,12 +65,18 @@ public class Lab1_LexicalAnalysisForGA {
                 else if (tokenChar == 'x' || tokenChar == 'X') {
                     tokenStr = "";
                     tokenChar = (char)in.read();
-                    while (Character.isDigit(tokenChar)) {
+                    while (Character.isLetterOrDigit(tokenChar)) {
                         tokenStr += tokenChar;
                         tokenChar = (char) in.read();
                     }
                     in.unread(tokenChar);
-                    return new Lab1_Token("NUMBER", String.valueOf(Integer.parseInt(tokenStr, 16)));
+
+                    try {
+                        return new Lab1_Token("NUMBER", String.valueOf(Integer.parseInt(tokenStr, 16)));
+                    }
+                    catch (Exception e) {
+                        System.exit(1);
+                    }
                 }
                 // 8进制
                 else {

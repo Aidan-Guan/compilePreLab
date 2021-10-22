@@ -20,6 +20,6 @@ public class Lab1_Test {
         printWriter.print(outputStr);
         printWriter.flush();
 
-        System.out.print(outputStr);
+//        System.out.print(outputStr);
     }
 }
