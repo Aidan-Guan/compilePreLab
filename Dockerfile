@@ -1,4 +1,4 @@
-FROM openjdk:15-alpine
+FROM openjdk:15
 WORKDIR /app/
 COPY ./src/* /app/
 RUN javac Lab1_Token.java
