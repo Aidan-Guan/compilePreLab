@@ -21,12 +21,15 @@ public class Lab1_LexicalAnalysisForGA {
         String tokenStr = "";
 
         // 读取空字符
+        int flag = 0;
         while (Character.isWhitespace(tokenChar)) {
-            tokenChar = (char) in.read();
+            flag = 1;
 
-            // 在读入后添加到输出字符串
             Lab1_Test.outputStr += String.valueOf(tokenChar);
+            tokenChar = (char) in.read();
         }
+//        if (flag == 1 && Lab1_Test.outputStr.length()>=1)
+//            Lab1_Test.outputStr = Lab1_Test.outputStr.substring(0,Lab1_Test.outputStr.length()-1);
 
         // 首字符是字母
         if (Character.isLetter(tokenChar)) {
@@ -87,7 +90,7 @@ public class Lab1_LexicalAnalysisForGA {
                 case ')' -> { return new Lab1_Token("SIGN", ")"); }
                 case '{' -> { return new Lab1_Token("SIGN", "{"); }
                 case '}' -> { return new Lab1_Token("SIGN", "}"); }
-                default -> { System.exit(1); }
+//                default -> { System.exit(1); }
             }
         }
 

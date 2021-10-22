@@ -44,6 +44,8 @@ public class Lab1_GrammarAnalysis {
         }
         Lab1_Test.outputStr += ")";
 
+        currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+
         blockAnal();
         // 为了下一个可以直接读取
         currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
@@ -56,10 +58,10 @@ public class Lab1_GrammarAnalysis {
         if (!currentSym.value.equals("int")) {
             System.exit(2);
         }
+        Lab1_Test.outputStr += "define dso_local i32";
+
         currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
 
-        //对于int的输出
-        Lab1_Test.outputStr += "define dso_local i32";
     }
 
     /**
@@ -87,6 +89,8 @@ public class Lab1_GrammarAnalysis {
 
         stmtAnal();
 
+        currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+
         if (!currentSym.value.equals("}")) {
             System.exit(1);
         }
@@ -110,7 +114,7 @@ public class Lab1_GrammarAnalysis {
 
         currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
 
-        if (!currentSym.equals(";")) {
+        if (!currentSym.value.equals(";")) {
             System.exit(6);
         }
     }
