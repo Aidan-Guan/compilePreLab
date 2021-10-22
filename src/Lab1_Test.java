@@ -1,7 +1,4 @@
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PushbackReader;
+import java.io.*;
 
 public class Lab1_Test {
 
@@ -15,6 +12,11 @@ public class Lab1_Test {
         Lab1_LexicalAnalysisForGA.getTokenInit(in);
 
         Lab1_GrammarAnalysis.compUnitAnal();
-        System.out.println(outputStr);
+
+        String outputFileLoc = args[1];
+        FileWriter fileWriter = new FileWriter(outputFileLoc, true);
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+        printWriter.print(outputStr);
+        printWriter.flush();
     }
 }
