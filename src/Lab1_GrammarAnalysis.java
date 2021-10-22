@@ -9,9 +9,8 @@ public class Lab1_GrammarAnalysis {
     static {
         try {
             currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            System.exit(-1);
         }
     }
 
