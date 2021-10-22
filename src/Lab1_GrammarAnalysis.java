@@ -28,7 +28,7 @@ public class Lab1_GrammarAnalysis {
         funcTypeAnal();
         identAnal();
 
-        currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+//        currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
         // 出现错误，退出
         if (currentSym == null || !currentSym.value.equals("(")) {
             System.exit(-1);
@@ -60,19 +60,19 @@ public class Lab1_GrammarAnalysis {
         Lab1_Test.outputStr += "define dso_local i32";
 
         currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
-
     }
 
     /**
      * 处理Ident文法
      */
-    private static void identAnal() {
+    private static void identAnal() throws IOException {
         if (currentSym == null || !currentSym.value.equals("main")) {
             System.exit(-1);
         }
 
         //对于main的输出
         Lab1_Test.outputStr += "@main";
+        currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
     }
 
     /**
@@ -87,8 +87,6 @@ public class Lab1_GrammarAnalysis {
         currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
 
         stmtAnal();
-
-        currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
 
         if (currentSym == null || !currentSym.value.equals("}")) {
             System.exit(1);
@@ -113,7 +111,7 @@ public class Lab1_GrammarAnalysis {
         currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
 
         if (currentSym==null || !currentSym.type.equals("NUMBER")) {
-            System.exit(0);
+            System.exit(5);
         }
         Lab1_Test.outputStr += currentSym.value;
 
@@ -122,6 +120,7 @@ public class Lab1_GrammarAnalysis {
         if (!currentSym.value.equals(";")) {
             System.exit(6);
         }
+        currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
     }
 }
 
