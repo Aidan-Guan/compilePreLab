@@ -5,6 +5,8 @@ import java.io.PushbackReader;
 import java.util.*;
 
 public class Lab1_LexicalAnalysisForGA {
+    static char tokenChar;
+    static String tokenStr;
 
     public static Map<String, String> tokenTable = new HashMap<>();
     static PushbackReader in;
@@ -17,8 +19,8 @@ public class Lab1_LexicalAnalysisForGA {
     }
 
     public static Lab1_Token getNextToken () throws IOException {
-        char tokenChar = (char) in.read();
-        String tokenStr = "";
+        tokenChar = (char) in.read();
+        tokenStr = "";
 
         // 读取空字符
         int flag = 0;
@@ -28,8 +30,6 @@ public class Lab1_LexicalAnalysisForGA {
             Lab1_Test.outputStr += String.valueOf(tokenChar);
             tokenChar = (char) in.read();
         }
-//        if (flag == 1 && Lab1_Test.outputStr.length()>=1)
-//            Lab1_Test.outputStr = Lab1_Test.outputStr.substring(0,Lab1_Test.outputStr.length()-1);
 
         // 首字符是字母
         if (Character.isLetter(tokenChar)) {
@@ -96,6 +96,10 @@ public class Lab1_LexicalAnalysisForGA {
                 case ')' -> { return new Lab1_Token("SIGN", ")"); }
                 case '{' -> { return new Lab1_Token("SIGN", "{"); }
                 case '}' -> { return new Lab1_Token("SIGN", "}"); }
+                case '/' -> {
+                    commentAnal();
+                    return getNextToken();
+                }
                 case '\uFFFF' -> {return null;}
             }
         }
@@ -103,19 +107,37 @@ public class Lab1_LexicalAnalysisForGA {
         return null;
     }
 
+    private static void commentAnal() throws IOException {
+        tokenChar = (char) in.read();
 
+        if (tokenChar == '/') { // 单行注释
+            tokenChar = (char) in.read();
+            // 跳过所有换行之前的字符 考虑文件结束
+            while (tokenChar != '\n' && tokenChar != '\uFFFF') {
+                tokenChar = (char) in.read();
+            }
+            // 回退字符
+            in.unread(tokenChar);
+        }
+        else if (tokenChar == '*') { // 多行注释
+            char charBeforeTokenChar = '/';
+            tokenChar = (char) in.read();
 
-//    public static String nextSym() {
-//        String nextsym = "";
-//
-//
-//        return nextsym;
-//    }
+            while (true) {
+                if (tokenChar == '\uFFFF') {
+                    System.exit(10);
+                }
+                if (charBeforeTokenChar == '*' && tokenChar == '/') {
+                    break;
+                }
+                charBeforeTokenChar = tokenChar;
+                tokenChar = (char) in.read();
+            }
+//            in.unread(tokenChar);
+        }
+        else {
+            System.exit(10);
+        }
 
-
-    public static boolean isNumber (String token) {
-        return false;
     }
-
-
 }
