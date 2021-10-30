@@ -6,6 +6,7 @@ public class Lab1_GrammarAnalysis {
     // 当前的token
     static Lab1_Token currentSym;
 
+
     static {
         try {
             currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
@@ -27,7 +28,6 @@ public class Lab1_GrammarAnalysis {
         funcTypeAnal();
         identAnal();
 
-//        currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
         // 出现错误，退出
         if (currentSym == null || !currentSym.value.equals("(")) {
             System.exit(-1);
@@ -102,24 +102,61 @@ public class Lab1_GrammarAnalysis {
      * 处理stmt文法
      */
     private static void stmtAnal() throws IOException {
-        if (currentSym == null || !currentSym.value.equals("return")) {
-            System.exit(4);
-        }
+        /* 处理return */
+        if (currentSym == null || !currentSym.value.equals("return")) { System.exit(4); }
         Lab1_Test.outputStr += "ret i32";
 
         currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
 
-        if (currentSym==null || !currentSym.type.equals("NUMBER")) {
-            System.exit(5);
-        }
-        Lab1_Test.outputStr += currentSym.value;
+        /* 处理Exp */
+        //TODO: 注意在exp处理结束之后需要再读取一个字符
+        expAnal();
+
+        if (!currentSym.value.equals(";")) { System.exit(6); }
 
         currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+    }
 
-        if (!currentSym.value.equals(";")) {
-            System.exit(6);
+    private static void expAnal() throws IOException {
+        addExpAnal();
+    }
+
+    private static void addExpAnal() throws IOException {
+        mulExpAnal();
+    }
+
+    private static void mulExpAnal() throws IOException {
+        unaryExpAnal();
+    }
+
+    private static void unaryExpAnal() throws IOException {
+        /* 处理null情况 */
+        if (currentSym == null) {
+            System.exit(20);
         }
-        currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+
+        /* unaryExp文法 */
+        if (currentSym.value.equals("+") || currentSym.value.equals("-")) {
+            Lab1_Test.outputStr += currentSym.value;
+            currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+            unaryExpAnal();
+        }
+        /* primaryExp文法 */
+        else if (currentSym.value.equals("(")) {
+            Lab1_Test.outputStr += currentSym.value;
+            currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+            expAnal(); //TODO: 确保之后会读入下一个新字符
+            if (currentSym == null || !currentSym.value.equals(")")) {System.exit(1);}
+            Lab1_Test.outputStr += currentSym.value;
+            currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+        }
+        else if (currentSym.type.equals("NUMBER")) {
+            Lab1_Test.outputStr += currentSym.value;
+            currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+        }
+        else {
+            System.exit(20);
+        }
     }
 }
 
@@ -130,3 +167,4 @@ public class Lab1_GrammarAnalysis {
 //4   return有误
 //5   并不是number
 //6   分号有问题
+//20  读取有问题
