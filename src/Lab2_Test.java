@@ -1,6 +1,6 @@
 import java.io.*;
 
-public class Lab1_Test {
+public class Lab2_Test {
 
     public static PushbackReader in;
     public static String outputStr = "";
@@ -10,9 +10,9 @@ public class Lab1_Test {
         String fileLoc = "/Users/guanhuaimin/本地磁盘/学习/本地_大三上/编译原理/labs/compilePreLab/src/a.txt";
 
         in = new PushbackReader(new FileReader(fileLoc));
-        Lab1_LexicalAnalysisForGA.getTokenInit(in);
+        Lab2_LexicalAnalysisForGA.getTokenInit(in);
 
-        Lab1_GrammarAnalysis.compUnitAnal();
+        Lab2_GrammarAnalysis.compUnitAnal();
 
 //
 //        String outputFileLoc = args[1];

@@ -1,13 +1,13 @@
-public class Lab1_Token {
+public class Lab2_Token {
     String type;
     String value;
 
-    public Lab1_Token () {
+    public Lab2_Token() {
         this.type = "null";
         this.value = "";
     }
 
-    public Lab1_Token(String type, String value) {
+    public Lab2_Token(String type, String value) {
         this.type = type;
         this.value = value;
     }

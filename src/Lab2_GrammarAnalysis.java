@@ -1,15 +1,15 @@
 import java.io.IOException;
 
-public class Lab1_GrammarAnalysis {
+public class Lab2_GrammarAnalysis {
 
 
     // 当前的token
-    static Lab1_Token currentSym;
+    static Lab2_Token currentSym;
 
 
     static {
         try {
-            currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
         } catch (IOException e) {
         }
     }
@@ -33,20 +33,20 @@ public class Lab1_GrammarAnalysis {
             System.exit(-1);
         }
         // 处理(的输出
-        Lab1_Test.outputStr += "(";
+        Lab2_Test.outputStr += "(";
 
 
-        currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
         if (currentSym == null || !currentSym.value.equals(")")) {
             System.exit(-1);
         }
-        Lab1_Test.outputStr += ")";
+        Lab2_Test.outputStr += ")";
 
-        currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
 
         blockAnal();
         // 为了下一个可以直接读取
-//        currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+//        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
     }
 
     /**
@@ -56,9 +56,9 @@ public class Lab1_GrammarAnalysis {
         if (currentSym == null || !currentSym.value.equals("int")) {
             System.exit(-1);
         }
-        Lab1_Test.outputStr += "define dso_local i32";
+        Lab2_Test.outputStr += "define dso_local i32";
 
-        currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
     }
 
     /**
@@ -70,8 +70,8 @@ public class Lab1_GrammarAnalysis {
         }
 
         //对于main的输出
-        Lab1_Test.outputStr += "@main";
-        currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+        Lab2_Test.outputStr += "@main";
+        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
     }
 
     /**
@@ -81,18 +81,18 @@ public class Lab1_GrammarAnalysis {
         if (currentSym == null || !currentSym.value.equals("{")) {
             System.exit(1);
         }
-        Lab1_Test.outputStr += "{";
+        Lab2_Test.outputStr += "{";
 
-        currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
 
         stmtAnal();
 
         if (currentSym == null || !currentSym.value.equals("}")) {
             System.exit(1);
         }
-        Lab1_Test.outputStr += "}";
+        Lab2_Test.outputStr += "}";
 
-        currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
         if (currentSym != null) {
             System.exit(2);
         }
@@ -104,9 +104,9 @@ public class Lab1_GrammarAnalysis {
     private static void stmtAnal() throws IOException {
         /* 处理return */
         if (currentSym == null || !currentSym.value.equals("return")) { System.exit(4); }
-        Lab1_Test.outputStr += "ret i32";
+        Lab2_Test.outputStr += "ret i32";
 
-        currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
 
         /* 处理Exp */
         //TODO: 注意在exp处理结束之后需要再读取一个字符
@@ -114,7 +114,7 @@ public class Lab1_GrammarAnalysis {
 
         if (!currentSym.value.equals(";")) { System.exit(6); }
 
-        currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
     }
 
     private static void expAnal() throws IOException {
@@ -137,22 +137,22 @@ public class Lab1_GrammarAnalysis {
 
         /* unaryExp文法 */
         if (currentSym.value.equals("+") || currentSym.value.equals("-")) {
-            Lab1_Test.outputStr += currentSym.value;
-            currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+            Lab2_Test.outputStr += currentSym.value;
+            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
             unaryExpAnal();
         }
         /* primaryExp文法 */
         else if (currentSym.value.equals("(")) {
-            Lab1_Test.outputStr += currentSym.value;
-            currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+            Lab2_Test.outputStr += currentSym.value;
+            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
             expAnal(); //TODO: 确保之后会读入下一个新字符
             if (currentSym == null || !currentSym.value.equals(")")) {System.exit(1);}
-            Lab1_Test.outputStr += currentSym.value;
-            currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+            Lab2_Test.outputStr += currentSym.value;
+            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
         }
         else if (currentSym.type.equals("NUMBER")) {
-            Lab1_Test.outputStr += currentSym.value;
-            currentSym = Lab1_LexicalAnalysisForGA.getNextToken();
+            Lab2_Test.outputStr += currentSym.value;
+            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
         }
         else {
             System.exit(20);
