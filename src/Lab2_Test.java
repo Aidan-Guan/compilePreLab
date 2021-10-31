@@ -32,3 +32,11 @@ public class Lab2_Test {
         System.out.print(outputStr.trim());
     }
 }
+
+
+/**
+ * bug总结
+ * 1. 遇到括号应当如何处理
+ * 2. 对于数字超过1位的情况，不能 使用char
+ * 3. 对于输入格式的问题，如何能够很好地获取到表达式
+ */
