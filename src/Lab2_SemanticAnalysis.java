@@ -14,27 +14,39 @@ public class Lab2_SemanticAnalysis {
         List<Character> opList = Arrays.asList(ops);
 
         /* 获取前缀表达式的反向后的字符串 */
+        System.out.println(Lab2_Test.outputStr);
         String revPolish = getRevPolish();
+        System.out.println(revPolish);
 
         /* 数字栈 */
         Stack<String> numStack = new Stack<>();
         for (char c : revPolish.toCharArray()) {
-            /* 如果是数字，直接入栈*/
-            if (Character.isDigit(c)) { numStack.push(String.valueOf(c)); }
-            /* 如果是符号，进行处理 */
-            else if (opList.contains(c)){
-                int first = 0;
-                int second = 0;
-                first = Integer.parseInt(numStack.pop());
-                if (!numStack.empty()) {
-                    second = Integer.parseInt(numStack.pop());
+            try {
+                /* 如果是数字，直接入栈*/
+                if (Character.isDigit(c)) {
+                    numStack.push(String.valueOf(c));
                 }
-                else {
-                    switch (c) {
-                        case '+' -> {numStack.push(String.valueOf(first));}
-                        case '-' -> {numStack.push(String.valueOf(first*-1));}
+                /* 如果是符号，进行处理 */
+                else if (opList.contains(c)) {
+                    int first = 0;
+                    int second = 0;
+                    first = Integer.parseInt(numStack.pop());
+                    if (!numStack.empty()) {
+                        second = Integer.parseInt(numStack.pop());
+                    } else {
+                        switch (c) {
+                            case '+' -> {
+                                numStack.push(String.valueOf(first));
+                            }
+                            case '-' -> {
+                                numStack.push(String.valueOf(first * -1));
+                            }
+                        }
                     }
                 }
+            }
+            catch (Exception e) {
+                System.out.println(revPolish);
             }
         }
 
