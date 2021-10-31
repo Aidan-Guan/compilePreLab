@@ -20,31 +20,32 @@ public class Lab2_SemanticAnalysis {
 
         /* 数字栈 */
         Stack<String> numStack = new Stack<>();
-        for (char c : revPolish.toCharArray()) {
-            /* 如果是数字，直接入栈*/
-            if (Character.isDigit(c)) {
-                numStack.push(String.valueOf(c));
+        for (int index = 0; index<revPolish.toCharArray().length; index++) {
+            if (Character.isDigit(revPolish.charAt(index))) {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append(revPolish.charAt(index));
+                for (index++ ; index<revPolish.toCharArray().length && Character.isDigit(revPolish.charAt(index)) ; index++) {
+                    stringBuilder.append(revPolish.charAt(index));
+                }
+                index --;
+                numStack.push(stringBuilder.reverse().toString());
             }
-            /* 如果是符号，进行处理 */
-            else if (opList.contains(c)) {
+            else if (opList.contains(revPolish.charAt(index))) {
                 int first = 0;
                 int second = 0;
                 first = Integer.parseInt(numStack.pop());
                 if (!numStack.empty()) {
                     second = Integer.parseInt(numStack.pop());
                 } else {
-                    switch (c) {
-                        case '+' -> {
-                            numStack.push(String.valueOf(first));
-                        }
-                        case '-' -> {
-                            numStack.push(String.valueOf(first * -1));
-                        }
+                    switch (revPolish.charAt(index)) {
+                        case '+' -> { numStack.push(String.valueOf(first)); }
+                        case '-' -> { numStack.push(String.valueOf(first * -1)); }
                     }
                 }
             }
-            System.out.println(revPolish);
+
         }
+
 
         /* 栈中最后一个值就是答案 */
         int ans = Integer.parseInt(numStack.pop());
