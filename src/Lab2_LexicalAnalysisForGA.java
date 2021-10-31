@@ -96,9 +96,11 @@ public class Lab2_LexicalAnalysisForGA {
                 case '}' -> { return new Lab2_Token("SIGN", "}"); }
                 case '+' -> { return new Lab2_Token("SIGN", "+"); }
                 case '-' -> { return new Lab2_Token("SIGN", "-"); }
+                case '*' -> { return new Lab2_Token("SIGN", "*"); }
+                case '%' -> { return new Lab2_Token("SIGN", "%"); }
                 case '/' -> {
-                    commentAnal();
-                    return getNextToken();
+                    if ( commentAnal()) { return getNextToken(); }
+                    else { return new Lab2_Token("SIGN", "/"); }
                 }
                 case '\uFFFF' -> {return null;}
             }
@@ -107,7 +109,7 @@ public class Lab2_LexicalAnalysisForGA {
         return null;
     }
 
-    private static void commentAnal() throws IOException {
+    private static boolean commentAnal() throws IOException {
         tokenChar = (char) in.read();
 
         if (tokenChar == '/') { // 单行注释
@@ -118,6 +120,7 @@ public class Lab2_LexicalAnalysisForGA {
             }
             // 回退字符
             in.unread(tokenChar);
+            return true;
         }
         else if (tokenChar == '*') { // 多行注释
             char charBeforeTokenChar = '/';
@@ -134,9 +137,11 @@ public class Lab2_LexicalAnalysisForGA {
                 tokenChar = (char) in.read();
             }
 //            in.unread(tokenChar);
+            return true;
         }
         else {
-            System.exit(10);
+            return false;
+//            System.exit(10);
         }
 
     }

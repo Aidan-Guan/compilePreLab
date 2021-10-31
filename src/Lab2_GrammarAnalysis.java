@@ -133,20 +133,13 @@ public class Lab2_GrammarAnalysis {
     private static void addExp2Anal() throws IOException {
         if (currentSym == null) {return;}
 
-        if (!currentSym.value.equals("(")) {System.exit(21);}
+        if (currentSym.value.equals("+") || currentSym.value.equals("-")) {
+            Lab2_Test.outputStr += currentSym.value;
+            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
 
-        Lab2_Test.outputStr += "(";
-        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
-
-        if (!(currentSym.value.equals("+") || currentSym.value.equals("-"))) {
-            System.exit(21);
+            mulExpAnal();
+            addExp2Anal();
         }
-
-        Lab2_Test.outputStr += currentSym.value;
-        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
-
-        mulExpAnal();
-        addExp2Anal();
     }
 
 
@@ -162,22 +155,15 @@ public class Lab2_GrammarAnalysis {
             return;
         }
 
-        if (currentSym.value.equals("(")) {
-            Lab2_Test.outputStr += "(";
-            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
-            if (!(currentSym.value.equals("*") || currentSym.value.equals("/") || currentSym.value.equals("%"))) {
-                System.exit(21);
-            }
 
+        if (currentSym.value.equals("*") || currentSym.value.equals("/") || currentSym.value.equals("%")) {
             Lab2_Test.outputStr += currentSym.value;
             currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
 
             unaryExpAnal();
             mulExp2Anal();
         }
-        else {
-            System.exit(20);
-        }
+
     }
 
     private static void unaryExpAnal() throws IOException {
