@@ -67,9 +67,12 @@ public class Lab2_SemanticAnalysis {
      */
     private static String getRevPolish() {
         int start = Lab2_Test.outputStr.indexOf("ret") + 7; // 此处的7是固定的
-        int end = Lab2_Test.outputStr.indexOf('\n', start);
+        int end = Lab2_Test.outputStr.indexOf('}', start);
 
         String polish = Lab2_Test.outputStr.substring(start, end).trim();
+        System.out.println("polish is");
+        System.out.println(polish);
+
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(polish);
