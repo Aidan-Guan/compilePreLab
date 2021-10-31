@@ -125,13 +125,60 @@ public class Lab2_GrammarAnalysis {
 
     private static void addExpAnal() throws IOException {
         mulExpAnal();
+        //TODO: 确保有新的读入
+        addExp2Anal();
+    }
+
+
+    private static void addExp2Anal() throws IOException {
+        if (currentSym == null) {return;}
+
+        if (!currentSym.value.equals("(")) {System.exit(21);}
+
+        Lab2_Test.outputStr += "(";
+        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+
+        if (!(currentSym.value.equals("+") || currentSym.value.equals("-"))) {
+            System.exit(21);
+        }
+
+        Lab2_Test.outputStr += currentSym.value;
+        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+
+        mulExpAnal();
+        addExp2Anal();
     }
 
 
     private static void mulExpAnal() throws IOException {
         unaryExpAnal();
+        mulExp2Anal();
     }
 
+
+    private static void mulExp2Anal() throws IOException {
+        //TODO: 确认为空的时候是null
+        if (currentSym == null) {
+            return;
+        }
+
+        if (currentSym.value.equals("(")) {
+            Lab2_Test.outputStr += "(";
+            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+            if (!(currentSym.value.equals("*") || currentSym.value.equals("/") || currentSym.value.equals("%"))) {
+                System.exit(21);
+            }
+
+            Lab2_Test.outputStr += currentSym.value;
+            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+
+            unaryExpAnal();
+            mulExp2Anal();
+        }
+        else {
+            System.exit(20);
+        }
+    }
 
     private static void unaryExpAnal() throws IOException {
         /* 处理null情况 */
@@ -172,3 +219,4 @@ public class Lab2_GrammarAnalysis {
 //5   并不是number
 //6   分号有问题
 //20  读取有问题
+//21  读取运算符错误
