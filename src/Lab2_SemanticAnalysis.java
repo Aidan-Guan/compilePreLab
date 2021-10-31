@@ -21,33 +21,29 @@ public class Lab2_SemanticAnalysis {
         /* 数字栈 */
         Stack<String> numStack = new Stack<>();
         for (char c : revPolish.toCharArray()) {
-            try {
-                /* 如果是数字，直接入栈*/
-                if (Character.isDigit(c)) {
-                    numStack.push(String.valueOf(c));
-                }
-                /* 如果是符号，进行处理 */
-                else if (opList.contains(c)) {
-                    int first = 0;
-                    int second = 0;
-                    first = Integer.parseInt(numStack.pop());
-                    if (!numStack.empty()) {
-                        second = Integer.parseInt(numStack.pop());
-                    } else {
-                        switch (c) {
-                            case '+' -> {
-                                numStack.push(String.valueOf(first));
-                            }
-                            case '-' -> {
-                                numStack.push(String.valueOf(first * -1));
-                            }
+            /* 如果是数字，直接入栈*/
+            if (Character.isDigit(c)) {
+                numStack.push(String.valueOf(c));
+            }
+            /* 如果是符号，进行处理 */
+            else if (opList.contains(c)) {
+                int first = 0;
+                int second = 0;
+                first = Integer.parseInt(numStack.pop());
+                if (!numStack.empty()) {
+                    second = Integer.parseInt(numStack.pop());
+                } else {
+                    switch (c) {
+                        case '+' -> {
+                            numStack.push(String.valueOf(first));
+                        }
+                        case '-' -> {
+                            numStack.push(String.valueOf(first * -1));
                         }
                     }
                 }
             }
-            catch (Exception e) {
-                System.out.println(revPolish);
-            }
+            System.out.println(revPolish);
         }
 
         /* 栈中最后一个值就是答案 */
