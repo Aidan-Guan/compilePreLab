@@ -117,17 +117,21 @@ public class Lab2_GrammarAnalysis {
         currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
     }
 
+
     private static void expAnal() throws IOException {
         addExpAnal();
     }
+
 
     private static void addExpAnal() throws IOException {
         mulExpAnal();
     }
 
+
     private static void mulExpAnal() throws IOException {
         unaryExpAnal();
     }
+
 
     private static void unaryExpAnal() throws IOException {
         /* 处理null情况 */

@@ -13,6 +13,7 @@ public class Lab2_Test {
         Lab2_LexicalAnalysisForGA.getTokenInit(in);
 
         Lab2_GrammarAnalysis.compUnitAnal();
+        Lab2_SemanticAnalysis.dealPolishNotation();
 
 //
 //        String outputFileLoc = args[1];
