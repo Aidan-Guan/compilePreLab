@@ -36,7 +36,8 @@ public class Lab2_SemanticAnalysis {
                 first = Integer.parseInt(numStack.pop());
                 if (!numStack.empty()) {
                     second = Integer.parseInt(numStack.pop());
-                } else {
+                }
+                else {
                     switch (revPolish.charAt(index)) {
                         case '+' -> { numStack.push(String.valueOf(first)); }
                         case '-' -> { numStack.push(String.valueOf(first * -1)); }
