@@ -1,7 +1,9 @@
 import java.io.IOException;
+import java.util.HashMap;
 
 public class Lab2_GrammarAnalysis {
 
+    private static HashMap<String, String> priorityTable = new HashMap<>();
 
     // 当前的token
     static Lab2_Token currentSym;
@@ -119,49 +121,101 @@ public class Lab2_GrammarAnalysis {
 
 
     private static void expAnal() throws IOException {
-        addExpAnal();
+//        addExpAnal();
+    }
+
+    private static void bottomToTopAnal() throws IOException {
+
+    }
+
+    private static void hashMapInit() {
+        // 通过 '$' 进行分割 打表输入
+        priorityTable.put("+$+", "<");
+        priorityTable.put("+$-", "<");
+        priorityTable.put("+$(", "<");
+        priorityTable.put("+$NUMBER", "<");
+
+        priorityTable.put("-$+", "<");
+        priorityTable.put("-$-", "<");
+        priorityTable.put("-$(", "<");
+        priorityTable.put("-$NUMBER", "<");
+
+        priorityTable.put("($+", "<");
+        priorityTable.put("($-", "<");
+        priorityTable.put("($(", "<");
+        priorityTable.put("($)", "=");
+        priorityTable.put("($NUMBER", "<");
+
+        priorityTable.put(")$+", ">");
+        priorityTable.put(")$-", ">");
+        priorityTable.put(")$)", ">");
+        priorityTable.put(")$/", ">");
+        priorityTable.put(")$*", ">");
+        priorityTable.put(")$%", ">");
+
+        priorityTable.put("/$+", "<");
+        priorityTable.put("/$-", "<");
+        priorityTable.put("/$(", "<");
+        priorityTable.put("/$NUMBER", "<");
+
+        priorityTable.put("*$+", "<");
+        priorityTable.put("*$-", "<");
+        priorityTable.put("*$(", "<");
+        priorityTable.put("*$NUMBER", "<");
+
+        priorityTable.put("%$+", "<");
+        priorityTable.put("%$-", "<");
+        priorityTable.put("%$(", "<");
+        priorityTable.put("%$NUMBER", "<");
+
+        priorityTable.put("NUMBER$+", ">");
+        priorityTable.put("NUMBER$-", ">");
+        priorityTable.put("NUMBER$)", ">");
+        priorityTable.put("NUMBER$/", ">");
+        priorityTable.put("NUMBER$*", ">");
+        priorityTable.put("NUMBER$%", ">");
     }
 
 
-    private static void addExpAnal() throws IOException {
-        mulExpAnal();
-    }
-
-
-    private static void mulExpAnal() throws IOException {
-        unaryExpAnal();
-    }
-
-
-    private static void unaryExpAnal() throws IOException {
-        /* 处理null情况 */
-        if (currentSym == null) {
-            System.exit(20);
-        }
-
-        /* unaryExp文法 */
-        if (currentSym.value.equals("+") || currentSym.value.equals("-")) {
-            Lab2_Test.outputStr += currentSym.value;
-            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
-            unaryExpAnal();
-        }
-        /* primaryExp文法 */
-        else if (currentSym.value.equals("(")) {
-            Lab2_Test.outputStr += currentSym.value;
-            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
-            expAnal(); //TODO: 确保之后会读入下一个新字符
-            if (currentSym == null || !currentSym.value.equals(")")) {System.exit(1);}
-            Lab2_Test.outputStr += currentSym.value;
-            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
-        }
-        else if (currentSym.type.equals("NUMBER")) {
-            Lab2_Test.outputStr += currentSym.value;
-            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
-        }
-        else {
-            System.exit(20);
-        }
-    }
+//    private static void addExpAnal() throws IOException {
+//        mulExpAnal();
+//    }
+//
+//
+//    private static void mulExpAnal() throws IOException {
+//        unaryExpAnal();
+//    }
+//
+//
+//    private static void unaryExpAnal() throws IOException {
+//        /* 处理null情况 */
+//        if (currentSym == null) {
+//            System.exit(20);
+//        }
+//
+//        /* unaryExp文法 */
+//        if (currentSym.value.equals("+") || currentSym.value.equals("-")) {
+//            Lab2_Test.outputStr += currentSym.value;
+//            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+//            unaryExpAnal();
+//        }
+//        /* primaryExp文法 */
+//        else if (currentSym.value.equals("(")) {
+//            Lab2_Test.outputStr += currentSym.value;
+//            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+//            expAnal(); //TODO: 确保之后会读入下一个新字符
+//            if (currentSym == null || !currentSym.value.equals(")")) {System.exit(1);}
+//            Lab2_Test.outputStr += currentSym.value;
+//            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+//        }
+//        else if (currentSym.type.equals("NUMBER")) {
+//            Lab2_Test.outputStr += currentSym.value;
+//            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+//        }
+//        else {
+//            System.exit(20);
+//        }
+//    }
 }
 
 //错误对照表
