@@ -118,83 +118,170 @@ public class Lab2_GrammarAnalysis {
     }
 
 
-    private static void expAnal() throws IOException {
-        addExpAnal();
+    private static int expAnal() throws IOException {
+        int expResult = addExpAnal();
+        return expResult;
     }
 
 
-    private static void addExpAnal() throws IOException {
-        mulExpAnal();
-        //TODO: 确保有新的读入
-        addExp2Anal();
+    private static int addExpAnal() throws IOException {
+        int addResult = 0;
+        addResult = mulExpAnal();
+
+        while (true) {
+            if (currentSym.value.equals("+")) {
+                currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+                addResult += mulExpAnal();
+            }
+            else if (currentSym.value.equals("-")) {
+                currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+                addResult -= mulExpAnal();
+            }
+            else {
+                break;
+            }
+        }
+        return addResult;
+//        mulExpAnal();
+//        //TODO: 确保有新的读入
+//        addExp2Anal();
     }
 
 
-    private static void addExp2Anal() throws IOException {
-        if (currentSym == null) {return;}
+//    private static void addExp2Anal() throws IOException {
+//        if (currentSym == null) {return;}
+//
+//        if (currentSym.value.equals("+") || currentSym.value.equals("-")) {
+//            Lab2_Test.outputStr += currentSym.value;
+//            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+//
+//            mulExpAnal();
+//            addExp2Anal();
+//        }
+//    }
 
+
+    private static int mulExpAnal() throws IOException {
+        int mulResult = unaryExpAnal();
+        while (true) {
+            if (currentSym.value.equals("*")) {
+                currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+                mulResult *= unaryExpAnal();
+            }
+            else if (currentSym.value.equals("/")) {
+                currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+                mulResult /= unaryExpAnal();
+            }
+            else if (currentSym.value.equals("%")) {
+                currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+                mulResult %= unaryExpAnal();
+            }
+            else { break; }
+        }
+        return mulResult;
+    }
+
+    private static int unaryExpAnal() throws IOException {
+        int unaryResult = 1;
         if (currentSym.value.equals("+") || currentSym.value.equals("-")) {
-            Lab2_Test.outputStr += currentSym.value;
-            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+            unaryResult *= unaryOpAnal();
+            unaryResult *= unaryExpAnal();
+        }
+        else { unaryResult *= primaryExpAnal(); }
 
-            mulExpAnal();
-            addExp2Anal();
+        return unaryResult;
+    }
+
+    private static int primaryExpAnal() throws IOException {
+        int priResult = 0;
+        if (currentSym.value.equals("(")) {
+            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+            priResult = expAnal();
+            if (currentSym.value.equals(")")) {
+                currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+            }
+            else { System.exit(1); }
+        }
+        else {
+            priResult = numberAnal();
+        }
+
+        return priResult;
+    }
+
+    private static int unaryOpAnal() throws IOException {
+        if (currentSym.value.equals("-")) {
+            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+            return -1;
+        }
+        else if (currentSym.value.equals("+")) {
+            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+            return 1;
+        }
+        else {
+            System.exit(21);
+            return -1;
         }
     }
 
-
-    private static void mulExpAnal() throws IOException {
-        unaryExpAnal();
-        mulExp2Anal();
-    }
-
-
-    private static void mulExp2Anal() throws IOException {
-        //TODO: 确认为空的时候是null
-        if (currentSym == null) {
-            return;
-        }
-
-
-        if (currentSym.value.equals("*") || currentSym.value.equals("/") || currentSym.value.equals("%")) {
-            Lab2_Test.outputStr += currentSym.value;
-            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
-
-            unaryExpAnal();
-            mulExp2Anal();
-        }
-
-    }
-
-    private static void unaryExpAnal() throws IOException {
-        /* 处理null情况 */
-        if (currentSym == null) {
-            System.exit(20);
-        }
-
-        /* unaryExp文法 */
-        if (currentSym.value.equals("+") || currentSym.value.equals("-")) {
-            Lab2_Test.outputStr += currentSym.value;
-            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
-            unaryExpAnal();
-        }
-        /* primaryExp文法 */
-        else if (currentSym.value.equals("(")) {
-            Lab2_Test.outputStr += currentSym.value;
-            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
-            expAnal(); //TODO: 确保之后会读入下一个新字符
-            if (currentSym == null || !currentSym.value.equals(")")) {System.exit(1);}
-            Lab2_Test.outputStr += currentSym.value;
-            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
-        }
-        else if (currentSym.type.equals("NUMBER")) {
-            Lab2_Test.outputStr += currentSym.value;
+    private static int numberAnal() throws IOException {
+        int numberResult = 0;
+        if (currentSym.type.equals("NUMBER")) {
+            numberResult = Integer.parseInt(currentSym.value);
             currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
         }
         else {
             System.exit(20);
         }
+        return numberResult;
     }
+
+//    private static void mulExp2Anal() throws IOException {
+//        //TODO: 确认为空的时候是null
+//        if (currentSym == null) {
+//            return;
+//        }
+//
+//
+//        if (currentSym.value.equals("*") || currentSym.value.equals("/") || currentSym.value.equals("%")) {
+//            Lab2_Test.outputStr += currentSym.value;
+//            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+//
+//            unaryExpAnal();
+//            mulExp2Anal();
+//        }
+//
+//    }
+
+//    private static void unaryExpAnal() throws IOException {
+//        /* 处理null情况 */
+//        if (currentSym == null) {
+//            System.exit(20);
+//        }
+//
+//        /* unaryExp文法 */
+//        if (currentSym.value.equals("+") || currentSym.value.equals("-")) {
+//            Lab2_Test.outputStr += currentSym.value;
+//            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+//            unaryExpAnal();
+//        }
+//        /* primaryExp文法 */
+//        else if (currentSym.value.equals("(")) {
+//            Lab2_Test.outputStr += currentSym.value;
+//            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+//            expAnal(); //TODO: 确保之后会读入下一个新字符
+//            if (currentSym == null || !currentSym.value.equals(")")) {System.exit(1);}
+//            Lab2_Test.outputStr += currentSym.value;
+//            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+//        }
+//        else if (currentSym.type.equals("NUMBER")) {
+//            Lab2_Test.outputStr += currentSym.value;
+//            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+//        }
+//        else {
+//            System.exit(20);
+//        }
+//    }
 }
 
 //错误对照表
