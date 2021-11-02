@@ -17,6 +17,9 @@ public class Lab3_Test {
         String fileLoc = "/Users/guanhuaimin/本地磁盘/学习/本地_大三上/编译原理/labs/compilePreLab/src/a.txt";
 
         in = new PushbackReader(new FileReader(fileLoc));
+        Lab3_LexicalAnal.getTokenInit(in);
+
+
 
 
     }
