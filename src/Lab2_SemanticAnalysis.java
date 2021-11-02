@@ -2,6 +2,8 @@ import java.util.*;
 
 public class Lab2_SemanticAnalysis {
 
+    public static int expResult = 0;
+
     /**
      * 处理前缀表达式
      */
@@ -57,9 +59,8 @@ public class Lab2_SemanticAnalysis {
         }
 
 //        改变输出字符串
-        modifyOutputStr(expStr, ans);
+//        modifyOutputStr(expStr, ans);
     }
-
 
     private static String calculateNum (double first, double second, char op) {
         String ans = "";
@@ -209,7 +210,9 @@ public class Lab2_SemanticAnalysis {
     }
 
 
-    private static void modifyOutputStr(String revPolish, int ans) {
+    public static void modifyOutputStr() {
+        String revPolish = getRevExp();
+        int ans = expResult;
         Lab2_Test.outputStr = Lab2_Test.outputStr.replace(revPolish, String.valueOf(ans));
     }
 

@@ -110,7 +110,8 @@ public class Lab2_GrammarAnalysis {
 
         /* 处理Exp */
         //TODO: 注意在exp处理结束之后需要再读取一个字符
-        expAnal();
+        Lab2_SemanticAnalysis.expResult = expAnal();
+        System.out.println("结果为："+String.valueOf(Lab2_SemanticAnalysis.expResult));
 
         if (!currentSym.value.equals(";")) { System.exit(6); }
 
@@ -130,10 +131,12 @@ public class Lab2_GrammarAnalysis {
 
         while (true) {
             if (currentSym.value.equals("+")) {
+                Lab2_Test.outputStr += "+";
                 currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
                 addResult += mulExpAnal();
             }
             else if (currentSym.value.equals("-")) {
+                Lab2_Test.outputStr += "-";
                 currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
                 addResult -= mulExpAnal();
             }
@@ -165,14 +168,17 @@ public class Lab2_GrammarAnalysis {
         int mulResult = unaryExpAnal();
         while (true) {
             if (currentSym.value.equals("*")) {
+                Lab2_Test.outputStr += "*";
                 currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
                 mulResult *= unaryExpAnal();
             }
             else if (currentSym.value.equals("/")) {
+                Lab2_Test.outputStr += "/";
                 currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
                 mulResult /= unaryExpAnal();
             }
             else if (currentSym.value.equals("%")) {
+                Lab2_Test.outputStr += "%";
                 currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
                 mulResult %= unaryExpAnal();
             }
@@ -195,9 +201,11 @@ public class Lab2_GrammarAnalysis {
     private static int primaryExpAnal() throws IOException {
         int priResult = 0;
         if (currentSym.value.equals("(")) {
+            Lab2_Test.outputStr += "(";
             currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
             priResult = expAnal();
             if (currentSym.value.equals(")")) {
+                Lab2_Test.outputStr += ")";
                 currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
             }
             else { System.exit(1); }
@@ -211,10 +219,12 @@ public class Lab2_GrammarAnalysis {
 
     private static int unaryOpAnal() throws IOException {
         if (currentSym.value.equals("-")) {
+            Lab2_Test.outputStr += "-";
             currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
             return -1;
         }
         else if (currentSym.value.equals("+")) {
+            Lab2_Test.outputStr += "+";
             currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
             return 1;
         }
@@ -227,6 +237,7 @@ public class Lab2_GrammarAnalysis {
     private static int numberAnal() throws IOException {
         int numberResult = 0;
         if (currentSym.type.equals("NUMBER")) {
+            Lab2_Test.outputStr += currentSym.value;
             numberResult = Integer.parseInt(currentSym.value);
             currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
         }
