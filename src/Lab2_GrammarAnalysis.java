@@ -427,9 +427,9 @@ public class Lab2_GrammarAnalysis {
             else {
                 rollbackSym();
                 Integer identIndex = identRegMap.get(currentSym.value);
-                if (isConst.get(currentSym.value)!=null) {
-                    System.exit(-1);
-                }
+//                if (isConst.get(currentSym.value)!=null) {
+//                    System.exit(-1);
+//                }
                 if (identIndex == null) {
                     System.exit(-1);
                 }
