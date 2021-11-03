@@ -376,7 +376,7 @@ public class Lab2_GrammarAnalysis {
                             System.exit(-1);
                         }
 //                        getNextSym();
-                        if (!Lab2_Test.outputStr.contains("declare void putint(i32)")) {
+                        if (!Lab2_Test.outputStr.contains("declare void @putint(i32)")) {
                             Lab2_Test.outputStr = "declare void @putint(i32)\n" + Lab2_Test.outputStr.trim();
                         }
 
@@ -396,7 +396,7 @@ public class Lab2_GrammarAnalysis {
                             System.exit(-1);
                         }
 //                        getNextSym();
-                        if (!Lab2_Test.outputStr.contains("declare void putch(i32)")) {
+                        if (!Lab2_Test.outputStr.contains("declare void @putch(i32)")) {
                             Lab2_Test.outputStr = "declare void @putch(i32)\n" + Lab2_Test.outputStr.trim();
                         }
 
