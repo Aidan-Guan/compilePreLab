@@ -460,7 +460,7 @@ public class Lab2_GrammarAnalysis {
                 Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
                 Lab2_Test.outputStr += "\t%"+String.valueOf(regIndex) + " = load i32, i32* %"+String.valueOf(reg)+"\n";
                 regIndex++;
-                Lab2_Test.outputStr += "\tstore i32 " + result.output() + ", i32* %" + String.valueOf(regIndex-1) + "\n";
+//                Lab2_Test.outputStr += "\tstore i32 " + result.output() + ", i32* %" + String.valueOf(regIndex-1) + "\n";
 
 
 
