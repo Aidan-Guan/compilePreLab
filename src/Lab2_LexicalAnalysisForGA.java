@@ -98,6 +98,7 @@ public class Lab2_LexicalAnalysisForGA {
                 case '-' -> { return new Lab2_Token("SIGN", "-"); }
                 case '*' -> { return new Lab2_Token("SIGN", "*"); }
                 case '%' -> { return new Lab2_Token("SIGN", "%"); }
+                case '=' -> { return new Lab2_Token("SIGN", "="); }
                 case '/' -> {
                     if ( commentAnal()) { return getNextToken(); }
                     else { return new Lab2_Token("SIGN", "/"); }
