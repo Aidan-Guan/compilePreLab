@@ -4,7 +4,9 @@ public class Lab2_GrammarAnalysis {
 
 
     // 当前的token
+    static Lab2_Token lastSym;
     static Lab2_Token currentSym;
+    static Lab2_Token futureSym;
 
 
     static {
@@ -102,7 +104,12 @@ public class Lab2_GrammarAnalysis {
         if (currentSym.value.equals("int") || currentSym.value.equals("const")) {
             declAnal();
         }
+        else if (currentSym.value.equals("return") || currentSym.value.equals(";") || currentSym.type.equals("IDENT")) {
+            stmtAnal();
+        }
     }
+
+
 
     private static void declAnal() throws IOException {
         if (currentSym.value.equals("const")) {
@@ -185,22 +192,30 @@ public class Lab2_GrammarAnalysis {
      * 处理stmt文法
      */
     private static void stmtAnal() throws IOException {
-        /* 处理return */
-        if (currentSym == null || !currentSym.value.equals("return")) { System.exit(4); }
-        Lab2_Test.outputStr += "ret i32";
-
-        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
-
-        /* 处理Exp */
-        //TODO: 注意在exp处理结束之后需要再读取一个字符
-        Lab2_SemanticAnalysis.expResult = expAnal();
-        System.out.println("结果为："+String.valueOf(Lab2_SemanticAnalysis.expResult));
-
-        if (!currentSym.value.equals(";")) { System.exit(6); }
-
-        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+        if (currentSym.value.equals("return")) {
+            getNextSym();
+            expAnal();
+            if (!currentSym.value.equals(";")) {System.exit(-1);}
+            getNextSym();
+        }
+        else if (currentSym.value.equals(";")){}
+        else {
+            getNextSym();
+            if (currentSym.value.equals("=")) {
+                rollbackSym();
+                lValAnal();
+            }
+            else {
+                rollbackSym();
+                expAnal();
+            }
+        }
     }
 
+    private static void lValAnal() throws IOException {
+        if (!currentSym.type.equals("IDENT")) {System.exit(-1);}
+        getNextSym();
+    }
 
     private static int expAnal() throws IOException {
         int expResult = addExpAnal();
@@ -315,7 +330,20 @@ public class Lab2_GrammarAnalysis {
     }
 
     private static void getNextSym() throws IOException {
-        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+        if (futureSym!=null) {
+            lastSym = currentSym;
+            currentSym = futureSym;
+            futureSym = null;
+        }
+        else {
+            lastSym = currentSym;
+            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+        }
+    }
+
+    private static void rollbackSym() throws IOException {
+        futureSym = currentSym;
+        currentSym = lastSym;
     }
 
 //    private static void mulExp2Anal() throws IOException {
