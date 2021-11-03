@@ -23,6 +23,7 @@ public class Lab2_LexicalAnalysisForGA {
         // 读取空字符
         int flag = 0;
         while (Character.isWhitespace(tokenChar)) {
+            System.out.print(tokenChar);
             flag = 1;
 
             Lab2_Test.outputStr += String.valueOf(tokenChar);
@@ -33,6 +34,7 @@ public class Lab2_LexicalAnalysisForGA {
         if (Character.isLetter(tokenChar) || tokenChar=='_') {
             // 识别标识符
             while (Character.isLetterOrDigit(tokenChar) || tokenChar=='_') {
+                System.out.print(tokenChar);
                 tokenStr += tokenChar;
                 tokenChar = (char) in.read();
             }
@@ -46,6 +48,8 @@ public class Lab2_LexicalAnalysisForGA {
         else if (Character.isDigit(tokenChar)) {
             if (tokenChar != '0') { // 一定是十进制 非 0
                 while (Character.isDigit(tokenChar)) {
+                    System.out.print(tokenChar);
+
                     tokenStr += tokenChar;
                     tokenChar = (char) in.read();
                 }
@@ -54,6 +58,8 @@ public class Lab2_LexicalAnalysisForGA {
             }
             else {
                 tokenChar = (char) in.read();
+                System.out.print(tokenChar);
+
                 // 单纯为0的情况
                 if (!Character.isDigit(tokenChar) && tokenChar!='x' && tokenChar!='X') {
                     in.unread(tokenChar);
@@ -64,6 +70,8 @@ public class Lab2_LexicalAnalysisForGA {
                     tokenStr = "";
                     tokenChar = (char)in.read();
                     while (Character.isLetterOrDigit(tokenChar)) {
+                        System.out.print(tokenChar);
+
                         tokenStr += tokenChar;
                         tokenChar = (char) in.read();
                     }
@@ -79,6 +87,8 @@ public class Lab2_LexicalAnalysisForGA {
                 // 8进制
                 else {
                     while (Character.isDigit(tokenChar)) {
+                        System.out.print(tokenChar);
+
                         tokenStr += tokenChar;
                         tokenChar = (char) in.read();
                     }
@@ -88,6 +98,8 @@ public class Lab2_LexicalAnalysisForGA {
             }
         }
         else {
+            System.out.print(tokenChar);
+
             switch (tokenChar) {
                 case ';' -> { return new Lab2_Token("SIGN", ";"); }
                 case '(' -> { return new Lab2_Token("SIGN", "("); }

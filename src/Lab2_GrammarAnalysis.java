@@ -84,7 +84,7 @@ public class Lab2_GrammarAnalysis {
      */
     private static void blockAnal() throws IOException {
         if (currentSym == null || !currentSym.value.equals("{")) {
-            System.exit(1);
+//            System.exit(1);
         }
         Lab2_Test.outputStr += "{";
 
@@ -95,13 +95,13 @@ public class Lab2_GrammarAnalysis {
         }
 
         if (currentSym == null || !currentSym.value.equals("}")) {
-            System.exit(1);
+//            System.exit(1);
         }
         Lab2_Test.outputStr += "}";
 
         getNextSym();
         if (currentSym != null) {
-            System.exit(2);
+//            System.exit(2);
         }
     }
 
@@ -380,13 +380,13 @@ public class Lab2_GrammarAnalysis {
             currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
         }
         else {
-            System.exit(20);
+//            System.exit(20);
         }
         return numberResult;
     }
 
     private static void getNextSym() throws IOException {
-        System.out.println(currentSym);
+//        System.out.println(currentSym);
         if (futureSym!=null) {
             lastSym = currentSym;
             currentSym = futureSym;
