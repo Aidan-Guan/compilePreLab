@@ -30,9 +30,9 @@ public class Lab2_LexicalAnalysisForGA {
         }
 
         // 首字符是字母
-        if (Character.isLetter(tokenChar)) {
+        if (Character.isLetter(tokenChar) || tokenChar=='_') {
             // 识别标识符
-            while (Character.isLetterOrDigit(tokenChar)) {
+            while (Character.isLetterOrDigit(tokenChar) || tokenChar=='_') {
                 tokenStr += tokenChar;
                 tokenChar = (char) in.read();
             }
@@ -99,6 +99,7 @@ public class Lab2_LexicalAnalysisForGA {
                 case '*' -> { return new Lab2_Token("SIGN", "*"); }
                 case '%' -> { return new Lab2_Token("SIGN", "%"); }
                 case '=' -> { return new Lab2_Token("SIGN", "="); }
+                case ',' -> { return new Lab2_Token("SIGN", ","); }
                 case '/' -> {
                     if ( commentAnal()) { return getNextToken(); }
                     else { return new Lab2_Token("SIGN", "/"); }

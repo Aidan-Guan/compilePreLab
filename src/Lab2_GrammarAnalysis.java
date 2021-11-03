@@ -140,6 +140,8 @@ public class Lab2_GrammarAnalysis {
     }
 
     private static void varDefAnal() throws IOException {
+        if (currentSym.value.equals(","))
+            getNextSym();
         if (!currentSym.type.equals("IDENT")) {System.exit(-1);}
 
         String varName = currentSym.value;
@@ -150,10 +152,15 @@ public class Lab2_GrammarAnalysis {
             Lab2_Test.outputStr = Lab2_Test.outputStr.trim();
             Lab2_Test.outputStr += "\n";
             Lab2_Test.outputStr += "\t%"+regIndex+" = alloca i32\n";
-            Lab2_Test.outputStr += "\tstore i32 %"+result.value+", i32* %"+String.valueOf(regIndex);
+            Lab2_Test.outputStr += "\tstore i32 "+result.output()+", i32* %"+String.valueOf(regIndex);
             identRegMap.put(varName, regIndex);
             regIndex++;
         }
+        else {
+            identRegMap.put(varName, regIndex);
+            regIndex++;
+        }
+//        getNextSym();
     }
 
     private static Lab2_Token initValAnal() throws IOException {
@@ -170,7 +177,7 @@ public class Lab2_GrammarAnalysis {
             if (!currentSym.value.equals(",")) {break;}
             constDefAnal();
         }
-        getNextSym();
+//        getNextSym();
         if (!currentSym.value.equals(";")) {System.exit(-1);}
         getNextSym();
     }
@@ -191,9 +198,9 @@ public class Lab2_GrammarAnalysis {
         }
         getNextSym();
         Lab2_Token result = constInitValAnal();
-
+        Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
         Lab2_Test.outputStr += "\t%" + String.valueOf(regIndex) + " = alloca i32\n";
-        Lab2_Test.outputStr += "store i32 %" + result.value + ", i32* %" + String.valueOf(regIndex) + "\n";
+        Lab2_Test.outputStr += "\tstore i32 " + result.output() + ", i32* %" + String.valueOf(regIndex) + "\n";
         identRegMap.put(identName, regIndex);
         regIndex ++;
     }
@@ -212,13 +219,13 @@ public class Lab2_GrammarAnalysis {
 
     private static Lab2_Token addExpAnal() throws IOException {
         Lab2_Token result = mulExpAnal();
-
+//        getNextSym();
         while (true) {
             if (currentSym.value.equals("+")) {
                 getNextSym();
                 Lab2_Token result2 = mulExpAnal();
-
-                Lab2_Test.outputStr += "%"+String.valueOf(regIndex) + " = add i32 "+ result.output() + ", " + result2.output()+"\n";
+                Lab2_Test.outputStr = Lab2_Test.outputStr.trim() + "\n";
+                Lab2_Test.outputStr += "\t%"+String.valueOf(regIndex) + " = add i32 "+ result.output() + ", " + result2.output()+"\n";
                 result.value = String.valueOf(regIndex);
                 regIndex++;
             }
@@ -247,14 +254,16 @@ public class Lab2_GrammarAnalysis {
                 Lab2_Test.outputStr += "%"+String.valueOf(regIndex) + " = mul i32 "+ result.output() + ", " + result2.output()+"\n";
                 result.value = String.valueOf(regIndex);
                 regIndex++;
+                getNextSym();
             }
             else if (currentSym.value.equals("/")) {
                 getNextSym();
                 Lab2_Token result2 = unaryExp();
 
-                Lab2_Test.outputStr += "%"+String.valueOf(regIndex) + " = sdiv i32 "+ result.output() + ", " + result2.output()+"\n";
+                Lab2_Test.outputStr += "\t%"+String.valueOf(regIndex) + " = sdiv i32 "+ result.output() + ", " + result2.output()+"\n";
                 result.value = String.valueOf(regIndex);
                 regIndex++;
+                getNextSym();
             }
             else if (currentSym.value.equals("%")) {
                 getNextSym();
@@ -263,6 +272,7 @@ public class Lab2_GrammarAnalysis {
                 Lab2_Test.outputStr += "%"+String.valueOf(regIndex) + " = mod i32 "+ result.output() + ", " + result2.output()+"\n";
                 result.value = String.valueOf(regIndex);
                 regIndex++;
+                getNextSym();
             }
             else {break;}
         }
@@ -315,10 +325,18 @@ public class Lab2_GrammarAnalysis {
         }
         else if (currentSym.value.equals(";")){}
         else {
+            String varName = currentSym.value;
             getNextSym();
             if (currentSym.value.equals("=")) {
                 rollbackSym();
                 lValAnal();
+                getNextSym();
+                Lab2_Token result = exp();
+                Integer reg = identRegMap.get(varName);
+                Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
+                Lab2_Test.outputStr += "\tstore i32 "+result.output()+", i32* %"+String.valueOf(reg)+"\n";
+                if (!currentSym.value.equals(";")) {System.exit(-1);}
+                getNextSym();
             }
             else {
                 rollbackSym();
