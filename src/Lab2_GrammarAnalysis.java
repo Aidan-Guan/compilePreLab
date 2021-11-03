@@ -168,12 +168,8 @@ public class Lab2_GrammarAnalysis {
             Lab2_Test.outputStr = Lab2_Test.outputStr.trim();
             Lab2_Test.outputStr += "\n";
             Lab2_Test.outputStr += "\t%"+regIndex+" = alloca i32\n";
-            if (result.type.equals("NUMBER")) {
-                Lab2_Test.outputStr += "\tstore i32 " + result.output() + ", i32 %" + String.valueOf(regIndex);
-            }
-            else if (result.type.equals("REG")) {
-                Lab2_Test.outputStr += "\tstore i32 " + result.output() + ", i32* %" + String.valueOf(regIndex);
-            }
+            Lab2_Test.outputStr += "\tstore i32 " + result.output() + ", i32* %" + String.valueOf(regIndex);
+
             identRegMap.put(varName, regIndex);
             regIndex++;
         }
@@ -229,13 +225,14 @@ public class Lab2_GrammarAnalysis {
         Lab2_Token result = constInitValAnal();
         Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
         Lab2_Test.outputStr += "\t%" + String.valueOf(regIndex) + " = alloca i32\n";
+        int varReg = regIndex;
         if (result.type.equals("REG")) {
-            Lab2_Test.outputStr += "\tstore i32 " + result.output() + ", i32* %" + String.valueOf(regIndex) + "\n";
+            regIndex++;
+            Lab2_Test.outputStr += "\t%" + String.valueOf(regIndex) + " = load i32, i32*" + result.output();
         }
-        else if (result.type.equals("NUMBER")) {
-            Lab2_Test.outputStr += "\tstore i32 " + result.output() + ", i32 %" + String.valueOf(regIndex) + "\n";
-        }
-        identRegMap.put(identName, regIndex);
+        Lab2_Test.outputStr += "\tstore i32 %" + String.valueOf(regIndex) + ", i32* %" + String.valueOf(varReg) + "\n";
+
+        identRegMap.put(identName, varReg);
         regIndex ++;
     }
 
@@ -455,12 +452,14 @@ public class Lab2_GrammarAnalysis {
                 Lab2_Token result = exp();
                 Integer reg = identRegMap.get(varName);
                 Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
+
                 if (result.type.equals("REG")) {
-                    Lab2_Test.outputStr += "\tstore i32 " + result.output() + ", i32* %" + String.valueOf(reg) + "\n";
+                    Lab2_Test.outputStr += "\t%"+String.valueOf(regIndex) + " = load i32, i32* "+result.output()+"\n";
+                    regIndex++;
                 }
-                else if (result.type.equals("NUMBER")) {
-                    Lab2_Test.outputStr += "\tstore i32 " + result.output() + ", i32 %" + String.valueOf(reg) + "\n";
-                }
+                Lab2_Test.outputStr += "\tstore i32 %" + String.valueOf(regIndex-1) + ", i32* %" + String.valueOf(reg) + "\n";
+
+
                 if (!currentSym.value.equals(";")) {
                     System.exit(-1);
                 }
