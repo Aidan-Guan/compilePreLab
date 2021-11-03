@@ -295,7 +295,14 @@ public class Lab2_GrammarAnalysis {
                 getNextSym();
                 Lab2_Token result2 = unaryExp();
                 Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
-                Lab2_Test.outputStr += "\t%"+String.valueOf(regIndex) + " = mul i32 "+ result.output() + ", " + result2.output()+"\n";
+                if (result.type.equals("REG")) {
+                    Lab2_Test.outputStr += "\t%" + String.valueOf(regIndex) + " = load i32, i32* " + result.output()+"\n";
+                    regIndex++;
+                    Lab2_Test.outputStr += "\t%" + String.valueOf(regIndex) + " = mul i32 %" + String.valueOf(regIndex-1) + ", " + result2.output() + "\n";
+                }
+                else {
+                    Lab2_Test.outputStr += "\t%" + String.valueOf(regIndex) + " = mul i32 " + result.output() + ", " + result2.output() + "\n";
+                }
                 result.value = String.valueOf(regIndex);
                 regIndex++;
                 getNextSym();
