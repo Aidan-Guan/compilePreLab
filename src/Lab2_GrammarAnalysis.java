@@ -163,6 +163,12 @@ public class Lab2_GrammarAnalysis {
                 identRegMap.put(varName, regIndex);
                 regIndex++;
 
+                Lab2_Test.outputStr = Lab2_Test.outputStr.trim();
+                Lab2_Test.outputStr += "\t%"+regIndex+" = alloca i32\n";
+                Lab2_Test.outputStr += "\tstore i32 %" + String.valueOf(regIndex-1) + ", i32* %" + String.valueOf(regIndex)+"\n";
+                identRegMap.put(varName, regIndex);
+                regIndex++;
+
                 return;
             }
             Lab2_Test.outputStr = Lab2_Test.outputStr.trim();
@@ -280,8 +286,6 @@ public class Lab2_GrammarAnalysis {
                 Lab2_Token result2 = unaryExp();
                 Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
                 if (result.type.equals("REG")) {
-//                    Lab2_Test.outputStr += "\t%" + String.valueOf(regIndex) + " = load i32, i32* " + result.output()+"\n";
-//                    regIndex++;
                     Lab2_Test.outputStr += "\t%" + String.valueOf(regIndex) + " = mul i32 " + result.output() + ", " + result2.output() + "\n";
                 }
                 else {
@@ -304,7 +308,7 @@ public class Lab2_GrammarAnalysis {
                 getNextSym();
                 Lab2_Token result2 = unaryExp();
 
-                Lab2_Test.outputStr += "%"+String.valueOf(regIndex) + " = mod i32 "+ result.output() + ", " + result2.output()+"\n";
+                Lab2_Test.outputStr += "%"+String.valueOf(regIndex) + " = srem i32 "+ result.output() + ", " + result2.output()+"\n";
                 result.value = String.valueOf(regIndex);
                 regIndex++;
                 getNextSym();
@@ -458,10 +462,7 @@ public class Lab2_GrammarAnalysis {
                 Lab2_Token result = exp();
                 Integer reg = identRegMap.get(varName);
                 Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
-//                Lab2_Test.outputStr += "\t%"+String.valueOf(regIndex) + " = load i32, i32* %"+String.valueOf(reg)+"\n";
-//                regIndex++;
                 Lab2_Test.outputStr += "\tstore i32 " + result.output() + ", i32* %" + String.valueOf(reg) + "\n";
-//                regIndex++;
 
 
                 if (!currentSym.value.equals(";")) {
