@@ -377,7 +377,7 @@ public class Lab2_GrammarAnalysis {
                         }
 //                        getNextSym();
                         if (!Lab2_Test.outputStr.contains("declare void putint(i32)")) {
-                            Lab2_Test.outputStr = "declare void putint(i32)\n" + Lab2_Test.outputStr.trim();
+                            Lab2_Test.outputStr = "declare void @putint(i32)\n" + Lab2_Test.outputStr.trim();
                         }
 
                         Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
@@ -397,7 +397,7 @@ public class Lab2_GrammarAnalysis {
                         }
 //                        getNextSym();
                         if (!Lab2_Test.outputStr.contains("declare void putch(i32)")) {
-                            Lab2_Test.outputStr = "declare void putch(i32)\n" + Lab2_Test.outputStr.trim();
+                            Lab2_Test.outputStr = "declare void @putch(i32)\n" + Lab2_Test.outputStr.trim();
                         }
 
                         Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
