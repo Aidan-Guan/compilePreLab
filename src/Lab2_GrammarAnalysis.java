@@ -284,7 +284,7 @@ public class Lab2_GrammarAnalysis {
             else if (currentSym.value.equals("/")) {
                 getNextSym();
                 Lab2_Token result2 = unaryExp();
-
+                Lab2_Test.outputStr = Lab2_Test.outputStr.trim() + "\n";
                 Lab2_Test.outputStr += "\t%"+String.valueOf(regIndex) + " = sdiv i32 "+ result.output() + ", " + result2.output()+"\n";
                 result.value = String.valueOf(regIndex);
                 regIndex++;
