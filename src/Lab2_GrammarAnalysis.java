@@ -173,6 +173,8 @@ public class Lab2_GrammarAnalysis {
             regIndex++;
         }
         else {
+            Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
+            Lab2_Test.outputStr += "\t%"+regIndex+" = alloca i32\n";
             identRegMap.put(varName, regIndex);
             regIndex++;
         }
@@ -273,8 +275,8 @@ public class Lab2_GrammarAnalysis {
             if (currentSym.value.equals("*")) {
                 getNextSym();
                 Lab2_Token result2 = unaryExp();
-
-                Lab2_Test.outputStr += "%"+String.valueOf(regIndex) + " = mul i32 "+ result.output() + ", " + result2.output()+"\n";
+                Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
+                Lab2_Test.outputStr += "\t%"+String.valueOf(regIndex) + " = mul i32 "+ result.output() + ", " + result2.output()+"\n";
                 result.value = String.valueOf(regIndex);
                 regIndex++;
                 getNextSym();
