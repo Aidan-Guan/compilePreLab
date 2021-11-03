@@ -85,16 +85,18 @@ public class Lab2_GrammarAnalysis {
         }
         Lab2_Test.outputStr += "{";
 
-        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
-
-        stmtAnal();
+        getNextSym();
+        while (true) {
+            if (!(currentSym.value.equals("return")||currentSym.value.equals("int")||currentSym.value.equals("const")||currentSym.type.equals("IDENT"))){break;}
+            blockItemAnal();
+        }
 
         if (currentSym == null || !currentSym.value.equals("}")) {
             System.exit(1);
         }
         Lab2_Test.outputStr += "}";
 
-        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+        getNextSym();
         if (currentSym != null) {
             System.exit(2);
         }
