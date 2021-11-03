@@ -7,6 +7,8 @@ public class Lab2_GrammarAnalysis {
     static Lab2_Token lastSym;
     static Lab2_Token currentSym;
     static Lab2_Token futureSym;
+    String process = "";
+    int regIndex = 0;
 
 
     static {
@@ -112,7 +114,6 @@ public class Lab2_GrammarAnalysis {
     }
 
 
-
     private static void declAnal() throws IOException {
         if (currentSym.value.equals("const")) {
             constDeclAnal();
@@ -190,9 +191,6 @@ public class Lab2_GrammarAnalysis {
         addExpAnal();
     }
 
-    /**
-     * 处理stmt文法
-     */
     private static void stmtAnal() throws IOException {
         if (currentSym.value.equals("return")) {
             getNextSym();
@@ -224,7 +222,6 @@ public class Lab2_GrammarAnalysis {
         return expResult;
     }
 
-
     private static int addExpAnal() throws IOException {
         int addResult = 0;
         addResult = mulExpAnal();
@@ -234,6 +231,7 @@ public class Lab2_GrammarAnalysis {
                 Lab2_Test.outputStr += "+";
                 currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
                 addResult += mulExpAnal();
+
             }
             else if (currentSym.value.equals("-")) {
                 Lab2_Test.outputStr += "-";
@@ -246,7 +244,6 @@ public class Lab2_GrammarAnalysis {
         }
         return addResult;
     }
-
 
     private static int mulExpAnal() throws IOException {
         int mulResult = unaryExpAnal();
