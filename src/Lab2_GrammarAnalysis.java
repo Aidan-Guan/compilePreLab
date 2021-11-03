@@ -402,7 +402,7 @@ public class Lab2_GrammarAnalysis {
                         }
 
                         Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
-                        Lab2_Test.outputStr += "\tcall void @putint("+result.output()+")\n";
+                        Lab2_Test.outputStr += "\tcall void @putint(i32 "+result.output()+")\n";
                         return new Lab2_Token("FUNC", "putint");
 
                     }
@@ -422,7 +422,7 @@ public class Lab2_GrammarAnalysis {
                         }
 
                         Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
-                        Lab2_Test.outputStr += "\tcall void @putch("+result.output()+")\n";
+                        Lab2_Test.outputStr += "\tcall void @putch(i32 "+result.output()+")\n";
                         return new Lab2_Token("FUNC", "putch");
                     }
                 }
