@@ -155,6 +155,10 @@ public class Lab2_GrammarAnalysis {
         if (currentSym.value.equals("=")) {
             getNextSym();
             Lab2_Token result = initValAnal();
+            if (result.type.equals("FUNC")) {
+//                getNextSym();
+                return;
+            }
             Lab2_Test.outputStr = Lab2_Test.outputStr.trim();
             Lab2_Test.outputStr += "\n";
             Lab2_Test.outputStr += "\t%"+regIndex+" = alloca i32\n";
@@ -295,7 +299,9 @@ public class Lab2_GrammarAnalysis {
         if (currentSym.value.equals("-")) {
             getNextSym();
             Lab2_Token result = unaryExp();
-
+            if (result.type.equals("FUNC")) {
+                return result;
+            }
             Lab2_Test.outputStr += "%" + regIndex + " = sub i32 0, " + result.output()+"\n";
 
             result =  new Lab2_Token("REG", String.valueOf(regIndex));
@@ -318,11 +324,81 @@ public class Lab2_GrammarAnalysis {
             return currentSym;
         }
         else if (currentSym.type.equals("IDENT")) {
-            Integer identIndex = identRegMap.get(currentSym.value);
-            if (identIndex == null) {
-//                System.exit(-1);
+            getNextSym();
+            if (currentSym.value.equals("(")) { // 库函数调用
+                rollbackSym();
+                switch (currentSym.value) {
+                    case "getint" -> {
+                        getNextSym();
+                        if (!currentSym.value.equals("(")) {
+                            System.exit(-1);
+                        }
+                        getNextSym();
+                        if (!currentSym.value.equals(")")) {
+                            System.exit(-1);
+                        }
+//                        getNextSym();
+                        Lab2_Test.outputStr = "declare i32 @getint()\n"+Lab2_Test.outputStr.trim();
+                        return new Lab2_Token("FUNC", "getint");
+                    }
+                    case "getch" -> {
+                        getNextSym();
+                        if (!currentSym.value.equals("(")) {
+                            System.exit(-1);
+                        }
+                        getNextSym();
+                        if (!currentSym.value.equals(")")) {
+                            System.exit(-1);
+                        }
+//                        getNextSym();
+                        Lab2_Test.outputStr = "declare i32 @getch()\n"+Lab2_Test.outputStr.trim();
+                        return new Lab2_Token("FUNC", "getch");
+                    }
+                    case "putint" -> {
+                        getNextSym();
+                        if (!currentSym.value.equals("(")) {
+                            System.exit(-1);
+                        }
+                        getNextSym();
+                        Lab2_Token result = exp();
+                        if (!currentSym.value.equals(")")) {
+                            System.exit(-1);
+                        }
+//                        getNextSym();
+                        Lab2_Test.outputStr = "declare void putint(i32)\n"+Lab2_Test.outputStr.trim();
+
+                        Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
+                        Lab2_Test.outputStr += "\tcall void @putint("+result.output()+")\n";
+                        return new Lab2_Token("FUNC", "putint");
+
+                    }
+                    case "putch" -> {
+                        getNextSym();
+                        if (!currentSym.value.equals("(")) {
+                            System.exit(-1);
+                        }
+                        getNextSym();
+                        Lab2_Token result = exp();
+                        if (!currentSym.value.equals(")")) {
+                            System.exit(-1);
+                        }
+//                        getNextSym();
+                        Lab2_Test.outputStr = "declare void putch(i32)\n"+Lab2_Test.outputStr.trim();
+
+                        Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
+                        Lab2_Test.outputStr += "\tcall void @putch("+result.output()+")\n";
+                        return new Lab2_Token("FUNC", "putch");
+                    }
+                }
             }
-            return new Lab2_Token("REG", String.valueOf(identIndex));
+            else {
+                rollbackSym();
+                Integer identIndex = identRegMap.get(currentSym.value);
+                if (identIndex == null) {
+//                System.exit(-1);
+                }
+                return new Lab2_Token("REG", String.valueOf(identIndex));
+            }
         }
         else {
 //           System.exit(-1);
