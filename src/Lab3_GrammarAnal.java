@@ -18,13 +18,11 @@ public class Lab3_GrammarAnal {
 
     public static void Decl() throws IOException {
         if (currentSym.value.equals("const")) {
-            Lab3_Test.allTokens.add(currentSym);
-            currentSym = Lab3_LexicalAnal.getNextToken();
+            getNextToken();
             ConstDecl();
         }
         else if (currentSym.value.equals("int")) {
-            Lab3_Test.allTokens.add(currentSym);
-            currentSym = Lab3_LexicalAnal.getNextToken();
+            getNextToken();
             VarDecl();
         }
         else {System.exit(4);}
@@ -60,16 +58,43 @@ public class Lab3_GrammarAnal {
         currentSym = Lab3_LexicalAnal.getNextToken();
     }
 
-    public static void ConstDef() {
+    // FINISHED
+    public static void ConstDef() throws IOException {
+        Ident();
+        if (!currentSym.equals("=")) {
+            System.exit(6);
+        }
+        Lab3_Test.allTokens.add(currentSym);
+        currentSym = Lab3_LexicalAnal.getNextToken();
 
+        ConstInitVal();
     }
 
+    // FINISHED
+    public static void ConstInitVal() {
+        ConstExp();
+    }
+
+    // FINISHED
     public static void ConstExp() {
-
+        AddExp();
     }
 
-    public static void VarDecl() {
+    // FINISHED
+    public static void VarDecl() throws IOException {
+        Btype();
+        VarDef();
 
+        while (true) {
+            if (!currentSym.value.equals(",")) { break; }
+            Lab3_Test.allTokens.add(currentSym);
+            currentSym = Lab3_LexicalAnal.getNextToken();
+            VarDef();
+        }
+
+        if (!currentSym.value.equals(";")) {System.exit(5);}
+        Lab3_Test.allTokens.add(currentSym);
+        currentSym = Lab3_LexicalAnal.getNextToken();
     }
 
     /**
@@ -123,24 +148,50 @@ public class Lab3_GrammarAnal {
         currentSym = Lab3_LexicalAnal.getNextToken();
     }
 
-    public static void Block() {
-
+    // FINISHED
+    public static void Block() throws IOException {
+        if (!currentSym.value.equals("{")) {System.exit(2);}
+        getNextToken();
+        while (true) {
+            if (!(currentSym.value.equals("const") || currentSym.value.equals("int") || currentSym.type.equals("IDENT"))) {
+                break;
+            }
+            BlockItem();
+        }
+        if (!currentSym.value.equals("}")) {System.exit(2);}
+        getNextToken();
     }
 
-    public static void BlockItem() {
-
+    public static void BlockItem() throws IOException {
+        if (currentSym.type.equals("IDENT")) {
+            Stmt();
+        }
+        else if (currentSym.value.equals("const") || currentSym.value.equals("int")) {
+            Decl();
+        }
+        else {
+            System.exit(3);
+        }
     }
 
-    public static void Stmt() {
-
+    //TODO: 确定中括号是啥意思
+    public static void Stmt() throws IOException {
+        LVal();
+        if (!currentSym.value.equals("=")) {System.exit(6);}
+        getNextToken();
+        Exp();
+        if (!currentSym.value.equals(";")) {System.exit(6);}
+        getNextToken();
     }
 
+    // FINISHED
     public static void Exp() {
-
+        AddExp();
     }
 
-    public static void LVal() {
-
+    // FINISHED
+    public static void LVal() throws IOException {
+        Ident();
     }
 
     public static void PrimaryExp() {
@@ -167,8 +218,14 @@ public class Lab3_GrammarAnal {
 
     }
 
-    public static void Ident() {
+    public static void Ident() throws IOException {
+        if (!currentSym.type.equals("IDENT")) {System.exit(3);}
+        getNextToken();
+    }
 
+    private static void getNextToken() throws IOException {
+        Lab3_Test.allTokens.add(currentSym);
+        currentSym = Lab3_LexicalAnal.getNextToken();
     }
 }
 
@@ -179,4 +236,5 @@ public class Lab3_GrammarAnal {
  * 3    数据类型错误
  * 4    Decl错误
  * 5    分号错误
+ * 6    符号错误
  */
