@@ -42,8 +42,7 @@ public class Lab3_GrammarAnal {
         if (!currentSym.value.equals(";")) {
             System.exit(5);
         }
-        Lab3_Test.allTokens.add(currentSym);
-        currentSym = Lab3_LexicalAnal.getNextToken();
+        getNextToken();
     }
 
     /**
@@ -210,12 +209,20 @@ public class Lab3_GrammarAnal {
 
     }
 
-    public static void FuncRParams() {
-
+    // FINISHED
+    public static void FuncRParams() throws IOException {
+        Exp();
+        while (true) {
+            if (!currentSym.value.equals(",")) {break;}
+            getNextToken();
+            Exp();
+        }
     }
 
-    public static void UnaryOp() {
-
+    // FINISHED
+    public static void UnaryOp() throws IOException {
+        if (!(currentSym.value.equals("+") || currentSym.value.equals("-"))) {System.exit(6);}
+        getNextToken();
     }
 
     public static void Ident() throws IOException {
