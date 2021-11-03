@@ -163,7 +163,7 @@ public class Lab2_GrammarAnalysis {
                 identRegMap.put(varName, regIndex);
                 regIndex++;
 
-                Lab2_Test.outputStr = Lab2_Test.outputStr.trim();
+                Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
                 Lab2_Test.outputStr += "\t%"+regIndex+" = alloca i32\n";
                 Lab2_Test.outputStr += "\tstore i32 %" + String.valueOf(regIndex-1) + ", i32* %" + String.valueOf(regIndex)+"\n";
                 identRegMap.put(varName, regIndex);
@@ -460,10 +460,19 @@ public class Lab2_GrammarAnalysis {
                 lValAnal();
                 getNextSym();
                 Lab2_Token result = exp();
-                Integer reg = identRegMap.get(varName);
-                Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
-                Lab2_Test.outputStr += "\tstore i32 " + result.output() + ", i32* %" + String.valueOf(reg) + "\n";
-
+                if (!result.type.equals("FUNC")) {
+                    Integer reg = identRegMap.get(varName);
+                    Lab2_Test.outputStr = Lab2_Test.outputStr.trim() + "\n";
+                    Lab2_Test.outputStr += "\tstore i32 " + result.output() + ", i32* %" + String.valueOf(reg) + "\n";
+                }
+                else {
+                    Lab2_Test.outputStr = Lab2_Test.outputStr.trim() + "\n";
+                    Lab2_Test.outputStr += "\t%"+regIndex+ " = call " + result.output() + "\n";
+                    regIndex++;
+                    Integer reg = identRegMap.get(varName);
+                    Lab2_Test.outputStr = Lab2_Test.outputStr.trim() + "\n";
+                    Lab2_Test.outputStr += "\tstore i32 %" + String.valueOf(regIndex-1) + ", i32* %" + String.valueOf(reg) + "\n";
+                }
 
                 if (!currentSym.value.equals(";")) {
                     System.exit(-1);

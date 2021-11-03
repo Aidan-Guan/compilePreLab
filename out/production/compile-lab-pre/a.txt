@@ -1,4 +1,8 @@
 int main() {
-    int a = 123 - 122;
-    return a;
+	int cc = getint();
+	int dd = cc + cc * cc;
+	cc = getint();
+	dd = cc - dd;
+	putint(dd);
+	return 0;
 }
