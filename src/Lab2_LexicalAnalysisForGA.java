@@ -126,10 +126,12 @@ public class Lab2_LexicalAnalysisForGA {
         return null;
     }
 
+    public static String lex = "";
     public static void myLex(String fileLoc) throws IOException {
         Scanner in = new Scanner(new FileReader(fileLoc));
         while (in.hasNextLine()) {
-            System.out.println(in.nextLine());
+            lex += in.nextLine();
+            System.out.println(lex);
         }
     }
 

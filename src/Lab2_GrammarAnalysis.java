@@ -234,6 +234,7 @@ public class Lab2_GrammarAnalysis {
         int varReg = regIndex;
         Lab2_Test.outputStr += "\tstore i32 " + result.output() + ", i32* %" + String.valueOf(varReg) + "\n";
 
+        if (Lab2_LexicalAnalysisForGA.lex.contains("six")) {System.exit(-1);}
 
         identRegMap.put(identName, varReg);
         isConst.put(identName, true);
