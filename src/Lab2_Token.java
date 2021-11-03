@@ -12,6 +12,14 @@ public class Lab2_Token {
         this.value = value;
     }
 
+    public String output() {
+        if (this.type.equals("NUMBER"))
+            return this.value;
+        else if (this.type.equals("REG"))
+            return "%"+this.value;
+        return null;
+    }
+
     @Override
     public String toString() {
         return "Token{" + "\ttype:" + type + "\tvalue:" + value + "}";
