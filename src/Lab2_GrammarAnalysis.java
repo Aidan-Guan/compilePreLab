@@ -12,6 +12,7 @@ public class Lab2_GrammarAnalysis {
     static String process = "";
     static int regIndex = 1;
     static HashMap<String, Integer> identRegMap = new HashMap<>();
+    static HashMap<String, Boolean> isConst = new HashMap<>();
 
 
     static {
@@ -235,6 +236,7 @@ public class Lab2_GrammarAnalysis {
 
 
         identRegMap.put(identName, varReg);
+        isConst.put(identName, true);
         regIndex ++;
     }
 
@@ -425,6 +427,9 @@ public class Lab2_GrammarAnalysis {
             else {
                 rollbackSym();
                 Integer identIndex = identRegMap.get(currentSym.value);
+                if (isConst.get(currentSym.value)!=null) {
+                    System.exit(-1);
+                }
                 if (identIndex == null) {
                     System.exit(-1);
                 }
@@ -462,6 +467,9 @@ public class Lab2_GrammarAnalysis {
                 Lab2_Token result = exp();
                 if (!result.type.equals("FUNC")) {
                     Integer reg = identRegMap.get(varName);
+                    if (isConst.get(varName)!=null) {
+                        System.exit(-1);
+                    }
                     Lab2_Test.outputStr = Lab2_Test.outputStr.trim() + "\n";
                     Lab2_Test.outputStr += "\tstore i32 " + result.output() + ", i32* %" + String.valueOf(reg) + "\n";
                 }
