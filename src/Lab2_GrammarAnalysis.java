@@ -98,6 +98,89 @@ public class Lab2_GrammarAnalysis {
         }
     }
 
+    private static void blockItemAnal() throws IOException {
+        if (currentSym.value.equals("int") || currentSym.value.equals("const")) {
+            declAnal();
+        }
+    }
+
+    private static void declAnal() throws IOException {
+        if (currentSym.value.equals("const")) {
+            constDeclAnal();
+        }
+        else if (currentSym.value.equals("int")) {
+            varDeclAnal();
+        }
+        else { System.exit(-1); }
+    }
+
+    private static void varDeclAnal() throws IOException {
+        if (!currentSym.value.equals("int")) {System.exit(-1);}
+        getNextSym();
+        varDefAnal();
+
+        while (true) {
+            if (!currentSym.value.equals(",")) { break;}
+            varDefAnal();
+        }
+        getNextSym();
+        if (!currentSym.value.equals(";")) { System.exit(-1);}
+        getNextSym();
+    }
+
+    private static void varDefAnal() throws IOException {
+        if (!currentSym.type.equals("IDENT")) {System.exit(-1);}
+        getNextSym();
+        if (currentSym.value.equals("=")) {
+            getNextSym();
+            initValAnal();
+        }
+    }
+
+    private static void initValAnal() throws IOException {
+        expAnal();
+    }
+
+    private static void constDeclAnal() throws IOException {
+        if (!currentSym.value.equals("const")) { System.exit(-1); }
+        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+        bTypeAnal();
+        constDefAnal();
+
+        while (true) {
+            if (!currentSym.value.equals(",")) {break;}
+            constDefAnal();
+        }
+        getNextSym();
+        if (!currentSym.value.equals(";")) {System.exit(-1);}
+        getNextSym();
+    }
+
+    private static void bTypeAnal() throws IOException {
+        if (!currentSym.value.equals("int")) { System.exit(-1); }
+        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+    }
+
+    private static void constDefAnal() throws IOException{
+        if (!currentSym.type.equals("IDENT")) {
+            System.exit(-1);
+        }
+        getNextSym();
+        if (!currentSym.value.equals("=")) {
+            System.exit(-1);
+        }
+        getNextSym();
+        constInitValAnal();
+    }
+
+    private static void constInitValAnal() throws IOException {
+        constExpAnal();
+    }
+
+    private static void constExpAnal() throws IOException {
+        addExpAnal();
+    }
+
     /**
      * 处理stmt文法
      */
@@ -145,23 +228,7 @@ public class Lab2_GrammarAnalysis {
             }
         }
         return addResult;
-//        mulExpAnal();
-//        //TODO: 确保有新的读入
-//        addExp2Anal();
     }
-
-
-//    private static void addExp2Anal() throws IOException {
-//        if (currentSym == null) {return;}
-//
-//        if (currentSym.value.equals("+") || currentSym.value.equals("-")) {
-//            Lab2_Test.outputStr += currentSym.value;
-//            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
-//
-//            mulExpAnal();
-//            addExp2Anal();
-//        }
-//    }
 
 
     private static int mulExpAnal() throws IOException {
@@ -245,6 +312,10 @@ public class Lab2_GrammarAnalysis {
             System.exit(20);
         }
         return numberResult;
+    }
+
+    private static void getNextSym() throws IOException {
+        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
     }
 
 //    private static void mulExp2Anal() throws IOException {
