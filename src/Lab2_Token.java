@@ -14,9 +14,9 @@ public class Lab2_Token {
 
     public String output() {
         if (this.type.equals("NUMBER"))
-            return this.value;
+            return this.value.trim();
         else if (this.type.equals("REG"))
-            return "%"+this.value;
+            return "%"+this.value.trim();
         return null;
     }
 

@@ -147,8 +147,10 @@ public class Lab2_GrammarAnalysis {
         if (currentSym.value.equals("=")) {
             getNextSym();
             Lab2_Token result = initValAnal();
-            Lab2_Test.outputStr += "%"+regIndex+" = alloca i32\n";
-            Lab2_Test.outputStr += "store i32 %"+result.value+", i32* %"+String.valueOf(regIndex)+"\n";
+            Lab2_Test.outputStr = Lab2_Test.outputStr.trim();
+            Lab2_Test.outputStr += "\n";
+            Lab2_Test.outputStr += "\t%"+regIndex+" = alloca i32\n";
+            Lab2_Test.outputStr += "\tstore i32 %"+result.value+", i32* %"+String.valueOf(regIndex);
             identRegMap.put(varName, regIndex);
             regIndex++;
         }
@@ -190,7 +192,7 @@ public class Lab2_GrammarAnalysis {
         getNextSym();
         Lab2_Token result = constInitValAnal();
 
-        Lab2_Test.outputStr += "%" + String.valueOf(regIndex) + " = alloca i32\n";
+        Lab2_Test.outputStr += "\t%" + String.valueOf(regIndex) + " = alloca i32\n";
         Lab2_Test.outputStr += "store i32 %" + result.value + ", i32* %" + String.valueOf(regIndex) + "\n";
         identRegMap.put(identName, regIndex);
         regIndex ++;
@@ -223,8 +225,8 @@ public class Lab2_GrammarAnalysis {
             else if (currentSym.value.equals("-")) {
                 getNextSym();
                 Lab2_Token result2 = mulExpAnal();
-
-                Lab2_Test.outputStr += "%"+String.valueOf(regIndex) + " = sub i32 "+ result.output() + ", "+ result2.output()+"\n";
+                Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
+                Lab2_Test.outputStr += "\t%"+String.valueOf(regIndex) + " = sub i32 "+ result.output() + ", "+ result2.output()+"\n";
                 result.value = String.valueOf(regIndex);
                 regIndex++;
             }
@@ -307,7 +309,8 @@ public class Lab2_GrammarAnalysis {
             getNextSym();
             Lab2_Token result = exp();
             if (!currentSym.value.equals(";")) {System.exit(-1);}
-            Lab2_Test.outputStr += "ret i32 "+result.output()+"\n";
+            Lab2_Test.outputStr = Lab2_Test.outputStr.trim() + "\n";
+            Lab2_Test.outputStr += "\tret i32 "+result.output();
             getNextSym();
         }
         else if (currentSym.value.equals(";")){}
