@@ -17,6 +17,12 @@ public class Lab2_Token {
             return this.value.trim();
         else if (this.type.equals("REG"))
             return "%"+this.value.trim();
+        else if (this.type.equals("FUNC")) {
+            switch (this.value) {
+                case "getint" -> {return "i32 @getint()";}
+                case "getch" -> {return "i32 @getch()";}
+            }
+        }
         return null;
     }
 

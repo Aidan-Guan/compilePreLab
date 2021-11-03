@@ -37,7 +37,7 @@ public class Lab2_GrammarAnalysis {
 
         // 出现错误，退出
         if (currentSym == null || !currentSym.value.equals("(")) {
-//            System.exit(-1);
+            System.exit(-1);
         }
         // 处理(的输出
         Lab2_Test.outputStr += "(";
@@ -45,7 +45,7 @@ public class Lab2_GrammarAnalysis {
 
         getNextSym();
         if (currentSym == null || !currentSym.value.equals(")")) {
-//            System.exit(-1);
+            System.exit(-1);
         }
         Lab2_Test.outputStr += ")";
 
@@ -59,7 +59,7 @@ public class Lab2_GrammarAnalysis {
      */
     private static void funcTypeAnal() throws IOException {
         if (currentSym == null || !currentSym.value.equals("int")) {
-//            System.exit(-1);
+            System.exit(-1);
         }
         Lab2_Test.outputStr += "define dso_local i32";
 
@@ -71,7 +71,7 @@ public class Lab2_GrammarAnalysis {
      */
     private static void identAnal() throws IOException {
         if (currentSym == null || !currentSym.value.equals("main")) {
-//            System.exit(-1);
+            System.exit(-1);
         }
 
         //对于main的输出
@@ -84,7 +84,7 @@ public class Lab2_GrammarAnalysis {
      */
     private static void blockAnal() throws IOException {
         if (currentSym == null || !currentSym.value.equals("{")) {
-//            System.exit(1);
+            System.exit(1);
         }
         Lab2_Test.outputStr += "{";
 
@@ -95,13 +95,13 @@ public class Lab2_GrammarAnalysis {
         }
 
         if (currentSym == null || !currentSym.value.equals("}")) {
-//            System.exit(1);
+            System.exit(1);
         }
         Lab2_Test.outputStr += "}";
 
         getNextSym();
         if (currentSym != null) {
-//            System.exit(2);
+            System.exit(2);
         }
     }
 
@@ -122,12 +122,12 @@ public class Lab2_GrammarAnalysis {
         else if (currentSym.value.equals("int")) {
             varDeclAnal();
         }
-//        else { System.exit(-1); }
+        else { System.exit(-1); }
     }
 
     private static void varDeclAnal() throws IOException {
         if (!currentSym.value.equals("int")) {
-//            System.exit(-1);
+            System.exit(-1);
         }
         getNextSym();
         varDefAnal();
@@ -138,7 +138,7 @@ public class Lab2_GrammarAnalysis {
         }
 //        getNextSym();
         if (!currentSym.value.equals(";")) {
-//            System.exit(-1);
+            System.exit(-1);
         }
         getNextSym();
     }
@@ -147,7 +147,7 @@ public class Lab2_GrammarAnalysis {
         if (currentSym.value.equals(","))
             getNextSym();
         if (!currentSym.type.equals("IDENT")) {
-//            System.exit(-1);
+            System.exit(-1);
         }
 
         String varName = currentSym.value;
@@ -157,6 +157,12 @@ public class Lab2_GrammarAnalysis {
             Lab2_Token result = initValAnal();
             if (result.type.equals("FUNC")) {
 //                getNextSym();
+                Lab2_Test.outputStr = Lab2_Test.outputStr.trim();
+                Lab2_Test.outputStr += "\n";
+                Lab2_Test.outputStr += "\t%"+regIndex+" = call "+result.output()+"\n";
+                identRegMap.put(varName, regIndex);
+                regIndex++;
+
                 return;
             }
             Lab2_Test.outputStr = Lab2_Test.outputStr.trim();
@@ -179,7 +185,7 @@ public class Lab2_GrammarAnalysis {
 
     private static void constDeclAnal() throws IOException {
         if (!currentSym.value.equals("const")) {
-//            System.exit(-1);
+            System.exit(-1);
         }
         getNextSym();
         bTypeAnal();
@@ -191,26 +197,26 @@ public class Lab2_GrammarAnalysis {
         }
 //        getNextSym();
         if (!currentSym.value.equals(";")) {
-//            System.exit(-1);
+            System.exit(-1);
         }
         getNextSym();
     }
 
     private static void bTypeAnal() throws IOException {
         if (!currentSym.value.equals("int")) {
-//            System.exit(-1);
+            System.exit(-1);
         }
         currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
     }
 
     private static void constDefAnal() throws IOException{
         if (!currentSym.type.equals("IDENT")) {
-//            System.exit(-1);
+            System.exit(-1);
         }
         String identName = currentSym.value;
         getNextSym();
         if (!currentSym.value.equals("=")) {
-//            System.exit(-1);
+            System.exit(-1);
         }
         getNextSym();
         Lab2_Token result = constInitValAnal();
@@ -251,6 +257,7 @@ public class Lab2_GrammarAnalysis {
                 Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
                 Lab2_Test.outputStr += "\t%"+String.valueOf(regIndex) + " = sub i32 "+ result.output() + ", "+ result2.output()+"\n";
                 result.value = String.valueOf(regIndex);
+                result.type = "REG";
                 regIndex++;
             }
             else { break; }
@@ -316,7 +323,7 @@ public class Lab2_GrammarAnalysis {
             getNextSym();
             Lab2_Token result = exp();
             if (!currentSym.value.equals(")")) {
-//                System.exit(-1);
+                System.exit(-1);
             }
             return result;
         }
@@ -338,7 +345,9 @@ public class Lab2_GrammarAnalysis {
                             System.exit(-1);
                         }
 //                        getNextSym();
-                        Lab2_Test.outputStr = "declare i32 @getint()\n"+Lab2_Test.outputStr.trim();
+                        if (!Lab2_Test.outputStr.contains("declare i32 @getint()")) {
+                            Lab2_Test.outputStr = "declare i32 @getint()\n" + Lab2_Test.outputStr.trim();
+                        }
                         return new Lab2_Token("FUNC", "getint");
                     }
                     case "getch" -> {
@@ -351,7 +360,9 @@ public class Lab2_GrammarAnalysis {
                             System.exit(-1);
                         }
 //                        getNextSym();
-                        Lab2_Test.outputStr = "declare i32 @getch()\n"+Lab2_Test.outputStr.trim();
+                        if (!Lab2_Test.outputStr.contains("declare i32 @getch()")) {
+                            Lab2_Test.outputStr = "declare i32 @getch()\n" + Lab2_Test.outputStr.trim();
+                        }
                         return new Lab2_Token("FUNC", "getch");
                     }
                     case "putint" -> {
@@ -365,7 +376,9 @@ public class Lab2_GrammarAnalysis {
                             System.exit(-1);
                         }
 //                        getNextSym();
-                        Lab2_Test.outputStr = "declare void putint(i32)\n"+Lab2_Test.outputStr.trim();
+                        if (!Lab2_Test.outputStr.contains("declare void putint(i32)")) {
+                            Lab2_Test.outputStr = "declare void putint(i32)\n" + Lab2_Test.outputStr.trim();
+                        }
 
                         Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
                         Lab2_Test.outputStr += "\tcall void @putint("+result.output()+")\n";
@@ -383,7 +396,9 @@ public class Lab2_GrammarAnalysis {
                             System.exit(-1);
                         }
 //                        getNextSym();
-                        Lab2_Test.outputStr = "declare void putch(i32)\n"+Lab2_Test.outputStr.trim();
+                        if (!Lab2_Test.outputStr.contains("declare void putch(i32)")) {
+                            Lab2_Test.outputStr = "declare void putch(i32)\n" + Lab2_Test.outputStr.trim();
+                        }
 
                         Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
                         Lab2_Test.outputStr += "\tcall void @putch("+result.output()+")\n";
@@ -395,13 +410,13 @@ public class Lab2_GrammarAnalysis {
                 rollbackSym();
                 Integer identIndex = identRegMap.get(currentSym.value);
                 if (identIndex == null) {
-//                System.exit(-1);
+                System.exit(-1);
                 }
                 return new Lab2_Token("REG", String.valueOf(identIndex));
             }
         }
         else {
-//           System.exit(-1);
+           System.exit(-1);
         }
         return null;
     }
@@ -411,7 +426,7 @@ public class Lab2_GrammarAnalysis {
             getNextSym();
             Lab2_Token result = exp();
             if (!currentSym.value.equals(";")) {
-//                System.exit(-1);
+                System.exit(-1);
             }
             Lab2_Test.outputStr = Lab2_Test.outputStr.trim() + "\n";
             Lab2_Test.outputStr += "\tret i32 "+result.output();
@@ -430,20 +445,21 @@ public class Lab2_GrammarAnalysis {
                 Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
                 Lab2_Test.outputStr += "\tstore i32 "+result.output()+", i32* %"+String.valueOf(reg)+"\n";
                 if (!currentSym.value.equals(";")) {
-//                    System.exit(-1);
+                    System.exit(-1);
                 }
                 getNextSym();
             }
             else {
                 rollbackSym();
                 exp();
+                getNextSym();
             }
         }
     }
 
     private static void lValAnal() throws IOException {
         if (!currentSym.type.equals("IDENT")) {
-//            System.exit(-1);
+            System.exit(-1);
         }
         getNextSym();
     }
@@ -456,7 +472,7 @@ public class Lab2_GrammarAnalysis {
             currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
         }
         else {
-//            System.exit(20);
+            System.exit(20);
         }
         return numberResult;
     }
