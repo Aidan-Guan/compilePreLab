@@ -17,6 +17,7 @@ public class Lab2_Test {
 
         in = new PushbackReader(new FileReader(fileLoc));
         Lab2_LexicalAnalysisForGA.getTokenInit(in);
+        Lab2_LexicalAnalysisForGA.myLex(fileLoc);
 
         Lab2_GrammarAnalysis.compUnitAnal();
 

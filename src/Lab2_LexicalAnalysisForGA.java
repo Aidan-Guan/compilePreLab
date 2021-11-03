@@ -1,3 +1,4 @@
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.util.*;
@@ -98,6 +99,8 @@ public class Lab2_LexicalAnalysisForGA {
             }
         }
         else {
+//            System.out.print(tokenChar);
+
             switch (tokenChar) {
                 case ';' -> { return new Lab2_Token("SIGN", ";"); }
                 case '(' -> { return new Lab2_Token("SIGN", "("); }
@@ -119,6 +122,13 @@ public class Lab2_LexicalAnalysisForGA {
         }
 
         return null;
+    }
+
+    public static void myLex(String fileLoc) throws IOException {
+        Scanner in = new Scanner(new FileReader(fileLoc));
+        while (in.hasNextLine()) {
+            System.out.println(in.nextLine());
+        }
     }
 
     private static boolean commentAnal() throws IOException {
