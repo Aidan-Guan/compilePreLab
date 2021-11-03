@@ -26,7 +26,7 @@ public class Lab2_Test {
         fileWriter.flush();
         fileWriter.close();
 
-        System.out.print(outputStr.trim());
+//        System.out.print(outputStr.trim());
     }
 }
 
