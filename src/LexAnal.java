@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.PushbackReader;
 import java.util.*;
 
-public class Lab2_LexicalAnalysisForGA {
+public class LexAnal {
     static char tokenChar;
     static String tokenStr;
 
@@ -17,7 +17,7 @@ public class Lab2_LexicalAnalysisForGA {
         tokenTable.put("return", "return");
     }
 
-    public static Lab2_Token getNextToken () throws IOException {
+    public static Token getNextToken () throws IOException {
         tokenChar = (char) in.read();
         tokenStr = "";
 
@@ -27,7 +27,7 @@ public class Lab2_LexicalAnalysisForGA {
 //            System.out.print(tokenChar);
             flag = 1;
 
-            Lab2_Test.outputStr += String.valueOf(tokenChar);
+            Test.outputStr += String.valueOf(tokenChar);
             tokenChar = (char) in.read();
         }
 
@@ -42,9 +42,9 @@ public class Lab2_LexicalAnalysisForGA {
             in.unread(tokenChar);
 
             if (tokenTable.containsKey(tokenStr))
-                return new Lab2_Token("RESERVED", tokenTable.get(tokenStr));
+                return new Token("RESERVED", tokenTable.get(tokenStr));
             else
-                return new Lab2_Token("IDENT", tokenStr);
+                return new Token("IDENT", tokenStr);
         }
         else if (Character.isDigit(tokenChar)) {
             if (tokenChar != '0') { // 一定是十进制 非 0
@@ -55,7 +55,7 @@ public class Lab2_LexicalAnalysisForGA {
                     tokenChar = (char) in.read();
                 }
                 in.unread(tokenChar);
-                return new Lab2_Token("NUMBER", tokenStr);
+                return new Token("NUMBER", tokenStr);
             }
             else {
                 tokenChar = (char) in.read();
@@ -64,7 +64,7 @@ public class Lab2_LexicalAnalysisForGA {
                 // 单纯为0的情况
                 if (!Character.isDigit(tokenChar) && tokenChar!='x' && tokenChar!='X') {
                     in.unread(tokenChar);
-                    return new Lab2_Token("NUMBER", "0");
+                    return new Token("NUMBER", "0");
                 }
                 // 16进制
                 else if (tokenChar == 'x' || tokenChar == 'X') {
@@ -79,7 +79,7 @@ public class Lab2_LexicalAnalysisForGA {
                     in.unread(tokenChar);
 
                     try {
-                        return new Lab2_Token("NUMBER", String.valueOf(Integer.parseInt(tokenStr, 16)));
+                        return new Token("NUMBER", String.valueOf(Integer.parseInt(tokenStr, 16)));
                     }
                     catch (Exception e) {
                         System.exit(1);
@@ -94,7 +94,7 @@ public class Lab2_LexicalAnalysisForGA {
                         tokenChar = (char) in.read();
                     }
                     in.unread(tokenChar);
-                    return new Lab2_Token("NUMBER", String.valueOf(Integer.parseInt(tokenStr,8)));
+                    return new Token("NUMBER", String.valueOf(Integer.parseInt(tokenStr,8)));
                 }
             }
         }
@@ -102,22 +102,22 @@ public class Lab2_LexicalAnalysisForGA {
 //            System.out.print(tokenChar);
 
             switch (tokenChar) {
-                case ';' -> { return new Lab2_Token("SIGN", ";"); }
-                case '(' -> { return new Lab2_Token("SIGN", "("); }
-                case ')' -> { return new Lab2_Token("SIGN", ")"); }
-                case '{' -> { return new Lab2_Token("SIGN", "{"); }
-                case '}' -> { return new Lab2_Token("SIGN", "}"); }
-                case '+' -> { return new Lab2_Token("SIGN", "+"); }
-                case '-' -> { return new Lab2_Token("SIGN", "-"); }
-                case '*' -> { return new Lab2_Token("SIGN", "*"); }
-                case '%' -> { return new Lab2_Token("SIGN", "%"); }
-                case '=' -> { return new Lab2_Token("SIGN", "="); }
-                case ',' -> { return new Lab2_Token("SIGN", ","); }
+                case ';' -> { return new Token("SIGN", ";"); }
+                case '(' -> { return new Token("SIGN", "("); }
+                case ')' -> { return new Token("SIGN", ")"); }
+                case '{' -> { return new Token("SIGN", "{"); }
+                case '}' -> { return new Token("SIGN", "}"); }
+                case '+' -> { return new Token("SIGN", "+"); }
+                case '-' -> { return new Token("SIGN", "-"); }
+                case '*' -> { return new Token("SIGN", "*"); }
+                case '%' -> { return new Token("SIGN", "%"); }
+                case '=' -> { return new Token("SIGN", "="); }
+                case ',' -> { return new Token("SIGN", ","); }
                 case '/' -> {
                     if ( commentAnal()) { return getNextToken(); }
                     else {
                         in.unread(tokenChar);
-                        return new Lab2_Token("SIGN", "/"); }
+                        return new Token("SIGN", "/"); }
                 }
                 case '\uFFFF' -> {return null;}
             }

@@ -1,14 +1,13 @@
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Vector;
 
-public class Lab2_GrammarAnalysis {
+public class GrammarAnal {
 
 
     // 当前的token
-    static Lab2_Token lastSym;
-    static Lab2_Token currentSym;
-    static Lab2_Token futureSym;
+    static Token lastSym;
+    static Token currentSym;
+    static Token futureSym;
     static String process = "";
     static int regIndex = 1;
     static HashMap<String, Integer> identRegMap = new HashMap<>();
@@ -17,7 +16,7 @@ public class Lab2_GrammarAnalysis {
 
     static {
         try {
-            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+            currentSym = LexAnal.getNextToken();
         } catch (IOException e) {
         }
     }
@@ -41,14 +40,14 @@ public class Lab2_GrammarAnalysis {
             System.exit(-1);
         }
         // 处理(的输出
-        Lab2_Test.outputStr += "(";
+        Test.outputStr += "(";
 
 
         getNextSym();
         if (currentSym == null || !currentSym.value.equals(")")) {
             System.exit(-1);
         }
-        Lab2_Test.outputStr += ")";
+        Test.outputStr += ")";
 
         getNextSym();
 
@@ -62,7 +61,7 @@ public class Lab2_GrammarAnalysis {
         if (currentSym == null || !currentSym.value.equals("int")) {
             System.exit(-1);
         }
-        Lab2_Test.outputStr += "define dso_local i32";
+        Test.outputStr += "define dso_local i32";
 
         getNextSym();
     }
@@ -76,7 +75,7 @@ public class Lab2_GrammarAnalysis {
         }
 
         //对于main的输出
-        Lab2_Test.outputStr += "@main";
+        Test.outputStr += "@main";
         getNextSym();
     }
 
@@ -87,7 +86,7 @@ public class Lab2_GrammarAnalysis {
         if (currentSym == null || !currentSym.value.equals("{")) {
             System.exit(1);
         }
-        Lab2_Test.outputStr += "{";
+        Test.outputStr += "{";
 
         getNextSym();
         while (true) {
@@ -98,7 +97,7 @@ public class Lab2_GrammarAnalysis {
         if (currentSym == null || !currentSym.value.equals("}")) {
             System.exit(1);
         }
-        Lab2_Test.outputStr += "}";
+        Test.outputStr += "}";
 
         getNextSym();
         if (currentSym != null) {
@@ -155,40 +154,40 @@ public class Lab2_GrammarAnalysis {
         getNextSym();
         if (currentSym.value.equals("=")) {
             getNextSym();
-            Lab2_Token result = initValAnal();
+            Token result = initValAnal();
             if (result.type.equals("FUNC")) {
 //                getNextSym();
-                Lab2_Test.outputStr = Lab2_Test.outputStr.trim();
-                Lab2_Test.outputStr += "\n";
-                Lab2_Test.outputStr += "\t%"+regIndex+" = call "+result.output()+"\n";
+                Test.outputStr = Test.outputStr.trim();
+                Test.outputStr += "\n";
+                Test.outputStr += "\t%"+regIndex+" = call "+result.output()+"\n";
                 identRegMap.put(varName, regIndex);
                 regIndex++;
 
-                Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
-                Lab2_Test.outputStr += "\t%"+regIndex+" = alloca i32\n";
-                Lab2_Test.outputStr += "\tstore i32 %" + String.valueOf(regIndex-1) + ", i32* %" + String.valueOf(regIndex)+"\n";
+                Test.outputStr = Test.outputStr.trim()+"\n";
+                Test.outputStr += "\t%"+regIndex+" = alloca i32\n";
+                Test.outputStr += "\tstore i32 %" + String.valueOf(regIndex-1) + ", i32* %" + String.valueOf(regIndex)+"\n";
                 identRegMap.put(varName, regIndex);
                 regIndex++;
 
                 return;
             }
-            Lab2_Test.outputStr = Lab2_Test.outputStr.trim();
-            Lab2_Test.outputStr += "\n";
-            Lab2_Test.outputStr += "\t%"+regIndex+" = alloca i32\n";
-            Lab2_Test.outputStr += "\tstore i32 " + result.output() + ", i32* %" + String.valueOf(regIndex)+"\n";
+            Test.outputStr = Test.outputStr.trim();
+            Test.outputStr += "\n";
+            Test.outputStr += "\t%"+regIndex+" = alloca i32\n";
+            Test.outputStr += "\tstore i32 " + result.output() + ", i32* %" + String.valueOf(regIndex)+"\n";
             identRegMap.put(varName, regIndex);
             regIndex++;
         }
         else {
-            Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
-            Lab2_Test.outputStr += "\t%"+regIndex+" = alloca i32\n";
+            Test.outputStr = Test.outputStr.trim()+"\n";
+            Test.outputStr += "\t%"+regIndex+" = alloca i32\n";
             identRegMap.put(varName, regIndex);
             regIndex++;
         }
 //        getNextSym();
     }
 
-    private static Lab2_Token initValAnal() throws IOException {
+    private static Token initValAnal() throws IOException {
         return exp();
     }
 
@@ -215,7 +214,7 @@ public class Lab2_GrammarAnalysis {
         if (!currentSym.value.equals("int")) {
             System.exit(-1);
         }
-        currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+        currentSym = LexAnal.getNextToken();
     }
 
     private static void constDefAnal() throws IOException{
@@ -228,48 +227,48 @@ public class Lab2_GrammarAnalysis {
             System.exit(-1);
         }
         getNextSym();
-        Lab2_Token result = constInitValAnal();
-        Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
-        Lab2_Test.outputStr += "\t%" + String.valueOf(regIndex) + " = alloca i32\n";
+        Token result = constInitValAnal();
+        Test.outputStr = Test.outputStr.trim()+"\n";
+        Test.outputStr += "\t%" + String.valueOf(regIndex) + " = alloca i32\n";
         int varReg = regIndex;
-        Lab2_Test.outputStr += "\tstore i32 " + result.output() + ", i32* %" + String.valueOf(varReg) + "\n";
+        Test.outputStr += "\tstore i32 " + result.output() + ", i32* %" + String.valueOf(varReg) + "\n";
 
-        if (Lab2_LexicalAnalysisForGA.lex.contains("six")) {System.exit(-1);}
+        if (LexAnal.lex.contains("six")) {System.exit(-1);}
 
         identRegMap.put(identName, varReg);
         isConst.put(identName, true);
         regIndex ++;
     }
 
-    private static Lab2_Token exp() throws IOException {
+    private static Token exp() throws IOException {
         return addExpAnal();
     }
 
-    private static Lab2_Token constInitValAnal() throws IOException {
+    private static Token constInitValAnal() throws IOException {
         return constExpAnal();
     }
 
-    private static Lab2_Token constExpAnal() throws IOException {
+    private static Token constExpAnal() throws IOException {
         return addExpAnal();
     }
 
-    private static Lab2_Token addExpAnal() throws IOException {
-        Lab2_Token result = mulExpAnal();
+    private static Token addExpAnal() throws IOException {
+        Token result = mulExpAnal();
 //        getNextSym();
         while (true) {
             if (currentSym.value.equals("+")) {
                 getNextSym();
-                Lab2_Token result2 = mulExpAnal();
-                Lab2_Test.outputStr = Lab2_Test.outputStr.trim() + "\n";
-                Lab2_Test.outputStr += "\t%"+String.valueOf(regIndex) + " = add i32 "+ result.output() + ", " + result2.output()+"\n";
+                Token result2 = mulExpAnal();
+                Test.outputStr = Test.outputStr.trim() + "\n";
+                Test.outputStr += "\t%"+String.valueOf(regIndex) + " = add i32 "+ result.output() + ", " + result2.output()+"\n";
                 result.value = String.valueOf(regIndex);
                 regIndex++;
             }
             else if (currentSym.value.equals("-")) {
                 getNextSym();
-                Lab2_Token result2 = mulExpAnal();
-                Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
-                Lab2_Test.outputStr += "\t%"+String.valueOf(regIndex) + " = sub i32 "+ result.output() + ", "+ result2.output()+"\n";
+                Token result2 = mulExpAnal();
+                Test.outputStr = Test.outputStr.trim()+"\n";
+                Test.outputStr += "\t%"+String.valueOf(regIndex) + " = sub i32 "+ result.output() + ", "+ result2.output()+"\n";
                 result.value = String.valueOf(regIndex);
                 result.type = "REG";
                 regIndex++;
@@ -280,19 +279,19 @@ public class Lab2_GrammarAnalysis {
         return result;
     }
 
-    private static Lab2_Token mulExpAnal() throws IOException {
-        Lab2_Token result = unaryExp();
+    private static Token mulExpAnal() throws IOException {
+        Token result = unaryExp();
         getNextSym();
         while (true) {
             if (currentSym.value.equals("*")) {
                 getNextSym();
-                Lab2_Token result2 = unaryExp();
-                Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
+                Token result2 = unaryExp();
+                Test.outputStr = Test.outputStr.trim()+"\n";
                 if (result.type.equals("REG")) {
-                    Lab2_Test.outputStr += "\t%" + String.valueOf(regIndex) + " = mul i32 " + result.output() + ", " + result2.output() + "\n";
+                    Test.outputStr += "\t%" + String.valueOf(regIndex) + " = mul i32 " + result.output() + ", " + result2.output() + "\n";
                 }
                 else {
-                    Lab2_Test.outputStr += "\t%" + String.valueOf(regIndex) + " = mul i32 " + result.output() + ", " + result2.output() + "\n";
+                    Test.outputStr += "\t%" + String.valueOf(regIndex) + " = mul i32 " + result.output() + ", " + result2.output() + "\n";
                 }
                 result.value = String.valueOf(regIndex);
                 regIndex++;
@@ -300,18 +299,18 @@ public class Lab2_GrammarAnalysis {
             }
             else if (currentSym.value.equals("/")) {
                 getNextSym();
-                Lab2_Token result2 = unaryExp();
-                Lab2_Test.outputStr = Lab2_Test.outputStr.trim() + "\n";
-                Lab2_Test.outputStr += "\t%"+String.valueOf(regIndex) + " = sdiv i32 "+ result.output() + ", " + result2.output()+"\n";
+                Token result2 = unaryExp();
+                Test.outputStr = Test.outputStr.trim() + "\n";
+                Test.outputStr += "\t%"+String.valueOf(regIndex) + " = sdiv i32 "+ result.output() + ", " + result2.output()+"\n";
                 result.value = String.valueOf(regIndex);
                 regIndex++;
                 getNextSym();
             }
             else if (currentSym.value.equals("%")) {
                 getNextSym();
-                Lab2_Token result2 = unaryExp();
+                Token result2 = unaryExp();
 
-                Lab2_Test.outputStr += "%"+String.valueOf(regIndex) + " = srem i32 "+ result.output() + ", " + result2.output()+"\n";
+                Test.outputStr += "%"+String.valueOf(regIndex) + " = srem i32 "+ result.output() + ", " + result2.output()+"\n";
                 result.value = String.valueOf(regIndex);
                 regIndex++;
                 getNextSym();
@@ -321,16 +320,16 @@ public class Lab2_GrammarAnalysis {
         return result;
     }
 
-    private static Lab2_Token unaryExp() throws IOException {
+    private static Token unaryExp() throws IOException {
         if (currentSym.value.equals("-")) {
             getNextSym();
-            Lab2_Token result = unaryExp();
+            Token result = unaryExp();
             if (result.type.equals("FUNC")) {
                 return result;
             }
-            Lab2_Test.outputStr += "%" + regIndex + " = sub i32 0, " + result.output()+"\n";
+            Test.outputStr += "%" + regIndex + " = sub i32 0, " + result.output()+"\n";
 
-            result =  new Lab2_Token("REG", String.valueOf(regIndex));
+            result =  new Token("REG", String.valueOf(regIndex));
             regIndex++;
             return result;
         }
@@ -340,7 +339,7 @@ public class Lab2_GrammarAnalysis {
         }
         else if (currentSym.value.equals("(")) {
             getNextSym();
-            Lab2_Token result = exp();
+            Token result = exp();
             if (!currentSym.value.equals(")")) {
                 System.exit(-1);
             }
@@ -364,10 +363,10 @@ public class Lab2_GrammarAnalysis {
                             System.exit(-1);
                         }
 //                        getNextSym();
-                        if (!Lab2_Test.outputStr.contains("declare i32 @getint()")) {
-                            Lab2_Test.outputStr = "declare i32 @getint()\n" + Lab2_Test.outputStr.trim();
+                        if (!Test.outputStr.contains("declare i32 @getint()")) {
+                            Test.outputStr = "declare i32 @getint()\n" + Test.outputStr.trim();
                         }
-                        return new Lab2_Token("FUNC", "getint");
+                        return new Token("FUNC", "getint");
                     }
                     case "getch" -> {
                         getNextSym();
@@ -379,10 +378,10 @@ public class Lab2_GrammarAnalysis {
                             System.exit(-1);
                         }
 //                        getNextSym();
-                        if (!Lab2_Test.outputStr.contains("declare i32 @getch()")) {
-                            Lab2_Test.outputStr = "declare i32 @getch()\n" + Lab2_Test.outputStr.trim();
+                        if (!Test.outputStr.contains("declare i32 @getch()")) {
+                            Test.outputStr = "declare i32 @getch()\n" + Test.outputStr.trim();
                         }
-                        return new Lab2_Token("FUNC", "getch");
+                        return new Token("FUNC", "getch");
                     }
                     case "putint" -> {
                         getNextSym();
@@ -390,18 +389,18 @@ public class Lab2_GrammarAnalysis {
                             System.exit(-1);
                         }
                         getNextSym();
-                        Lab2_Token result = exp();
+                        Token result = exp();
                         if (!currentSym.value.equals(")")) {
                             System.exit(-1);
                         }
 //                        getNextSym();
-                        if (!Lab2_Test.outputStr.contains("declare void @putint(i32)")) {
-                            Lab2_Test.outputStr = "declare void @putint(i32)\n" + Lab2_Test.outputStr.trim();
+                        if (!Test.outputStr.contains("declare void @putint(i32)")) {
+                            Test.outputStr = "declare void @putint(i32)\n" + Test.outputStr.trim();
                         }
 
-                        Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
-                        Lab2_Test.outputStr += "\tcall void @putint(i32 "+result.output()+")\n";
-                        return new Lab2_Token("FUNC", "putint");
+                        Test.outputStr = Test.outputStr.trim()+"\n";
+                        Test.outputStr += "\tcall void @putint(i32 "+result.output()+")\n";
+                        return new Token("FUNC", "putint");
 
                     }
                     case "putch" -> {
@@ -410,18 +409,18 @@ public class Lab2_GrammarAnalysis {
                             System.exit(-1);
                         }
                         getNextSym();
-                        Lab2_Token result = exp();
+                        Token result = exp();
                         if (!currentSym.value.equals(")")) {
                             System.exit(-1);
                         }
 //                        getNextSym();
-                        if (!Lab2_Test.outputStr.contains("declare void @putch(i32)")) {
-                            Lab2_Test.outputStr = "declare void @putch(i32)\n" + Lab2_Test.outputStr.trim();
+                        if (!Test.outputStr.contains("declare void @putch(i32)")) {
+                            Test.outputStr = "declare void @putch(i32)\n" + Test.outputStr.trim();
                         }
 
-                        Lab2_Test.outputStr = Lab2_Test.outputStr.trim()+"\n";
-                        Lab2_Test.outputStr += "\tcall void @putch(i32 "+result.output()+")\n";
-                        return new Lab2_Token("FUNC", "putch");
+                        Test.outputStr = Test.outputStr.trim()+"\n";
+                        Test.outputStr += "\tcall void @putch(i32 "+result.output()+")\n";
+                        return new Token("FUNC", "putch");
                     }
                 }
             }
@@ -434,10 +433,10 @@ public class Lab2_GrammarAnalysis {
                 if (identIndex == null) {
                     System.exit(-1);
                 }
-                Lab2_Test.outputStr = Lab2_Test.outputStr.trim() + "\n";
-                Lab2_Test.outputStr += "\t%"+String.valueOf(regIndex)+" = load i32, i32* %"+String.valueOf(identIndex)+"\n";
+                Test.outputStr = Test.outputStr.trim() + "\n";
+                Test.outputStr += "\t%"+String.valueOf(regIndex)+" = load i32, i32* %"+String.valueOf(identIndex)+"\n";
                 regIndex++;
-                return new Lab2_Token("REG", String.valueOf(regIndex-1));
+                return new Token("REG", String.valueOf(regIndex-1));
             }
         }
         else {
@@ -449,12 +448,12 @@ public class Lab2_GrammarAnalysis {
     private static void stmtAnal() throws IOException {
         if (currentSym.value.equals("return")) {
             getNextSym();
-            Lab2_Token result = exp();
+            Token result = exp();
             if (!currentSym.value.equals(";")) {
                 System.exit(-1);
             }
-            Lab2_Test.outputStr = Lab2_Test.outputStr.trim() + "\n";
-            Lab2_Test.outputStr += "\tret i32 "+result.output();
+            Test.outputStr = Test.outputStr.trim() + "\n";
+            Test.outputStr += "\tret i32 "+result.output();
             getNextSym();
         }
         else if (currentSym.value.equals(";")){}
@@ -465,22 +464,22 @@ public class Lab2_GrammarAnalysis {
                 rollbackSym();
                 lValAnal();
                 getNextSym();
-                Lab2_Token result = exp();
+                Token result = exp();
                 if (!result.type.equals("FUNC")) {
                     Integer reg = identRegMap.get(varName);
                     if (isConst.get(varName)!=null) {
                         System.exit(-1);
                     }
-                    Lab2_Test.outputStr = Lab2_Test.outputStr.trim() + "\n";
-                    Lab2_Test.outputStr += "\tstore i32 " + result.output() + ", i32* %" + String.valueOf(reg) + "\n";
+                    Test.outputStr = Test.outputStr.trim() + "\n";
+                    Test.outputStr += "\tstore i32 " + result.output() + ", i32* %" + String.valueOf(reg) + "\n";
                 }
                 else {
-                    Lab2_Test.outputStr = Lab2_Test.outputStr.trim() + "\n";
-                    Lab2_Test.outputStr += "\t%"+regIndex+ " = call " + result.output() + "\n";
+                    Test.outputStr = Test.outputStr.trim() + "\n";
+                    Test.outputStr += "\t%"+regIndex+ " = call " + result.output() + "\n";
                     regIndex++;
                     Integer reg = identRegMap.get(varName);
-                    Lab2_Test.outputStr = Lab2_Test.outputStr.trim() + "\n";
-                    Lab2_Test.outputStr += "\tstore i32 %" + String.valueOf(regIndex-1) + ", i32* %" + String.valueOf(reg) + "\n";
+                    Test.outputStr = Test.outputStr.trim() + "\n";
+                    Test.outputStr += "\tstore i32 %" + String.valueOf(regIndex-1) + ", i32* %" + String.valueOf(reg) + "\n";
                 }
 
                 if (!currentSym.value.equals(";")) {
@@ -506,9 +505,9 @@ public class Lab2_GrammarAnalysis {
     private static int numberAnal() throws IOException {
         int numberResult = 0;
         if (currentSym.type.equals("NUMBER")) {
-            Lab2_Test.outputStr += currentSym.value;
+            Test.outputStr += currentSym.value;
             numberResult = Integer.parseInt(currentSym.value);
-            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+            currentSym = LexAnal.getNextToken();
         }
         else {
             System.exit(20);
@@ -525,7 +524,7 @@ public class Lab2_GrammarAnalysis {
         }
         else {
             lastSym = currentSym;
-            currentSym = Lab2_LexicalAnalysisForGA.getNextToken();
+            currentSym = LexAnal.getNextToken();
         }
     }
 
