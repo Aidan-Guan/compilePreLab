@@ -20,7 +20,7 @@ public class Test {
         LexAnal.getTokenInit(in);
 
         GrammarAnalysis grammarAnalysis = init(in);
-        grammarAnalysis.getSym();
+        grammarAnalysis.getNextSym();
         grammarAnalysis.CompUnit();
 
 
