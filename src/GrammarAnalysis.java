@@ -10,7 +10,7 @@ public class GrammarAnalysis {
     private ArrayDeque<Token> preSym = new ArrayDeque<>();
     private ArrayList<String> funcList = new ArrayList<>();
     Token currentSym = new Token();
-    TokenAnalysis lex = new TokenAnalysis();
+//    TokenAnalysis lex = new TokenAnalysis();
     PushbackReader in;
     String out = "";
     private boolean isConst = false;
@@ -446,7 +446,7 @@ public class GrammarAnalysis {
 
     void getSym() throws IOException {
         if(preSym.isEmpty()){
-            currentSym = lex.getToken(in);
+            currentSym = TokenAnalysis.getNextToken();
         } else {
             currentSym = preSym.removeFirst();
         }
