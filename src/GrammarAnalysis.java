@@ -343,6 +343,7 @@ public class GrammarAnalysis {
 //        }
     }
 
+
     private void Cond() throws IOException {
         LOrExp();
     }
@@ -372,10 +373,21 @@ public class GrammarAnalysis {
     }
 
     private void RelExp() throws IOException {
-        AddExp();
+        ExpValue expValue = null;
+        ExpValue expValue1 = AddExp();
+        ExpValue expValue2 = null;
+        String op = null;
         while (currentSym.value.equals("<")||currentSym.value.equals(">")||currentSym.value.equals("<=")||currentSym.value.equals(">=")) {
+            op = currentSym.value;
             getNextSym();
-            AddExp();
+            expValue2 = AddExp();
+        }
+
+        if (expValue2 != null) {
+            expValue = condSituation(op, expValue1, expValue2);
+            if (expValue != null) {
+
+            }
         }
     }
 
@@ -569,6 +581,19 @@ public class GrammarAnalysis {
 
         return expValue;
     }
+
+    private ExpValue condSituation (String op, ExpValue a, ExpValue b) {
+        ExpValue expValue = null;
+        String outA = a.value+"", outB = b.value+"";
+        if (a.isRegister) outA = a.register;
+        if (b.isRegister) outB = b.register;
+
+        out = a.icmp(out, regNum, op, outA, outB);
+        expValue = new ExpValue(true, "%"+regNum);
+        regNum++;
+        return expValue;
+    }
+
     private ExpValue subtraction(ExpValue a, ExpValue b){
         ExpValue expValue;
         String outA = a.value + "", outB = b.value + "";

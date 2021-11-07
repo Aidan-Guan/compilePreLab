@@ -59,4 +59,16 @@ public class ExpValue {
         out += "\tret i32 " + outA + "\n";
         return out;
     }
+
+    public String icmp(String out, int regNum, String op, String outA, String outB) {
+        switch (op) {
+            case ">=" -> {out += "\t%" + regNum + " = icmp sge i32 " + outA + ", " + outB + "\n";}
+            case "<=" -> {out += "\t%" + regNum + " = icmp sle i32 " + outA + ", " + outB + "\n";}
+            case "<" -> {out += "\t%" + regNum + " = icmp slt i32 " + outA + ", " + outB + "\n";}
+            case ">" -> {out += "\t%" + regNum + " = icmp sgt i32 " + outA + ", " + outB + "\n";}
+        }
+        return out;
+    }
+
+
 }
