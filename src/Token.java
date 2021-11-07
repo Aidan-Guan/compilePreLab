@@ -1,22 +1,12 @@
-/**
- * the class which TokenAnalysis send to GrammarAnalysis
- */
+
 public class Token {
-    /**
-     * NUMBER, ID
-     */
     String type = "";
-    int number = 0;
-    String word = "";
+//    int number = 0;
+    String value = "";
 
-    public Token(String type, int number) {
+    public Token(String type, String value) {
         this.type = type;
-        this.number = number;
-    }
-
-    public Token(String type, String word) {
-        this.type = type;
-        this.word = word;
+        this.value = value;
     }
 
     public Token() {
@@ -26,8 +16,7 @@ public class Token {
     public String toString() {
         return "Token{" +
                 "type='" + type + '\'' +
-                ", number=" + number +
-                ", word='" + word + '\'' +
+                ", word='" + value + '\'' +
                 '}';
     }
 }
