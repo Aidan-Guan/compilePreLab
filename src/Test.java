@@ -1,7 +1,6 @@
 import java.io.*;
 
 public class Test {
-    GrammarAnalysis grammarAnalysis;
 
     public static GrammarAnalysis init(PushbackReader in){
         GrammarAnalysis grammarAnalysis = new GrammarAnalysis(in);
@@ -11,8 +10,8 @@ public class Test {
     }
 
     public static void main(String[] args) throws IOException {
-//        File file = new File(args[0]);
-        File file = new File("/Users/guanhuaimin/本地磁盘/学习/本地_大三上/编译原理/labs/compilePreLab/src/a.txt");
+        File file = new File(args[0]);
+//        File file = new File("/Users/guanhuaimin/本地磁盘/学习/本地_大三上/编译原理/labs/compilePreLab/src/a.txt");
 
 
 
@@ -24,16 +23,13 @@ public class Test {
         grammarAnalysis.getSym();
         grammarAnalysis.CompUnit();
 
-//        String output = args[1];
-//        File outFile = new File(output);
-//        FileWriter out = new FileWriter(outFile,true);
-//
-//        if(!grammarAnalysis.isError) {
-//            out.write(grammarAnalysis.out);
-//            out.flush();
-//            out.close();
-//        }
-//        else System.exit(-1);
+
+        String output = args[1];
+        File outFile = new File(output);
+        FileWriter out = new FileWriter(outFile,true);
+        out.write(grammarAnalysis.out);
+        out.flush();
+        out.close();
 
         System.out.print(grammarAnalysis.out);
     }
