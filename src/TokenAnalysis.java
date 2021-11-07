@@ -4,28 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TokenAnalysis {
-    /**
-     * To store current char
-     */
+
     public char CHAR = 0;
-    /**
-     * To store current string
-     */
+
     public String TOKEN = "";
 
-    /**
-     * reserve map
-     */
+
     public Map<String, String> reserveTable = new HashMap<>();
 
-    /**
-     * sign map
-     */
+
     public Map<Character, String> signTable = new HashMap<>();
 
-    /**
-     * init reserveTable
-     */
+
     public void initReserveTable(){
         reserveTable.put("int", "int");
         reserveTable.put("main", "main");
@@ -48,10 +38,7 @@ public class TokenAnalysis {
         signTable.put(',', ",");
     }
 
-    /**
-     *
-     * @param in reader
-     */
+
     public void getNBC(PushbackReader in) throws IOException {
         CHAR = (char) in.read();
         while(Character.isWhitespace(CHAR)){
@@ -60,12 +47,7 @@ public class TokenAnalysis {
         in.unread(CHAR);
     }
 
-    /**
-     * a method for getting new char which deals with comments
-     * @param in reader
-     * @return the char newly coming
-     * @throws IOException deal with exception
-     */
+
     public char getChar(PushbackReader in) throws IOException {
 
         char newChar = (char) in.read();
@@ -97,11 +79,7 @@ public class TokenAnalysis {
         }
         return newChar;
     }
-    /**
-     *
-     * @param in reader
-     * @return provide token for grammar
-     */
+
     public Token getToken (PushbackReader in) throws IOException {
         TOKEN = "";
         initReserveTable();
@@ -166,11 +144,7 @@ public class TokenAnalysis {
         }
     }
 
-    /**
-     *
-     * @param word str to judge
-     * @return whether it is a reserve word
-     */
+
     public boolean reserve(String word){
         return reserveTable.containsKey(word);
     }

@@ -5,9 +5,9 @@ public class Test {
 
     public static GrammarAnalysis init(PushbackReader in){
         GrammarAnalysis grammarAnalysis = new GrammarAnalysis(in);
-        grammarAnalysis.sym.word = "";
-        grammarAnalysis.sym.type = "";
-        grammarAnalysis.sym.number = -1;
+        grammarAnalysis.currentSym.word = "";
+        grammarAnalysis.currentSym.type = "";
+        grammarAnalysis.currentSym.number = -1;
         return grammarAnalysis;
     }
 

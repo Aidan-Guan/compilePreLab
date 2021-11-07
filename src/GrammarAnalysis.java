@@ -2,7 +2,6 @@ import java.io.IOException;
 import java.io.PushbackReader;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Map;
 
 public class GrammarAnalysis {
     private int regNum = 1;
@@ -10,11 +9,10 @@ public class GrammarAnalysis {
     private ArrayList<String> storage = new ArrayList<>();
     private ArrayDeque<Token> preSym = new ArrayDeque<>();
     private ArrayList<String> funcList = new ArrayList<>();
-    Token sym = new Token();
+    Token currentSym = new Token();
     TokenAnalysis lex = new TokenAnalysis();
     PushbackReader in;
     String out = "";
-    private boolean isError = false;
     private boolean isConst = false;
 
     private boolean addConstAndVar(String ident, ExpValue expValue, boolean isConst, boolean isGiven){
@@ -23,7 +21,7 @@ public class GrammarAnalysis {
             return false;
         }
         for(Ident e: identList){
-            if(e.ident.equals(ident)){
+            if(e.identName.equals(ident)){
                 return false;
             }
         }
@@ -42,7 +40,7 @@ public class GrammarAnalysis {
 
     private boolean updateConstAndVar(String ident, ExpValue value){
         for(Ident e: identList){
-            if(e.ident.equals(ident)){
+            if(e.identName.equals(ident)){
                 if(e.isConst) return false;
                 else {
                     e.value = value.value;
@@ -61,14 +59,14 @@ public class GrammarAnalysis {
 
     private boolean isInIdentList(String ident){
         for(Ident e: identList){
-            if(e.ident.equals(ident)) return true;
+            if(e.identName.equals(ident)) return true;
         }
         return false;
     }
     private int getValue(String ident){
         int value = 0;
         for(Ident e: identList){
-            if (e.ident.equals(ident)){
+            if (e.identName.equals(ident)){
                 value = e.value;
             }
         }
@@ -78,7 +76,7 @@ public class GrammarAnalysis {
     private int getRegister(String ident){
         int register = 0;
         for(Ident e: identList){
-            if (e.ident.equals(ident)){
+            if (e.identName.equals(ident)){
                 register = e.register;
             }
         }
@@ -94,7 +92,7 @@ public class GrammarAnalysis {
     }
 
     private void Decl() throws IOException {
-        if(sym.word.equals("const")){
+        if(currentSym.word.equals("const")){
             ConstDecl();
         } else{
             VarDecl();
@@ -102,17 +100,17 @@ public class GrammarAnalysis {
     }
 
     private void ConstDecl() throws IOException {
-        if(!sym.word.equals("const")){
+        if(!currentSym.word.equals("const")){
             error();
         } else{
             getSym();
             BType();
             ConstDef();
-            while(sym.word.equals(",")){
+            while(currentSym.word.equals(",")){
                 getSym();
                 ConstDef();
             }
-            if(!sym.word.equals(";")){
+            if(!currentSym.word.equals(";")){
                 error();
             }
             getSym();
@@ -120,7 +118,7 @@ public class GrammarAnalysis {
     }
 
     private void BType() throws IOException {
-        if(!sym.word.equals("int")){
+        if(!currentSym.word.equals("int")){
             error();
         } else{
             getSym();
@@ -129,7 +127,7 @@ public class GrammarAnalysis {
 
     private void ConstDef() throws IOException {
         String ident = IdentID();
-        if(!sym.word.equals("=")){
+        if(!currentSym.word.equals("=")){
             error();
         }else{
             getSym();
@@ -152,11 +150,11 @@ public class GrammarAnalysis {
     private void VarDecl() throws IOException {
         BType();
         VarDef();
-        while(sym.word.equals(",")){
+        while(currentSym.word.equals(",")){
             getSym();
             VarDef();
         }
-        if(!sym.word.equals(";")){
+        if(!currentSym.word.equals(";")){
             error();
         } else {
             getSym();
@@ -165,7 +163,7 @@ public class GrammarAnalysis {
 
     private void VarDef() throws IOException {
         String ident = IdentID();
-        if(sym.word.equals("=")){
+        if(currentSym.word.equals("=")){
             getSym();
             ExpValue expValue = InitVal();
             if(!addConstAndVar(ident, expValue, false, true)) error();
@@ -182,12 +180,12 @@ public class GrammarAnalysis {
     private void FuncDef() throws IOException {
         FuncType();
         Ident();
-        if(!sym.word.equals("(")) {
+        if(!currentSym.word.equals("(")) {
             error();
         } else {
             out += "(";
             getSym();
-            if(!sym.word.equals(")")) {
+            if(!currentSym.word.equals(")")) {
                 error();
             } else {
                 out += ")";
@@ -198,7 +196,7 @@ public class GrammarAnalysis {
     }
 
     private void FuncType() throws IOException {
-        if(!sym.word.equals("int")) {
+        if(!currentSym.word.equals("int")) {
             error();
         } else {
             out += "define dso_local i32 ";
@@ -207,7 +205,7 @@ public class GrammarAnalysis {
     }
 
     private void Ident() throws IOException {
-        if(!sym.word.equals("main")){
+        if(!currentSym.word.equals("main")){
             error();
         } else {
             out += "@main";
@@ -216,12 +214,12 @@ public class GrammarAnalysis {
     }
 
     private void Block() throws IOException {
-        if(!sym.word.equals("{")){
+        if(!currentSym.word.equals("{")){
             error();
         } else {
             out += "{\n";
             getSym();
-            while(!sym.word.equals("}") && !sym.type.equals("ERR"))
+            while(!currentSym.word.equals("}") && !currentSym.type.equals("ERR"))
                 BlockItem();
             out += "}";
             getSym();
@@ -229,7 +227,7 @@ public class GrammarAnalysis {
     }
 
     private void BlockItem() throws IOException {
-        if(sym.word.equals("int") || sym.word.equals("const")){
+        if(currentSym.word.equals("int") || currentSym.word.equals("const")){
             Decl();
         }else {
             Stmt();
@@ -238,22 +236,22 @@ public class GrammarAnalysis {
 
     private void Stmt() throws IOException {
         boolean flag = false;
-        if(sym.type.equals("ID")){
-            Token pre = sym;
+        if(currentSym.type.equals("ID")){
+            Token pre = currentSym;
             getSym();
-            if(sym.word.equals("(")){
-                unGetSym(sym);
-                sym = pre;
+            if(currentSym.word.equals("(")){
+                unGetSym(currentSym);
+                currentSym = pre;
                 flag = true;
             } else {
-                unGetSym(sym);
-                sym = pre;
+                unGetSym(currentSym);
+                currentSym = pre;
             }
         }
         if(flag){
-            if (!sym.word.equals(";")) {
+            if (!currentSym.word.equals(";")) {
                 Exp();
-                if(!sym.word.equals(";")){
+                if(!currentSym.word.equals(";")){
                     error();
                 } else{
                     getSym();
@@ -261,28 +259,28 @@ public class GrammarAnalysis {
             } else {
                 getSym();
             }
-        } else if (sym.word.equals("return")){
+        } else if (currentSym.word.equals("return")){
             getSym();
             ExpValue expValue = Exp();
             if(expValue == null) System.exit(-1);
             ret(expValue);
-            if(!sym.word.equals(";")) {
+            if(!currentSym.word.equals(";")) {
                 error();
             } else {
                 getSym();
             }
-        } else if(sym.word.equals(";")){
+        } else if(currentSym.word.equals(";")){
             getSym();
         } else {
             String ident = LVal();
             if(!isInIdentList(ident))error();
-            if(!sym.word.equals("=")){
+            if(!currentSym.word.equals("=")){
                 error();
             }else{
                 getSym();
                 ExpValue value = Exp();
                 if(value == null) error();
-                if(!sym.word.equals(";")){
+                if(!currentSym.word.equals(";")){
                     error();
                 }else {
                     if(!updateConstAndVar(ident, value)) error();
@@ -302,8 +300,8 @@ public class GrammarAnalysis {
 
     private ExpValue AddExp() throws IOException {
         ExpValue expValue = MulExp();
-        while(sym.word.equals("+") || sym.word.equals("-")){
-            if(sym.word.equals("+")){
+        while(currentSym.word.equals("+") || currentSym.word.equals("-")){
+            if(currentSym.word.equals("+")){
                 getSym();
                 expValue = addition(expValue, MulExp());
             } else {
@@ -317,11 +315,11 @@ public class GrammarAnalysis {
 
     private ExpValue MulExp() throws IOException {
         ExpValue expValue = UnaryExp();
-        while(sym.word.equals("*") || sym.word.equals("/") || sym.word.equals("%")){
-            if(sym.word.equals("*")){
+        while(currentSym.word.equals("*") || currentSym.word.equals("/") || currentSym.word.equals("%")){
+            if(currentSym.word.equals("*")){
                 getSym();
                 expValue = multiple(expValue, UnaryExp());
-            } else if(sym.word.equals("/")){
+            } else if(currentSym.word.equals("/")){
                 getSym();
                 expValue = division(expValue, UnaryExp());
             } else {
@@ -334,33 +332,33 @@ public class GrammarAnalysis {
 
     private ExpValue UnaryExp() throws IOException {
         boolean flag = false;
-        if(!isInIdentList(sym.word) && sym.type.equals("ID")){
+        if(!isInIdentList(currentSym.word) && currentSym.type.equals("ID")){
             error();
         }
-        if(sym.type.equals("ID")){
-            Token pre = sym;
+        if(currentSym.type.equals("ID")){
+            Token pre = currentSym;
             getSym();
-            if(!sym.word.equals("(")){
-                unGetSym(sym);
-                sym = pre;
+            if(!currentSym.word.equals("(")){
+                unGetSym(currentSym);
+                currentSym = pre;
 
             } else {
-                unGetSym(sym);
-                sym = pre;
+                unGetSym(currentSym);
+                currentSym = pre;
                 flag = true;
             }
         }
         if(flag) {
             String ident = IdentID();
             declareFunc(ident);
-            if(!sym.word.equals("(")){
+            if(!currentSym.word.equals("(")){
                 error();
             } else {
                 getSym();
-                if(!sym.word.equals(")")){
+                if(!currentSym.word.equals(")")){
                     ExpValue param = FuncRParams();
                     ExpValue expValue = resolveFunc(ident, param);
-                    if(!sym.word.equals(")")){
+                    if(!currentSym.word.equals(")")){
                         error();
                     } else {
                         getSym();
@@ -374,9 +372,9 @@ public class GrammarAnalysis {
                 }
             }
         }
-        else if((sym.word.equals("(") || sym.type.equals("NUMBER") || sym.type.equals("ID"))) {
+        else if((currentSym.word.equals("(") || currentSym.type.equals("NUMBER") || currentSym.type.equals("ID"))) {
             return PrimaryExp();
-        } else if(sym.word.equals("+") || sym.word.equals("-")){
+        } else if(currentSym.word.equals("+") || currentSym.word.equals("-")){
             String sign = UnaryOp();
             ExpValue expValue = UnaryExp();
             if(sign.equals("-"))
@@ -388,7 +386,7 @@ public class GrammarAnalysis {
 
     private ExpValue FuncRParams() throws IOException {
         ExpValue expValue = Exp();  //todo 只支持一个参数
-        while(sym.word.equals(",")){
+        while(currentSym.word.equals(",")){
             getSym();
             Exp();
         }
@@ -396,23 +394,23 @@ public class GrammarAnalysis {
     }
 
     private ExpValue PrimaryExp() throws IOException {
-        if(sym.word.equals("(")){
+        if(currentSym.word.equals("(")){
             getSym();
             ExpValue expValue = Exp();
-            if(!sym.word.equals(")")){
+            if(!currentSym.word.equals(")")){
                 error();
             } else{
                 getSym();
             }
             return expValue;
-        } else if(sym.type.equals("NUMBER")){
-            ExpValue expValue = new ExpValue(sym.number, false);
+        } else if(currentSym.type.equals("NUMBER")){
+            ExpValue expValue = new ExpValue(currentSym.number, false);
             getSym();
             return expValue;
         } else {
             String ident = LVal();
             for(Ident e: identList){
-                if(e.ident.equals(ident) && !e.isConst && isConst) error();
+                if(e.identName.equals(ident) && !e.isConst && isConst) error();
             }
             ExpValue expValue = new ExpValue(getValue(ident), true, getRegister(ident));
             out = expValue.load(out, regNum++, expValue.register);
@@ -421,8 +419,8 @@ public class GrammarAnalysis {
     }
 
     private String UnaryOp() throws IOException {
-        if(sym.word.equals("-") || sym.word.equals("+")){
-            String sign = sym.word;
+        if(currentSym.word.equals("-") || currentSym.word.equals("+")){
+            String sign = currentSym.word;
             getSym();
             return sign;
         } else{
@@ -432,8 +430,8 @@ public class GrammarAnalysis {
     }
 
     private String IdentID() throws IOException {
-        String ident = sym.word;
-        if(!sym.type.equals("ID")){
+        String ident = currentSym.word;
+        if(!currentSym.type.equals("ID")){
             error();
             System.exit(-1);
         }else{
@@ -442,16 +440,15 @@ public class GrammarAnalysis {
         return ident;
     }
 
-
     private void error() {
-        this.isError = true;
+        System.exit(-1);
     }
 
     void getSym() throws IOException {
         if(preSym.isEmpty()){
-            sym = lex.getToken(in);
+            currentSym = lex.getToken(in);
         } else {
-            sym = preSym.removeFirst();
+            currentSym = preSym.removeFirst();
         }
 
     }
@@ -463,7 +460,6 @@ public class GrammarAnalysis {
     public GrammarAnalysis(PushbackReader in) {
         this.in = in;
     }
-
 
 
 

@@ -1,13 +1,13 @@
 public class Ident {
     public boolean isConst = false;
     public int value = 0;
-    public String ident;
+    public String identName;
     public int register;
 
-    public Ident(boolean isConst, int value, String ident, int register) {
+    public Ident(boolean isConst, int value, String identName, int register) {
         this.isConst = isConst;
         this.value = value;
-        this.ident = ident;
+        this.identName = identName;
         this.register = register;
     }
 }
