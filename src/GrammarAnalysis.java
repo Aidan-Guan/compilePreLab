@@ -5,19 +5,19 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class GrammarAnalysis {
-    public int regNum = 1;
-    public ArrayList<Ident> identList = new ArrayList<>();
-    public ArrayList<String> storage = new ArrayList<>();
-    public ArrayDeque<Token> preSym = new ArrayDeque<>();
-    public ArrayList<String> funcList = new ArrayList<>();
+    private int regNum = 1;
+    private ArrayList<Ident> identList = new ArrayList<>();
+    private ArrayList<String> storage = new ArrayList<>();
+    private ArrayDeque<Token> preSym = new ArrayDeque<>();
+    private ArrayList<String> funcList = new ArrayList<>();
     Token sym = new Token();
     TokenAnalysis lex = new TokenAnalysis();
     PushbackReader in;
     String out = "";
-    boolean isError = false;
-    boolean isConst = false;
+    private boolean isError = false;
+    private boolean isConst = false;
 
-    public boolean addConstAndVar(String ident, ExpValue expValue, boolean isConst, boolean isGiven){
+    private boolean addConstAndVar(String ident, ExpValue expValue, boolean isConst, boolean isGiven){
         if(expValue == null){
             error();
             return false;
@@ -40,7 +40,7 @@ public class GrammarAnalysis {
         return true;
     }
 
-    public boolean updateConstAndVar(String ident, ExpValue value){
+    private boolean updateConstAndVar(String ident, ExpValue value){
         for(Ident e: identList){
             if(e.ident.equals(ident)){
                 if(e.isConst) return false;
@@ -59,13 +59,13 @@ public class GrammarAnalysis {
         return true;
     }
 
-    public boolean isInIdentList(String ident){
+    private boolean isInIdentList(String ident){
         for(Ident e: identList){
             if(e.ident.equals(ident)) return true;
         }
         return false;
     }
-    public int getValue(String ident){
+    private int getValue(String ident){
         int value = 0;
         for(Ident e: identList){
             if (e.ident.equals(ident)){
@@ -75,7 +75,7 @@ public class GrammarAnalysis {
         return value;
     }
 
-    public int getRegister(String ident){
+    private int getRegister(String ident){
         int register = 0;
         for(Ident e: identList){
             if (e.ident.equals(ident)){
@@ -93,7 +93,7 @@ public class GrammarAnalysis {
         FuncDef();
     }
 
-    public void Decl() throws IOException {
+    private void Decl() throws IOException {
         if(sym.word.equals("const")){
             ConstDecl();
         } else{
@@ -101,7 +101,7 @@ public class GrammarAnalysis {
         }
     }
 
-    public void ConstDecl() throws IOException {
+    private void ConstDecl() throws IOException {
         if(!sym.word.equals("const")){
             error();
         } else{
@@ -119,7 +119,7 @@ public class GrammarAnalysis {
         }
     }
 
-    public void BType() throws IOException {
+    private void BType() throws IOException {
         if(!sym.word.equals("int")){
             error();
         } else{
@@ -127,7 +127,7 @@ public class GrammarAnalysis {
         }
     }
 
-    public void ConstDef() throws IOException {
+    private void ConstDef() throws IOException {
         String ident = IdentID();
         if(!sym.word.equals("=")){
             error();
@@ -141,15 +141,15 @@ public class GrammarAnalysis {
         }
     }
 
-    public ExpValue ConstInitVal() throws IOException {
+    private ExpValue ConstInitVal() throws IOException {
         return ConstExp();
     }
 
-    public ExpValue ConstExp() throws IOException {
+    private ExpValue ConstExp() throws IOException {
         return AddExp();
     }
 
-    public void VarDecl() throws IOException {
+    private void VarDecl() throws IOException {
         BType();
         VarDef();
         while(sym.word.equals(",")){
@@ -163,7 +163,7 @@ public class GrammarAnalysis {
         }
     }
 
-    public void VarDef() throws IOException {
+    private void VarDef() throws IOException {
         String ident = IdentID();
         if(sym.word.equals("=")){
             getSym();
@@ -175,11 +175,11 @@ public class GrammarAnalysis {
         }
     }
 
-    public ExpValue InitVal() throws IOException {
+    private ExpValue InitVal() throws IOException {
         return Exp();
     }
 
-    public void FuncDef() throws IOException {
+    private void FuncDef() throws IOException {
         FuncType();
         Ident();
         if(!sym.word.equals("(")) {
@@ -197,7 +197,7 @@ public class GrammarAnalysis {
         }
     }
 
-    public void FuncType() throws IOException {
+    private void FuncType() throws IOException {
         if(!sym.word.equals("int")) {
             error();
         } else {
@@ -206,7 +206,7 @@ public class GrammarAnalysis {
         }
     }
 
-    public void Ident() throws IOException {
+    private void Ident() throws IOException {
         if(!sym.word.equals("main")){
             error();
         } else {
@@ -215,7 +215,7 @@ public class GrammarAnalysis {
         }
     }
 
-    public void Block() throws IOException {
+    private void Block() throws IOException {
         if(!sym.word.equals("{")){
             error();
         } else {
@@ -228,7 +228,7 @@ public class GrammarAnalysis {
         }
     }
 
-    public void BlockItem() throws IOException {
+    private void BlockItem() throws IOException {
         if(sym.word.equals("int") || sym.word.equals("const")){
             Decl();
         }else {
@@ -236,7 +236,7 @@ public class GrammarAnalysis {
         }
     }
 
-    public void Stmt() throws IOException {
+    private void Stmt() throws IOException {
         boolean flag = false;
         if(sym.type.equals("ID")){
             Token pre = sym;
@@ -292,15 +292,15 @@ public class GrammarAnalysis {
         }
     }
 
-    public String LVal() throws IOException {
+    private String LVal() throws IOException {
         return IdentID();
     }
 
-    public ExpValue Exp() throws IOException {
+    private ExpValue Exp() throws IOException {
         return AddExp();
     }
 
-    public ExpValue AddExp() throws IOException {
+    private ExpValue AddExp() throws IOException {
         ExpValue expValue = MulExp();
         while(sym.word.equals("+") || sym.word.equals("-")){
             if(sym.word.equals("+")){
@@ -315,7 +315,7 @@ public class GrammarAnalysis {
         return expValue;
     }
 
-    public ExpValue MulExp() throws IOException {
+    private ExpValue MulExp() throws IOException {
         ExpValue expValue = UnaryExp();
         while(sym.word.equals("*") || sym.word.equals("/") || sym.word.equals("%")){
             if(sym.word.equals("*")){
@@ -332,7 +332,7 @@ public class GrammarAnalysis {
         return expValue;
     }
 
-    public ExpValue UnaryExp() throws IOException {
+    private ExpValue UnaryExp() throws IOException {
         boolean flag = false;
         if(!isInIdentList(sym.word) && sym.type.equals("ID")){
             error();
@@ -386,7 +386,7 @@ public class GrammarAnalysis {
         return null;
     }
 
-    public ExpValue FuncRParams() throws IOException {
+    private ExpValue FuncRParams() throws IOException {
         ExpValue expValue = Exp();  //todo 只支持一个参数
         while(sym.word.equals(",")){
             getSym();
@@ -395,7 +395,7 @@ public class GrammarAnalysis {
         return expValue;
     }
 
-    public ExpValue PrimaryExp() throws IOException {
+    private ExpValue PrimaryExp() throws IOException {
         if(sym.word.equals("(")){
             getSym();
             ExpValue expValue = Exp();
@@ -420,7 +420,7 @@ public class GrammarAnalysis {
         }
     }
 
-    public String UnaryOp() throws IOException {
+    private String UnaryOp() throws IOException {
         if(sym.word.equals("-") || sym.word.equals("+")){
             String sign = sym.word;
             getSym();
@@ -431,10 +431,7 @@ public class GrammarAnalysis {
         return "";
     }
 
-    /**
-     * temp
-     */
-    public String IdentID() throws IOException {
+    private String IdentID() throws IOException {
         String ident = sym.word;
         if(!sym.type.equals("ID")){
             error();
@@ -446,11 +443,11 @@ public class GrammarAnalysis {
     }
 
 
-    public void error() {
+    private void error() {
         this.isError = true;
     }
 
-    public void getSym() throws IOException {
+    void getSym() throws IOException {
         if(preSym.isEmpty()){
             sym = lex.getToken(in);
         } else {
@@ -459,7 +456,7 @@ public class GrammarAnalysis {
 
     }
 
-    public void unGetSym(Token token){
+    private void unGetSym(Token token){
         preSym.addLast(token);
     }
 
@@ -470,7 +467,7 @@ public class GrammarAnalysis {
 
 
 
-    public ExpValue addition(ExpValue a, ExpValue b){
+    private ExpValue addition(ExpValue a, ExpValue b){
         ExpValue expValue;
         String outA = a.value + "", outB = b.value + "";
         if(a.isRegister){
@@ -484,7 +481,7 @@ public class GrammarAnalysis {
 
         return expValue;
     }
-    public ExpValue subtraction(ExpValue a, ExpValue b){
+    private ExpValue subtraction(ExpValue a, ExpValue b){
         ExpValue expValue;
         String outA = a.value + "", outB = b.value + "";
         if(a.isRegister){
@@ -499,7 +496,7 @@ public class GrammarAnalysis {
         return expValue;
     }
 
-    public ExpValue multiple(ExpValue a, ExpValue b) {
+    private ExpValue multiple(ExpValue a, ExpValue b) {
         ExpValue expValue;
         String outA = a.value + "", outB = b.value + "";
         if (a.isRegister) {
@@ -513,7 +510,7 @@ public class GrammarAnalysis {
         return expValue;
     }
 
-    public ExpValue division(ExpValue a, ExpValue b){
+    private ExpValue division(ExpValue a, ExpValue b){
         ExpValue expValue;
         String outA = a.value + "", outB = b.value + "";
         if (a.isRegister) {
@@ -527,7 +524,7 @@ public class GrammarAnalysis {
         return expValue;
     }
 
-    public ExpValue mod(ExpValue a, ExpValue b){
+    private ExpValue mod(ExpValue a, ExpValue b){
         ExpValue expValue;
         String outA = a.value + "", outB = b.value + "";
         if (a.isRegister) {
@@ -541,7 +538,7 @@ public class GrammarAnalysis {
         return expValue;
     }
 
-    public void ret(ExpValue a) {
+    private void ret(ExpValue a) {
 
         String outA = a.value + "";
         if(a.isRegister){
@@ -556,9 +553,7 @@ public class GrammarAnalysis {
         out = a.ret(out, outA);
     }
 
-
-
-    public void declareFunc(String ident){
+    private void declareFunc(String ident){
         if(funcList.contains(ident)){
             return;
         }
@@ -571,7 +566,7 @@ public class GrammarAnalysis {
         }
     }
 
-    public ExpValue resolveFunc(String ident, ExpValue param){
+    private ExpValue resolveFunc(String ident, ExpValue param){
 
 
         ExpValue expValue = null;
