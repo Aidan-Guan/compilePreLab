@@ -232,7 +232,7 @@ public class GrammarAnalysis {
 
     private void Stmt() throws IOException {
         boolean flag = false;
-        if(currentSym.type.equals("ID")){
+        if(currentSym.type.equals("IDENT")){
             Token pre = currentSym;
             getSym();
             if(currentSym.value.equals("(")){
@@ -333,10 +333,10 @@ public class GrammarAnalysis {
 
     private ExpValue UnaryExp() throws IOException {
         boolean flag = false;
-        if(!isInIdentList(currentSym.value) && currentSym.type.equals("ID")){
+        if(!isInIdentList(currentSym.value) && currentSym.type.equals("IDENT")){
             error();
         }
-        if(currentSym.type.equals("ID")){
+        if(currentSym.type.equals("IDENT")){
             Token pre = currentSym;
             getSym();
             if(!currentSym.value.equals("(")){
@@ -371,7 +371,7 @@ public class GrammarAnalysis {
                 return expValue;
             }
         }
-        else if((currentSym.value.equals("(") || currentSym.type.equals("NUMBER") || currentSym.type.equals("ID"))) {
+        else if((currentSym.value.equals("(") || currentSym.type.equals("NUMBER") || currentSym.type.equals("IDENT"))) {
             return PrimaryExp();
         }
         else if(currentSym.value.equals("+") || currentSym.value.equals("-")){
@@ -433,7 +433,7 @@ public class GrammarAnalysis {
 
     private String IdentID() throws IOException {
         String ident = currentSym.value;
-        if(!currentSym.type.equals("ID")){
+        if(!currentSym.type.equals("IDENT")){
             error();
         }
         getSym();
@@ -447,7 +447,7 @@ public class GrammarAnalysis {
 
     void getSym() throws IOException {
         if(preSym.isEmpty()){
-            currentSym = TokenAnalysis.getNextToken();
+            currentSym = LexAnal.getNextToken();
         }
         else {
             currentSym = preSym.removeFirst();

@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.PushbackReader;
 import java.util.*;
 
-public class TokenAnalysis {
+public class LexAnal {
     static char tokenChar;
     static String tokenStr;
 
@@ -124,7 +124,7 @@ public class TokenAnalysis {
             }
         }
 
-        return null;
+        return new Token("ERR", "");
     }
 
     public static String lex = "";

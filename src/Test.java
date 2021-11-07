@@ -18,6 +18,7 @@ public class Test {
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
         PushbackReader in = new PushbackReader(reader, 10);
+        LexAnal.getTokenInit(in);
 
         GrammarAnalysis grammarAnalysis = init(in);
         grammarAnalysis.getSym();
