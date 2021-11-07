@@ -15,6 +15,9 @@ public class LexAnal {
         tokenTable.put("int", "int");
         tokenTable.put("main", "main");
         tokenTable.put("return", "return");
+        tokenTable.put("const", "const");
+        tokenTable.put("if", "if");
+        tokenTable.put("else", "else");
     }
 
     public static Token getNextToken () throws IOException {
@@ -22,11 +25,7 @@ public class LexAnal {
         tokenStr = "";
 
         // 读取空字符
-        int flag = 0;
         while (Character.isWhitespace(tokenChar)) {
-//            System.out.print(tokenChar);
-            flag = 1;
-
             Test.outputStr += String.valueOf(tokenChar);
             tokenChar = (char) in.read();
         }
@@ -35,7 +34,6 @@ public class LexAnal {
         if (Character.isLetter(tokenChar) || tokenChar=='_') {
             // 识别标识符
             while (Character.isLetterOrDigit(tokenChar) || tokenChar=='_') {
-//                System.out.print(tokenChar);
                 tokenStr += tokenChar;
                 tokenChar = (char) in.read();
             }
@@ -49,7 +47,6 @@ public class LexAnal {
         else if (Character.isDigit(tokenChar)) {
             if (tokenChar != '0') { // 一定是十进制 非 0
                 while (Character.isDigit(tokenChar)) {
-//                    System.out.print(tokenChar);
 
                     tokenStr += tokenChar;
                     tokenChar = (char) in.read();
@@ -99,7 +96,6 @@ public class LexAnal {
             }
         }
         else {
-//            System.out.print(tokenChar);
 
             switch (tokenChar) {
                 case ';' -> { return new Token("SIGN", ";"); }
@@ -111,8 +107,13 @@ public class LexAnal {
                 case '-' -> { return new Token("SIGN", "-"); }
                 case '*' -> { return new Token("SIGN", "*"); }
                 case '%' -> { return new Token("SIGN", "%"); }
-                case '=' -> { return new Token("SIGN", "="); }
+                case '=' -> { return eqAnal(); }
                 case ',' -> { return new Token("SIGN", ","); }
+                case '<' -> { return lOrLeAnal(); }
+                case '>' -> { return gOrGeAnal(); }
+                case '!' -> { return excAnal(); }
+                case '&' -> { return andAnal(); }
+                case '|' -> { return orAnal(); }
                 case '/' -> {
                     if ( commentAnal()) { return getNextToken(); }
                     else {
@@ -133,6 +134,72 @@ public class LexAnal {
             lex += in.nextLine();
             System.out.println(lex);
         }
+    }
+
+    private static Token eqAnal() throws IOException {
+        tokenChar = (char) in.read();
+        // 读了一个之后发现不是等号，一定是小于号
+        if (tokenChar != '=') {
+            in.unread(tokenChar);
+            return new Token("SIGN", "=");
+        }
+        else {
+            return new Token("SIGN", "==");
+        }
+    }
+
+    // 区分小于 小于等于
+    private static Token lOrLeAnal() throws IOException {
+        tokenChar = (char) in.read();
+        // 读了一个之后发现不是等号，一定是小于号
+        if (tokenChar != '=') {
+            in.unread(tokenChar);
+            return new Token("SIGN", "<");
+        }
+        else {
+            return new Token("SIGN", "<=");
+        }
+    }
+
+    // 区分大于 大于等于
+    private static Token gOrGeAnal() throws IOException {
+        tokenChar = (char) in.read();
+        // 读了一个之后发现不是等号，一定是小于号
+        if (tokenChar != '=') {
+            in.unread(tokenChar);
+            return new Token("SIGN", ">");
+        }
+        else {
+            return new Token("SIGN", ">=");
+        }
+    }
+
+    private static Token excAnal() throws IOException {
+        tokenChar = (char) in.read();
+        // 读了一个之后发现不是等号，一定是小于号
+        if (tokenChar != '=') {
+            in.unread(tokenChar);
+            return new Token("SIGN", "!=");
+        }
+        else {
+            return new Token("SIGN", "!");
+        }
+    }
+
+    private static Token andAnal() throws IOException {
+        tokenChar = (char) in.read();
+        if (tokenChar != '&') {
+            System.exit(-1);
+        }
+        return new Token("SIGN", "&&");
+    }
+
+    private static Token orAnal() throws IOException {
+        tokenChar = (char) in.read();
+        if (tokenChar != '|') {
+            System.exit(-1);
+        }
+        return new Token("SIGN", "||");
     }
 
     private static boolean commentAnal() throws IOException {
