@@ -5,12 +5,12 @@ import Token.Token;
 
 import java.io.IOException;
 import java.io.PushbackReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
 
 public class LexAnal {
-    private static Vector<Token> tokens = new Vector<Token>();
+    private static ArrayList<Token> tokens = new ArrayList<Token>();
 
     private static char tokenChar;
     private static String tokenStr;
@@ -18,7 +18,7 @@ public class LexAnal {
     public static Map<String, String> tokenTable = new HashMap<>();
 
 
-    public Vector<Token> getAllTokens (PushbackReader reader) throws IOException{
+    public static ArrayList<Token> getAllTokens (PushbackReader reader) throws IOException{
         in = reader;
         getTokenInit();
 
@@ -28,7 +28,6 @@ public class LexAnal {
             tokens.add(tmpToken);
             tmpToken = getNextToken();
         }
-
         return tokens;
     }
 
