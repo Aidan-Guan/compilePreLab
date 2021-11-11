@@ -80,6 +80,7 @@ public class GrammarAnalysis {
         return register;
     }
 
+
     public void CompUnit() throws IOException {
         identList.add(new Ident(false, 0, "putint", -1));
         identList.add(new Ident(false, 0, "getint", -1));
@@ -479,6 +480,8 @@ public class GrammarAnalysis {
 
         return expValue;
     }
+
+
     private ExpValue subtraction(ExpValue a, ExpValue b){
         ExpValue expValue;
         String outA = a.value + "", outB = b.value + "";

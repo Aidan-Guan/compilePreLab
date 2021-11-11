@@ -3,6 +3,8 @@ package Token;
 public class Token {
     public String value = "";
     public String type = "";
+    public String belongBlock = "";
+    public boolean isConst;
 
     public Token(String value, String type) {
         this.type = type;
