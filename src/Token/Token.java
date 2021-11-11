@@ -1,8 +1,8 @@
 package Token;
 
 public class Token {
-    String value = "";
-    String type = "";
+    public String value = "";
+    public String type = "";
 
     public Token(String value, String type) {
         this.type = type;
