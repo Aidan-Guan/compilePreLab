@@ -1,7 +1,7 @@
 package Grammar;
 
 import Token.ExpValue;
-import static Grammar.Tools.mulOperation
+import static Grammar.Tools.mulOperation;
 
 import java.io.IOException;
 
@@ -15,11 +15,11 @@ public class Expression {
         while(GrammarAnal.currentSym.value.equals("+") || GrammarAnal.currentSym.value.equals("-")){
             if(GrammarAnal.currentSym.value.equals("+")){
                 GrammarAnal.getNextSym();
-                expValue = addition(expValue, MulExp());
+                expValue = Tools.addOperation(expValue, MulExp());
             }
             else {
                 GrammarAnal.getNextSym();
-                expValue = subtraction(expValue, MulExp());
+                expValue = Tools.subOperation(expValue, MulExp());
             }
         }
         return expValue;

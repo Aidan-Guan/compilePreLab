@@ -11,7 +11,7 @@ public class ExpValue {
 
     public String out() {
         if (isRegister) {
-            return "%"+this.value;
+            return "%x"+this.value;
         }
         else {
             return String.valueOf(value);
