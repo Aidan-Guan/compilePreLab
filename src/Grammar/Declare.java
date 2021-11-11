@@ -1,7 +1,10 @@
 package Grammar;
 
+import Token.ExpValue;
 
 import java.io.IOException;
+
+import static Grammar.GrammarAnal.*;
 
 public class Declare {
 
@@ -35,17 +38,15 @@ public class Declare {
     }
 
     static void ConstDef() throws IOException {
-        String ident = IdentID();
         if (!GrammarAnal.currentSym.type.equals("IDENT")) { GrammarAnal.error(); }
         GrammarAnal.getNextSym();
         if(!GrammarAnal.currentSym.value.equals("=")){ GrammarAnal.error(); }
         GrammarAnal.getNextSym();
 
-        isConst = true;
         ExpValue expValue = ConstInitVal();
-        isConst = false;
+
         GrammarAnal.currentSym.isConst = true;
-        if(!addConstAndVar(ident, expValue, true, true)) GrammarAnal.error();
+        if(!addConstAndVar(currentSym.value, expValue, true, true)) GrammarAnal.error();
 
     }
 
@@ -61,17 +62,42 @@ public class Declare {
     }
 
     static void VarDef() throws IOException {
-        String ident = IdentID();
-        if (!GrammarAnal.currentSym.type.equals("IDENT")) { GrammarAnal.error(); }
+        if (!GrammarAnal.currentSym.type.equals("IDENT")) { error(); }
         GrammarAnal.getNextSym();
         if(GrammarAnal.currentSym.value.equals("=")){
             GrammarAnal.getNextSym();
             ExpValue expValue = InitVal();
-            if(!addConstAndVar(ident, expValue, false, true)) error();
+            if(!addConstAndVar(currentSym.value, expValue, false, true)) error();
         }
         else {
             ExpValue expValue = new ExpValue(0, false);
-            if(!addConstAndVar(ident, expValue, false, false))error();
+            if(!addConstAndVar(currentSym.value, expValue, false, false))error();
         }
+    }
+
+
+    //TODO: 这里还没看懂
+    private static boolean addConstAndVar(String ident, ExpValue expValue, boolean isConst, boolean isReserved) throws IOException {
+        if (expValue == null) {error();}
+
+        if (GrammarAnal.varMap.getOrDefault(ident, -1) != -1) { return false; }
+        GrammarAnal.varMap.put(ident, regIndex);
+        regIndex++;
+        outStr += "\t%"+ (regIndex-1) +" = alloca i32\n";
+
+        if (isReserved) {
+            outStr += Tools.store(regIndex-1, expValue.out());
+        }
+        return true;
+    }
+
+
+    private static ExpValue InitVal() throws IOException {
+        return Expression.Exp();
+    }
+
+
+    private static ExpValue ConstInitVal() throws IOException {
+        return Expression.AddExp();
     }
 }

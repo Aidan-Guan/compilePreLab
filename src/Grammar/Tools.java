@@ -87,4 +87,9 @@ public class Tools {
     static String load(int regNum, String outReg) {
         return "\t%" + regNum + " = load i32, i32* " + outReg +"\n";
     }
+
+
+    static String store(int regNum, String outReg) {
+        return "\t%" + regNum + " = load i32, i32* " + outReg +"\n";
+    }
 }

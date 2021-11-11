@@ -1,7 +1,6 @@
 package Grammar;
 
 import Token.Token;
-import static Token
 
 import java.io.IOException;
 import java.util.ArrayList;
