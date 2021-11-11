@@ -1,7 +1,9 @@
 package Grammar;
 
 import Token.ExpValue;
-import static Grammar.Tools.mulOperation;
+import Token.Token;
+
+import static Grammar.GrammarAnal.*;
 
 import java.io.IOException;
 
@@ -30,21 +32,83 @@ public class Expression {
         while(GrammarAnal.currentSym.value.equals("*") || GrammarAnal.currentSym.value.equals("/") || currentSym.value.equals("%")){
             if(GrammarAnal.currentSym.value.equals("*")){
                 GrammarAnal.getNextSym();
-                expValue = mulOperation(expValue, UnaryExp());
+                expValue = Tools.mulOperation(expValue, UnaryExp());
             }
             else if(GrammarAnal.currentSym.value.equals("/")){
                 GrammarAnal.getNextSym();
-                expValue = division(expValue, UnaryExp());
+                expValue = Tools.divOperation(expValue, UnaryExp());
             }
             else {
                 GrammarAnal.getNextSym();
-                expValue = mod(expValue, UnaryExp());
+                expValue = Tools.modOperation(expValue, UnaryExp());
             }
         }
         return expValue;
     }
 
     static ExpValue UnaryExp() throws IOException {
+        if (currentSym.value.equals("+") || currentSym.value.equals("-")) {
+            String sign = currentSym.value;
+            ExpValue expValue = UnaryExp();
+            if (sign.equals("-")) {
+                return Tools.subOperation(new ExpValue(0, false), expValue);
+            }
+            else {
+                return expValue;
+            }
+        }
+        else if (currentSym.value.equals("(") || currentSym.value.equals("NUMBER")) {
+            return PrimaryExp();
+        }
+        else if (currentSym.type.equals("IDENT")) {
+            Token nextSym = showNextSym();
+            if (nextSym.value.equals("(")) {
+                getNextSym();
+                getNextSym();
 
+                if (!currentSym.value.equals(")")) {
+                    ExpValue param = FuncRParams();
+                    ExpValue expValue = resolveFunc();
+                    if (!currentSym.value.equals(")")) {error();}
+                    getNextSym();
+                    return expValue;
+                }
+                else {
+                    ExpValue param = FuncRParams();
+                    ExpValue expValue = resolveFunc();
+                    getNextSym();
+                    return expValue;
+                }
+            }
+            else {
+                return PrimaryExp();
+            }
+        }
+        return null;
+    }
+
+
+    private static ExpValue PrimaryExp() throws IOException {
+        if (currentSym.value.equals("(")) {
+            getNextSym();
+            ExpValue expValue = Exp();
+            if (!currentSym.value.equals(")")) {error();}
+            getNextSym();
+            return expValue;
+        }
+        else if (currentSym.type.equals("NUMBER")) {
+            ExpValue expValue = new ExpValue(Integer.parseInt(currentSym.value),false);
+            getNextSym();
+            return expValue;
+        }
+        else {
+            if (!currentSym.type.equals("IDENT")) {error();}
+            Integer varReg = varMap.getOrDefault(currentSym.value, -1);
+            if (varReg==-1 || currentSym.isConst) {error();}
+
+            ExpValue expValue = new ExpValue(varReg,true);
+            outStr += Tools.load(regIndex++, expValue.out());
+            return new ExpValue(regIndex-1, true);
+        }
     }
 }

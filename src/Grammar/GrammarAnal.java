@@ -1,9 +1,11 @@
 package Grammar;
 
 import Token.Token;
+import static Token
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GrammarAnal {
     static ArrayList<Token> tokens;
@@ -12,6 +14,7 @@ public class GrammarAnal {
     static Token currentSym;
     static String outStr = "";
     static int regIndex = 0;
+    static HashMap<String, Integer> varMap = new HashMap<>();
 
     public static String getOutputString(ArrayList<Token> lexAnalResult) {
         tokens = lexAnalResult;
@@ -76,6 +79,16 @@ public class GrammarAnal {
         currentTokenIndex ++;
         try {
             return tokens.get(currentTokenIndex);
+        }
+        catch (Exception e) {
+            System.exit(-1);
+        }
+        return null;
+    }
+
+    static Token showNextSym() {
+        try {
+            return tokens.get(currentTokenIndex+1);
         }
         catch (Exception e) {
             System.exit(-1);

@@ -40,12 +40,11 @@ public class Declare {
         GrammarAnal.getNextSym();
         if(!GrammarAnal.currentSym.value.equals("=")){ GrammarAnal.error(); }
         GrammarAnal.getNextSym();
-        GrammarAnal.currentSym.isConst = true;
 
         isConst = true;
         ExpValue expValue = ConstInitVal();
         isConst = false;
-
+        GrammarAnal.currentSym.isConst = true;
         if(!addConstAndVar(ident, expValue, true, true)) GrammarAnal.error();
 
     }

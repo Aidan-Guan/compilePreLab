@@ -82,4 +82,9 @@ public class Tools {
     private static String modModifyStr(int regNum, String outA, String outB) {
         return "\t%" + regNum + " = srem i32 " +outA + ", " + outB + "\n";
     }
+
+
+    static String load(int regNum, String outReg) {
+        return "\t%" + regNum + " = load i32, i32* " + outReg +"\n";
+    }
 }
