@@ -67,15 +67,15 @@ public class Expression {
                 getNextSym();
 
                 if (!currentSym.value.equals(")")) {
-                    ExpValue param = FuncRParams();
-                    ExpValue expValue = resolveFunc();
+                    ExpValue param = FuncAnal.FuncRParams();
+                    ExpValue expValue = FuncAnal.resolveFunc(currentSym, param);
                     if (!currentSym.value.equals(")")) {error();}
                     getNextSym();
                     return expValue;
                 }
                 else {
-                    ExpValue param = FuncRParams();
-                    ExpValue expValue = resolveFunc();
+                    ExpValue param = FuncAnal.FuncRParams();
+                    ExpValue expValue = FuncAnal.resolveFunc(currentSym, param);
                     getNextSym();
                     return expValue;
                 }
@@ -111,4 +111,7 @@ public class Expression {
             return new ExpValue(regIndex-1, true);
         }
     }
+
+
+
 }
