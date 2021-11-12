@@ -1,3 +1,3 @@
 FROM openjdk:15
 WORKDIR /app/
-COPY ./out/* /app/
+COPY ./out/ /app/
