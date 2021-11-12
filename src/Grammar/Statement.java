@@ -34,12 +34,12 @@ public class Statement {
                 getNextSym();
                 ExpValue expValue = Expression.Exp();
                 if (expValue == null) error();
-
+                getNextSym();
                 if (currentSym.value.equals(";")) error();
 
                 if (!updateConstAndVar(ident, expValue)) error();
 
-                getNextSym();
+//                getNextSym();
             }
             else {
                 Expression.Exp();

@@ -25,12 +25,12 @@ public class FuncAnal {
             case "getint" -> {
                 if (param != null) { error(); }
                 expValue = new ExpValue(regIndex++, true);
-                outStr += "\t%" + (regIndex-1) +" = call i32 @getint()\n";
+                outStr += "\t%x" + (regIndex-1) +" = call i32 @getint()\n";
             }
             case "getch" -> {
                 if (param != null) { error(); }
                 expValue = new ExpValue(regIndex++, true);
-                outStr += "\t%" + (regIndex-1) +" = call i32 @getch()\n";
+                outStr += "\t%x" + (regIndex-1) +" = call i32 @getch()\n";
             }
             case "putint" -> {
                 if (param == null) { error(); }

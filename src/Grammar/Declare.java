@@ -59,6 +59,7 @@ public class Declare {
             GrammarAnal.getNextSym();
             VarDef();
         }
+        if (currentSym.type.equals("IDENT")) getNextSym();
         if(!GrammarAnal.currentSym.value.equals(";")){ GrammarAnal.error(); }
         GrammarAnal.getNextSym();
     }
@@ -88,7 +89,7 @@ public class Declare {
 
         identMap.put(ident, new Ident(isConst, ident, regIndex));
         regIndex++;
-        outStr += "\t%"+ (regIndex-1) +" = alloca i32\n";
+        outStr += "\t%x"+ (regIndex-1) +" = alloca i32\n";
 
         if (isGiven) {
             outStr += Tools.store(regIndex-1, expValue.out());
