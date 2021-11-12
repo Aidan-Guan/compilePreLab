@@ -1,7 +1,6 @@
 package Grammar;
 
-import Token.ExpValue;
-import Token.Token;
+import Token.*;
 
 import static Grammar.GrammarAnal.*;
 
@@ -103,10 +102,11 @@ public class Expression {
         }
         else {
             if (!currentSym.type.equals("IDENT")) {error();}
-            Integer varReg = varMap.getOrDefault(currentSym.value, -1);
-            if (varReg==-1 || currentSym.isConst) {error();}
+            Ident tarIdent = identMap.get(currentSym.value);
+//            Integer varReg = varMap.getOrDefault(currentSym.value, -1);
+            if (currentSym==null || currentSym.isConst) {error();}
 
-            ExpValue expValue = new ExpValue(varReg,true);
+            ExpValue expValue = new ExpValue(tarIdent.regNum,true);
             outStr += Tools.load(regIndex++, expValue.out());
             return new ExpValue(regIndex-1, true);
         }

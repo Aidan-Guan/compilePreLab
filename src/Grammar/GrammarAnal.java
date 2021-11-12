@@ -14,7 +14,7 @@ public class GrammarAnal {
     static String outStr = "";
     static int regIndex = 0;
 
-    static HashMap<String, Integer> varMap = new HashMap<>();
+//    static HashMap<String, Integer> varMap = new HashMap<>();
     static HashMap<String, Ident> identMap = new HashMap<>();
 
     public static String getOutputString(ArrayList<Token> lexAnalResult) {
@@ -72,7 +72,7 @@ public class GrammarAnal {
             Declare.Decl();
         }
         else {
-            Stmt();
+            Statement.Stmt();
         }
     }
 

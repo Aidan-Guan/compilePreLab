@@ -10,4 +10,6 @@ public class Ident {
         this.name = name;
         this.regNum = regNum;
     }
+
+
 }

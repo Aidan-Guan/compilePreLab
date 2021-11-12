@@ -1,6 +1,7 @@
 package Grammar;
 
 import Token.ExpValue;
+import Token.Ident;
 
 import java.io.IOException;
 
@@ -77,15 +78,16 @@ public class Declare {
 
 
     //TODO: 这里还没看懂
-    private static boolean addConstAndVar(String ident, ExpValue expValue, boolean isConst, boolean isReserved) throws IOException {
+    private static boolean addConstAndVar(String ident, ExpValue expValue, boolean isConst, boolean isGiven) throws IOException {
         if (expValue == null) {error();}
 
-        if (GrammarAnal.varMap.getOrDefault(ident, -1) != -1) { return false; }
-        GrammarAnal.varMap.put(ident, regIndex);
+        if (identMap.get(ident) != null) { return false; }
+
+        identMap.put(ident, new Ident(isConst, ident, regIndex));
         regIndex++;
         outStr += "\t%"+ (regIndex-1) +" = alloca i32\n";
 
-        if (isReserved) {
+        if (isGiven) {
             outStr += Tools.store(regIndex-1, expValue.out());
         }
         return true;
