@@ -56,10 +56,11 @@ public class Expression {
                 return expValue;
             }
         }
-        else if (currentSym.value.equals("(") || currentSym.value.equals("NUMBER")) {
+        else if (currentSym.value.equals("(") || currentSym.type.equals("NUMBER")) {
             return PrimaryExp();
         }
         else if (currentSym.type.equals("IDENT")) {
+            Token funcName = currentSym;
             Token nextSym = showNextSym();
             if (nextSym.value.equals("(")) {
                 getNextSym();
@@ -67,14 +68,14 @@ public class Expression {
 
                 if (!currentSym.value.equals(")")) {
                     ExpValue param = FuncAnal.FuncRParams();
-                    ExpValue expValue = FuncAnal.resolveFunc(currentSym, param);
+                    ExpValue expValue = FuncAnal.resolveFunc(funcName, param);
                     if (!currentSym.value.equals(")")) {error();}
                     getNextSym();
                     return expValue;
                 }
                 else {
                     ExpValue param = FuncAnal.FuncRParams();
-                    ExpValue expValue = FuncAnal.resolveFunc(currentSym, param);
+                    ExpValue expValue = FuncAnal.resolveFunc(funcName, param);
                     getNextSym();
                     return expValue;
                 }
@@ -104,10 +105,11 @@ public class Expression {
             if (!currentSym.type.equals("IDENT")) {error();}
             Ident tarIdent = identMap.get(currentSym.value);
 //            Integer varReg = varMap.getOrDefault(currentSym.value, -1);
-            if (currentSym==null || currentSym.isConst) {error();}
+            if (tarIdent==null || currentSym.isConst) {error();}
 
             ExpValue expValue = new ExpValue(tarIdent.regNum,true);
             outStr += Tools.load(regIndex++, expValue.out());
+            getNextSym();
             return new ExpValue(regIndex-1, true);
         }
     }

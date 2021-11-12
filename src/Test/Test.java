@@ -1,5 +1,6 @@
 package Test;
 
+import Grammar.GrammarAnal;
 import LexAnal.LexAnal;
 import Token.Token;
 
@@ -26,9 +27,13 @@ public class Test {
         in = new PushbackReader(new FileReader(fileLoc));
 
         tokens = LexAnal.getAllTokens(in);
-        for (Token item : tokens) {
-            System.out.println(item.toString());
-        }
+
+//        for (Token item : tokens) {
+//            System.out.println(item.toString());
+//        }
+
+        outputStr = GrammarAnal.getOutputString(tokens);
+        System.out.println(outputStr);
 
 //        filePrint(args[1]);
     }

@@ -17,11 +17,11 @@ public class GrammarAnal {
 //    static HashMap<String, Integer> varMap = new HashMap<>();
     static HashMap<String, Ident> identMap = new HashMap<>();
 
-    public static String getOutputString(ArrayList<Token> lexAnalResult) {
+    public static String getOutputString(ArrayList<Token> lexAnalResult) throws IOException {
         tokens = lexAnalResult;
         currentSym = getNextSym();
-
-        return "";
+        Comp();
+        return outStr;
     }
 
 
@@ -79,12 +79,12 @@ public class GrammarAnal {
     static Token getNextSym() {
         currentTokenIndex ++;
         try {
-            return tokens.get(currentTokenIndex);
+            currentSym = tokens.get(currentTokenIndex);
+            return currentSym;
         }
         catch (Exception e) {
-            System.exit(-1);
+            return null;
         }
-        return null;
     }
 
     static Token showNextSym() {
@@ -101,7 +101,8 @@ public class GrammarAnal {
     static Token getLastSym() {
         currentTokenIndex --;
         try {
-            return tokens.get(currentTokenIndex);
+            currentSym = tokens.get(currentTokenIndex);
+            return currentSym;
         }
         catch (Exception e) {
             System.exit(-1);

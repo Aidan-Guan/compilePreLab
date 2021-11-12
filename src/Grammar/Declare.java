@@ -2,6 +2,7 @@ package Grammar;
 
 import Token.ExpValue;
 import Token.Ident;
+import Token.Token;
 
 import java.io.IOException;
 
@@ -64,11 +65,13 @@ public class Declare {
 
     static void VarDef() throws IOException {
         if (!GrammarAnal.currentSym.type.equals("IDENT")) { error(); }
-        GrammarAnal.getNextSym();
-        if(GrammarAnal.currentSym.value.equals("=")){
-            GrammarAnal.getNextSym();
+        Token tmpNextSym = showNextSym();
+        if(tmpNextSym.value.equals("=")){
+            String identName = currentSym.value;
+            getNextSym();
+            getNextSym();
             ExpValue expValue = InitVal();
-            if(!addConstAndVar(currentSym.value, expValue, false, true)) error();
+            if(!addConstAndVar(identName, expValue, false, true)) error();
         }
         else {
             ExpValue expValue = new ExpValue(0, false);
@@ -90,6 +93,7 @@ public class Declare {
         if (isGiven) {
             outStr += Tools.store(regIndex-1, expValue.out());
         }
+
         return true;
     }
 

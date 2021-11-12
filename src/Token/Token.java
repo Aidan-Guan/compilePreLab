@@ -6,7 +6,7 @@ public class Token {
     public String belongBlock = "";
     public boolean isConst;
 
-    public Token(String value, String type) {
+    public Token( String type, String value) {
         this.type = type;
         this.value = value;
     }

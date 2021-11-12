@@ -18,7 +18,7 @@ public class Statement {
             ExpValue expValue = Expression.Exp();
             if (expValue == null) error();
             outStr += Tools.returnOperation(expValue);
-            getNextSym();
+//            getNextSym();
             if (!currentSym.value.equals(";")) error();
             getNextSym();
         }

@@ -60,37 +60,37 @@ public class Tools {
 
 
     private static String addModifyStr(int regNum, String outA, String outB) {
-        return "\t%" + regNum + " = add i32 " +outA + ", " + outB + "\n";
+        return "\t%x" + regNum + " = add i32 " +outA + ", " + outB + "\n";
     }
 
 
     private static String subModifyStr(int regNum, String outA, String outB) {
-        return "\t%" + regNum + " = sub i32 " +outA + ", " + outB + "\n";
+        return "\t%x" + regNum + " = sub i32 " +outA + ", " + outB + "\n";
     }
 
 
     private static String mulModifyStr(int regNum, String outA, String outB){
-         return "\t%" + regNum + " = mul i32 " +outA + ", " + outB + "\n";
+         return "\t%x" + regNum + " = mul i32 " +outA + ", " + outB + "\n";
     }
 
 
     private static String divModifyStr(int regNum, String outA, String outB) {
-        return "\t%" + regNum + " = sdiv i32 " +outA + ", " + outB + "\n";
+        return "\t%x" + regNum + " = sdiv i32 " +outA + ", " + outB + "\n";
     }
 
 
     private static String modModifyStr(int regNum, String outA, String outB) {
-        return "\t%" + regNum + " = srem i32 " +outA + ", " + outB + "\n";
+        return "\t%x" + regNum + " = srem i32 " +outA + ", " + outB + "\n";
     }
 
 
     static String load(int regNum, String outReg) {
-        return "\t%" + regNum + " = load i32, i32* " + outReg +"\n";
+        return "\t%x" + regNum + " = load i32, i32* " + outReg +"\n";
     }
 
 
     static String store(int regNum, String outReg) {
-        return "\t%" + regNum + " = load i32, i32* " + outReg +"\n";
+        return "\t%x" + regNum + " = load i32, i32* " + outReg +"\n";
     }
 
 
