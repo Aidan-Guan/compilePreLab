@@ -26,17 +26,20 @@ public class FuncAnal {
                 if (param != null) { error(); }
                 expValue = new ExpValue(regIndex++, true);
                 outStr += "\t%x" + (regIndex-1) +" = call i32 @getint()\n";
+                declareFunc("declare i32 @getint()");
             }
             case "getch" -> {
                 if (param != null) { error(); }
                 expValue = new ExpValue(regIndex++, true);
                 outStr += "\t%x" + (regIndex-1) +" = call i32 @getch()\n";
+                declareFunc("declare i32 @getch()");
             }
             case "putint" -> {
                 if (param == null) { error(); }
                 String output = param.value + "";
                 if (param.isRegister) { output = param.out(); }
                 outStr += "\tcall void @putint(i32 " + output + ")\n";
+                declareFunc("declare void @putint(i32)");
             }
             case "putch" -> {
                 if (param == null) { error(); }
@@ -45,9 +48,17 @@ public class FuncAnal {
                     output = param.out();
                 }
                 outStr += "\tcall void @putch(i32 " + output + ")\n";
+                declareFunc("declare void @putch(i32)");
             }
         }
         return expValue;
+    }
+
+    private static void declareFunc(String func) {
+        int loc = outStr.indexOf(func);
+        if (loc == -1) {
+            outStr = func + "\n" + outStr;
+        }
     }
 
 
