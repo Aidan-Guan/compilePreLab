@@ -28,14 +28,14 @@ public class Test {
 
         tokens = LexAnal.getAllTokens(in);
 
-//        for (Token item : tokens) {
-//            System.out.println(item.toString());
-//        }
+        for (Token item : tokens) {
+            System.out.println(item.toString());
+        }
 
         outputStr = GrammarAnal.getOutputString(tokens);
         System.out.println(outputStr);
 
-//        filePrint(args[1]);
+        filePrint(args[1]);
     }
 
     private static void filePrint(String fileLoc) throws IOException {
