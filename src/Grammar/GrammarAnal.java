@@ -1,6 +1,6 @@
 package Grammar;
 
-import Token.Token;
+import Token.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,7 +13,9 @@ public class GrammarAnal {
     static Token currentSym;
     static String outStr = "";
     static int regIndex = 0;
+
     static HashMap<String, Integer> varMap = new HashMap<>();
+    static HashMap<String, Ident> identMap = new HashMap<>();
 
     public static String getOutputString(ArrayList<Token> lexAnalResult) {
         tokens = lexAnalResult;
