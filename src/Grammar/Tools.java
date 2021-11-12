@@ -90,7 +90,7 @@ public class Tools {
 
 
     static String store(int regNum, String outReg) {
-        return "\t%x" + regNum + " = load i32, i32* " + outReg +"\n";
+        return "\tstore i32 " + outReg + ", i32* %x" + regNum + "\n";
     }
 
 
