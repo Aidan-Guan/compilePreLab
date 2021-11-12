@@ -41,6 +41,7 @@ public class Declare {
 
     static void ConstDef() throws IOException {
         if (!GrammarAnal.currentSym.type.equals("IDENT")) { GrammarAnal.error(); }
+        String constName = currentSym.value;
         GrammarAnal.getNextSym();
         if(!GrammarAnal.currentSym.value.equals("=")){ GrammarAnal.error(); }
         GrammarAnal.getNextSym();
@@ -48,7 +49,7 @@ public class Declare {
         ExpValue expValue = ConstInitVal();
 
         GrammarAnal.currentSym.isConst = true;
-        if(!addConstAndVar(currentSym.value, expValue, true, true)) GrammarAnal.error();
+        if(!addConstAndVar(constName, expValue, true, true)) GrammarAnal.error();
 
     }
 
