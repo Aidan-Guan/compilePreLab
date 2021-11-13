@@ -252,9 +252,9 @@ public class LexAnal {
         String lex="";
         Scanner in = new Scanner(new FileReader(fileLoc));
         while (in.hasNextLine()) {
-        lex += in.nextLine();
-        System.out.println(lex);
+        lex += in.nextLine()+"\n";
         }
+        System.out.println(lex);
     }
 
 }
