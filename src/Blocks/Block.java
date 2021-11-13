@@ -1,0 +1,25 @@
+package Blocks;
+
+import Grammar.GrammarAnal;
+
+import static Grammar.GrammarAnal.*;
+
+public class Block {
+    public int regNum;
+    public String blockStr = "";
+
+    public Block() {
+        regNum = regIndex;
+        blockStr = "";
+        regIndex ++;
+        BlockList.blockArrayList.add(this);
+    }
+
+    public String out() {
+        return "%x"+regNum;
+    }
+
+    public String outputBlockStr() {
+        return blockStr;
+    }
+}

@@ -12,7 +12,7 @@ public class GrammarAnal {
     static String currentBlockName = "";
     static Token currentSym;
     static String outStr = "";
-    static int regIndex = 0;
+    public static int regIndex = 0;
 
 //    static HashMap<String, Integer> varMap = new HashMap<>();
     static HashMap<String, Ident> identMap = new HashMap<>();

@@ -1,5 +1,6 @@
 package Grammar;
 
+import Blocks.Block;
 import Token.*;
 
 import static Grammar.GrammarAnal.*;
@@ -61,11 +62,13 @@ public class Statement {
 
 
     private static void IfAnal() throws IOException {
+        Block tBlock = new Block();
+
         if (!currentSym.value.equals("if")) error();
         getNextSym();
         if (!currentSym.value.equals("(")) error();
-        Cond();
-
+        Cond(tBlock);
+//TODO 把所有的stmt中对于Str的操作作为返回值return Str
         if (!currentSym.value.equals(")")) error();
 
         Stmt();
@@ -75,7 +78,11 @@ public class Statement {
         Stmt();
     }
 
-    private static void Cond() {
+    private static void Cond(Block tBlock) throws IOException {
+        Blocks.Block currentBlock = new Block();
+        outStr += "\tbr label " + currentBlock.out();
+
+        ExpValue expValue = Expression.LOrExp(currentBlock, tBlock);
 
     }
 

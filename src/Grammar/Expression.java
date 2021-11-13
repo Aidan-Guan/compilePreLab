@@ -1,5 +1,7 @@
 package Grammar;
 
+import Blocks.Block;
+import Blocks.BlockList;
 import Token.*;
 
 import static Grammar.GrammarAnal.*;
@@ -114,44 +116,85 @@ public class Expression {
         }
     }
 
-    static ExpValue LOrExp() throws IOException {
-        ExpValue expValue = LAndExp();
+
+    static ExpValue LOrExp(Block currentBlock, Block tBlock) throws IOException {
+        Block fBlock = new Block();
+        ExpValue expValue = LAndExp(currentBlock, fBlock);
+
+        currentBlock.blockStr += "\tbr i1 "+expValue.out()+",label "+tBlock.out()+", label"+fBlock.out()+"\n";
 
         while (currentSym.value.equals("||")) {
             getNextSym();
-            expValue = LOrExp();
+            expValue = LOrExp(fBlock, tBlock);
         }
 
         return expValue;
     }
 
-    static ExpValue LAndExp() throws IOException {
-        ExpValue expValue = EqExp();
+    static ExpValue LAndExp(Block currentBlock, Block fBlock) throws IOException {
+        ExpValue expValue = EqExp(currentBlock);
+
+        Block tBlock = new Block();
+        currentBlock.blockStr += "\tbr i1 "+expValue.out()+",label "+tBlock.out()+", label"+fBlock.out()+"\n";
+
         while (currentSym.value.equals("&&")) {
             getNextSym();
-            expValue = LAndExp();
+            expValue = LAndExp(tBlock, fBlock);
         }
 
         return expValue;
     }
 
-    static ExpValue EqExp() throws IOException {
-        ExpValue expValue = RelExp();
+    static ExpValue EqExp(Block block) throws IOException {
+        ExpValue expValue1 = RelExp(block);
+        ExpValue expValue = expValue1;
 
         while (currentSym.value.equals("==") || currentSym.value.equals("!=")) {
+            String op = currentSym.value;
             getNextSym();
-            expValue = EqExp();
+            ExpValue expValue2 = EqExp(block);
+            switch (op) {
+                case "==" -> {
+                    block.blockStr += "\t%x" + regIndex + " = icmp eq i32 " + expValue1.out() + ", " + expValue2.out() + "\n";
+                }
+                case "!=" -> {
+                    block.blockStr += "\t%x" + regIndex + " = icmp ne i32 " + expValue1.out() + ", " + expValue2.out() + "\n";
+                }
+            }
+            expValue = new ExpValue(regIndex, true);
+            regIndex++;
         }
 
         return expValue;
     }
 
-    static ExpValue RelExp() throws IOException {
-        ExpValue expValue = AddExp();
+    static ExpValue RelExp(Block block) throws IOException {
+        ExpValue expValue1 = AddExp();
+        ExpValue expValue = expValue1;
 
         while (currentSym.value.equals("<") || currentSym.value.equals(">") || currentSym.value.equals("<=") || currentSym.value.equals(">=")) {
+            String op = currentSym.value;
             getNextSym();
-            expValue = RelExp();
+            ExpValue expValue2 = RelExp(block);
+
+            switch (op) {
+                case "<" -> {
+                    block.blockStr += ("\t%x" + regIndex + " = icmp slt i32 " + expValue1.out() + ", " + expValue2.out() + "\n");
+                }
+                case ">" -> {
+                    block.blockStr += ("\t%x" + regIndex + " = icmp sgt i32 " + expValue1.out() + ", " + expValue2.out() + "\n");
+                }
+                case "<=" -> {
+                    block.blockStr += ("\t%x" + regIndex + " = icmp sle i32 " + expValue1.out() + ", " + expValue2.out() + "\n");
+                }
+                case ">=" -> {
+                    block.blockStr += ("\t%x" + regIndex + " = icmp sge i32 " + expValue1.out() + ", " + expValue2.out() + "\n");
+                }
+            }
+
+            expValue = new ExpValue(regIndex, true);
+            regIndex++;
+
         }
         return expValue;
     }
