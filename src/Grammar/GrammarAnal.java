@@ -111,6 +111,15 @@ public class GrammarAnal {
     }
 
 
+    static ArrayList<Token> getConstDefInitExp() {
+        ArrayList<Token> defInitTokens = new ArrayList<Token>();
+        for (int i=0; !tokens.get(currentTokenIndex+i).value.equals(";"); i++ ) {
+            defInitTokens.add(tokens.get(currentTokenIndex+i));
+        }
+        return defInitTokens;
+    }
+
+
     static void error() {
         System.exit(-1);
     }

@@ -1,9 +1,22 @@
 package Grammar;
 
 import Token.ExpValue;
+import Token.Token;
+
+import java.util.ArrayList;
+
 import static Grammar.GrammarAnal.*;
 
 public class Tools {
+
+    static void checkConstDef () {
+        ArrayList<Token> constDefExp = GrammarAnal.getConstDefInitExp();
+        for (Token item : constDefExp) {
+            if (item.type.equals("IDENT")) {
+                if (!identMap.get(item.value).isConst) error();
+            }
+        }
+    }
 
     static ExpValue addOperation (ExpValue a, ExpValue b) {
         ExpValue expValue;

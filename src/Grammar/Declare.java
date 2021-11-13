@@ -107,6 +107,7 @@ public class Declare {
 
 
     private static ExpValue ConstInitVal() throws IOException {
+        Tools.checkConstDef();
         return Expression.AddExp();
     }
 }
