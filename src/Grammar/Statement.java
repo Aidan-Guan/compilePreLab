@@ -18,7 +18,6 @@ public class Statement {
             ExpValue expValue = Expression.Exp();
             if (expValue == null) error();
             outStr += Tools.returnOperation(expValue);
-//            getNextSym();
             if (!currentSym.value.equals(";")) error();
             getNextSym();
         }
@@ -38,8 +37,6 @@ public class Statement {
                 if (currentSym.value.equals(";")) error();
 
                 if (!updateConstAndVar(ident, expValue)) error();
-
-//                getNextSym();
             }
             else {
                 Expression.Exp();
@@ -61,4 +58,26 @@ public class Statement {
         outStr += Tools.store(reg, value.out());
         return true;
     }
+
+
+    private static void IfAnal() throws IOException {
+        if (!currentSym.value.equals("if")) error();
+        getNextSym();
+        if (!currentSym.value.equals("(")) error();
+        Cond();
+
+        if (!currentSym.value.equals(")")) error();
+
+        Stmt();
+
+        if (!currentSym.value.equals("else")) return;
+
+        Stmt();
+    }
+
+    private static void Cond() {
+
+    }
+
+
 }

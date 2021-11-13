@@ -88,7 +88,6 @@ public class Expression {
         return null;
     }
 
-
     private static ExpValue PrimaryExp() throws IOException {
         if (currentSym.value.equals("(")) {
             getNextSym();
@@ -115,6 +114,46 @@ public class Expression {
         }
     }
 
+    static ExpValue LOrExp() throws IOException {
+        ExpValue expValue = LAndExp();
 
+        while (currentSym.value.equals("||")) {
+            getNextSym();
+            expValue = LOrExp();
+        }
+
+        return expValue;
+    }
+
+    static ExpValue LAndExp() throws IOException {
+        ExpValue expValue = EqExp();
+        while (currentSym.value.equals("&&")) {
+            getNextSym();
+            expValue = LAndExp();
+        }
+
+        return expValue;
+    }
+
+    static ExpValue EqExp() throws IOException {
+        ExpValue expValue = RelExp();
+
+        while (currentSym.value.equals("==") || currentSym.value.equals("!=")) {
+            getNextSym();
+            expValue = EqExp();
+        }
+
+        return expValue;
+    }
+
+    static ExpValue RelExp() throws IOException {
+        ExpValue expValue = AddExp();
+
+        while (currentSym.value.equals("<") || currentSym.value.equals(">") || currentSym.value.equals("<=") || currentSym.value.equals(">=")) {
+            getNextSym();
+            expValue = RelExp();
+        }
+        return expValue;
+    }
 
 }
