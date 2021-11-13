@@ -78,6 +78,7 @@ public class Declare {
         else {
             ExpValue expValue = new ExpValue(0, false);
             if(!addConstAndVar(currentSym.value, expValue, false, false))error();
+            getNextSym();
         }
     }
 

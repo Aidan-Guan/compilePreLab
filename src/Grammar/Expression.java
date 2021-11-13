@@ -48,6 +48,7 @@ public class Expression {
     static ExpValue UnaryExp() throws IOException {
         if (currentSym.value.equals("+") || currentSym.value.equals("-")) {
             String sign = currentSym.value;
+            getNextSym();
             ExpValue expValue = UnaryExp();
             if (sign.equals("-")) {
                 return Tools.subOperation(new ExpValue(0, false), expValue);
