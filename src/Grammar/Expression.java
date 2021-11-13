@@ -9,58 +9,58 @@ import static Grammar.GrammarAnal.*;
 import java.io.IOException;
 
 public class Expression {
-    static ExpValue Exp() throws IOException {
-        return AddExp();
+    static ExpValue Exp(Block currBlock) throws IOException {
+        return AddExp(currBlock);
     }
 
-    static ExpValue AddExp() throws IOException {
-        ExpValue expValue = MulExp();
+    static ExpValue AddExp(Block currBlock) throws IOException {
+        ExpValue expValue = MulExp(currBlock);
         while(GrammarAnal.currentSym.value.equals("+") || GrammarAnal.currentSym.value.equals("-")){
             if(GrammarAnal.currentSym.value.equals("+")){
                 GrammarAnal.getNextSym();
-                expValue = Tools.addOperation(expValue, MulExp());
+                expValue = Tools.addOperation(currBlock, expValue, MulExp(currBlock));
             }
             else {
                 GrammarAnal.getNextSym();
-                expValue = Tools.subOperation(expValue, MulExp());
+                expValue = Tools.subOperation(currBlock, expValue, MulExp(currBlock));
             }
         }
         return expValue;
     }
 
-    static ExpValue MulExp() throws IOException {
-        ExpValue expValue = UnaryExp();
+    static ExpValue MulExp(Block currBlock) throws IOException {
+        ExpValue expValue = UnaryExp(currBlock);
         while(GrammarAnal.currentSym.value.equals("*") || GrammarAnal.currentSym.value.equals("/") || currentSym.value.equals("%")){
             if(GrammarAnal.currentSym.value.equals("*")){
                 GrammarAnal.getNextSym();
-                expValue = Tools.mulOperation(expValue, UnaryExp());
+                expValue = Tools.mulOperation(currBlock, expValue, UnaryExp(currBlock));
             }
             else if(GrammarAnal.currentSym.value.equals("/")){
                 GrammarAnal.getNextSym();
-                expValue = Tools.divOperation(expValue, UnaryExp());
+                expValue = Tools.divOperation(currBlock, expValue, UnaryExp(currBlock));
             }
             else {
                 GrammarAnal.getNextSym();
-                expValue = Tools.modOperation(expValue, UnaryExp());
+                expValue = Tools.modOperation(currBlock, expValue, UnaryExp(currBlock));
             }
         }
         return expValue;
     }
 
-    static ExpValue UnaryExp() throws IOException {
+    static ExpValue UnaryExp(Block currBlock) throws IOException {
         if (currentSym.value.equals("+") || currentSym.value.equals("-")) {
             String sign = currentSym.value;
             getNextSym();
-            ExpValue expValue = UnaryExp();
+            ExpValue expValue = UnaryExp(currBlock);
             if (sign.equals("-")) {
-                return Tools.subOperation(new ExpValue(0, false), expValue);
+                return Tools.subOperation(currBlock, new ExpValue(0, false), expValue);
             }
             else {
                 return expValue;
             }
         }
         else if (currentSym.value.equals("(") || currentSym.type.equals("NUMBER")) {
-            return PrimaryExp();
+            return PrimaryExp(currBlock);
         }
         else if (currentSym.type.equals("IDENT")) {
             Token funcName = currentSym;
@@ -70,30 +70,30 @@ public class Expression {
                 getNextSym();
 
                 if (!currentSym.value.equals(")")) {
-                    ExpValue param = FuncAnal.FuncRParams();
-                    ExpValue expValue = FuncAnal.resolveFunc(funcName, param);
+                    ExpValue param = FuncAnal.FuncRParams(currBlock);
+                    ExpValue expValue = FuncAnal.resolveFunc(currBlock, funcName, param);
                     if (!currentSym.value.equals(")")) {error();}
                     getNextSym();
                     return expValue;
                 }
                 else {
-                    ExpValue param = FuncAnal.FuncRParams();
-                    ExpValue expValue = FuncAnal.resolveFunc(funcName, param);
+                    ExpValue param = FuncAnal.FuncRParams(currBlock);
+                    ExpValue expValue = FuncAnal.resolveFunc(currBlock, funcName, param);
                     getNextSym();
                     return expValue;
                 }
             }
             else {
-                return PrimaryExp();
+                return PrimaryExp(currBlock);
             }
         }
         return null;
     }
 
-    private static ExpValue PrimaryExp() throws IOException {
+    private static ExpValue PrimaryExp(Block currBlock) throws IOException {
         if (currentSym.value.equals("(")) {
             getNextSym();
-            ExpValue expValue = Exp();
+            ExpValue expValue = Exp(currBlock);
             if (!currentSym.value.equals(")")) {error();}
             getNextSym();
             return expValue;
@@ -110,7 +110,7 @@ public class Expression {
             if (tarIdent==null || currentSym.isConst) {error();}
 
             ExpValue expValue = new ExpValue(tarIdent.regNum,true);
-            outStr += Tools.load(regIndex++, expValue.out());
+            currBlock.blockStr += Tools.load(regIndex++, expValue.out());
             getNextSym();
             return new ExpValue(regIndex-1, true);
         }
@@ -169,7 +169,7 @@ public class Expression {
     }
 
     static ExpValue RelExp(Block block) throws IOException {
-        ExpValue expValue1 = AddExp();
+        ExpValue expValue1 = AddExp(block);
         ExpValue expValue = expValue1;
 
         while (currentSym.value.equals("<") || currentSym.value.equals(">") || currentSym.value.equals("<=") || currentSym.value.equals(">=")) {

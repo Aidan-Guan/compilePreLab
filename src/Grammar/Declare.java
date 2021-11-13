@@ -1,5 +1,6 @@
 package Grammar;
 
+import Blocks.Block;
 import Token.ExpValue;
 import Token.Ident;
 import Token.Token;
@@ -10,23 +11,23 @@ import static Grammar.GrammarAnal.*;
 
 public class Declare {
 
-    static void Decl() throws IOException {
+    static void Decl(Block currBlock) throws IOException {
         if (GrammarAnal.currentSym.value.equals("const")) {
-            ConstDecl();
+            ConstDecl(currBlock);
         }
         else {
-            VarDecl();
+            VarDecl(currBlock);
         }
     }
 
-    static void ConstDecl() throws IOException {
+    static void ConstDecl(Block currBlock) throws IOException {
         if(!GrammarAnal.currentSym.value.equals("const")){ GrammarAnal.error(); }
         GrammarAnal.getNextSym();
         BType();
-        ConstDef();
+        ConstDef(currBlock);
         while(GrammarAnal.currentSym.value.equals(",")){
             GrammarAnal.getNextSym();
-            ConstDef();
+            ConstDef(currBlock);
         }
         if(!GrammarAnal.currentSym.value.equals(";")){
             GrammarAnal.error();
@@ -39,75 +40,75 @@ public class Declare {
         GrammarAnal.getNextSym();
     }
 
-    static void ConstDef() throws IOException {
+    static void ConstDef(Block currBlock) throws IOException {
         if (!GrammarAnal.currentSym.type.equals("IDENT")) { GrammarAnal.error(); }
         String constName = currentSym.value;
         GrammarAnal.getNextSym();
         if(!GrammarAnal.currentSym.value.equals("=")){ GrammarAnal.error(); }
         GrammarAnal.getNextSym();
 
-        ExpValue expValue = ConstInitVal();
+        ExpValue expValue = ConstInitVal(currBlock);
 
         GrammarAnal.currentSym.isConst = true;
-        if(!addConstAndVar(constName, expValue, true, true)) GrammarAnal.error();
+        if(!addConstAndVar(currBlock, constName, expValue, true, true)) GrammarAnal.error();
 
     }
 
-    static void VarDecl() throws IOException {
+    static void VarDecl(Block currBlock) throws IOException {
         BType();
-        VarDef();
+        VarDef(currBlock);
         while(GrammarAnal.currentSym.value.equals(",")){
             GrammarAnal.getNextSym();
-            VarDef();
+            VarDef(currBlock);
         }
         if (currentSym.type.equals("IDENT")) getNextSym();
         if(!GrammarAnal.currentSym.value.equals(";")){ GrammarAnal.error(); }
         GrammarAnal.getNextSym();
     }
 
-    static void VarDef() throws IOException {
+    static void VarDef(Block currBlock) throws IOException {
         if (!GrammarAnal.currentSym.type.equals("IDENT")) { error(); }
         Token tmpNextSym = showNextSym();
         if(tmpNextSym.value.equals("=")){
             String identName = currentSym.value;
             getNextSym();
             getNextSym();
-            ExpValue expValue = InitVal();
-            if(!addConstAndVar(identName, expValue, false, true)) error();
+            ExpValue expValue = InitVal(currBlock);
+            if(!addConstAndVar(currBlock, identName, expValue, false, true)) error();
         }
         else {
             ExpValue expValue = new ExpValue(0, false);
-            if(!addConstAndVar(currentSym.value, expValue, false, false))error();
+            if(!addConstAndVar(currBlock, currentSym.value, expValue, false, false))error();
             getNextSym();
         }
     }
 
 
     //TODO: 这里还没看懂
-    private static boolean addConstAndVar(String ident, ExpValue expValue, boolean isConst, boolean isGiven) throws IOException {
+    private static boolean addConstAndVar(Block currBlock, String ident, ExpValue expValue, boolean isConst, boolean isGiven) throws IOException {
         if (expValue == null) {error();}
 
         if (identMap.get(ident) != null) { return false; }
 
         identMap.put(ident, new Ident(isConst, ident, regIndex));
         regIndex++;
-        outStr += "\t%x"+ (regIndex-1) +" = alloca i32\n";
+        currBlock.blockStr += "\t%x"+ (regIndex-1) +" = alloca i32\n";
 
         if (isGiven) {
-            outStr += Tools.store(regIndex-1, expValue.out());
+            currBlock.blockStr += Tools.store(regIndex-1, expValue.out());
         }
 
         return true;
     }
 
 
-    private static ExpValue InitVal() throws IOException {
-        return Expression.Exp();
+    private static ExpValue InitVal(Block currBlock) throws IOException {
+        return Expression.Exp(currBlock);
     }
 
 
-    private static ExpValue ConstInitVal() throws IOException {
+    private static ExpValue ConstInitVal(Block currBlock) throws IOException {
         Tools.checkConstDef();
-        return Expression.AddExp();
+        return Expression.AddExp(currBlock);
     }
 }

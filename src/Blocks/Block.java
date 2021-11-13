@@ -15,6 +15,12 @@ public class Block {
         BlockList.blockArrayList.add(this);
     }
 
+    public Block(boolean isMain) {
+        regNum = -1;
+        blockStr = "";
+        BlockList.blockArrayList.add(this);
+    }
+
     public String out() {
         return "%x"+regNum;
     }

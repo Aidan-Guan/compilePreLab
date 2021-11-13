@@ -1,5 +1,6 @@
 package Grammar;
 
+import Blocks.Block;
 import Token.ExpValue;
 import Token.Token;
 
@@ -18,55 +19,55 @@ public class Tools {
         }
     }
 
-    static ExpValue addOperation (ExpValue a, ExpValue b) {
+    static ExpValue addOperation (Block currBlock, ExpValue a, ExpValue b) {
         ExpValue expValue;
         String outA = a.out();
         String outB = b.out();
 
-        outStr += addModifyStr(regIndex, outA, outB);
+        currBlock.blockStr += addModifyStr(regIndex, outA, outB);
         expValue = new ExpValue(regIndex++, true);
         return expValue;
     }
 
 
-    static ExpValue subOperation (ExpValue a, ExpValue b) {
+    static ExpValue subOperation (Block currBlock, ExpValue a, ExpValue b) {
         ExpValue expValue;
         String outA = a.out();
         String outB = b.out();
 
-        outStr += subModifyStr(regIndex, outA, outB);
+        currBlock.blockStr += subModifyStr(regIndex, outA, outB);
         expValue = new ExpValue(regIndex++, true);
         return expValue;
     }
 
 
-    static ExpValue mulOperation (ExpValue a, ExpValue b) {
+    static ExpValue mulOperation (Block currBlock, ExpValue a, ExpValue b) {
         ExpValue expValue;
         String outA = a.out(), outB = b.out();
 
-        outStr += mulModifyStr(regIndex, outA, outB);
+        currBlock.blockStr += mulModifyStr(regIndex, outA, outB);
         expValue = new ExpValue(regIndex++, true);
         return expValue;
     }
 
 
-    static ExpValue divOperation (ExpValue a, ExpValue b) {
+    static ExpValue divOperation (Block currBlock, ExpValue a, ExpValue b) {
         ExpValue expValue;
         String outA = a.out();
         String outB = b.out();
 
-        outStr += divModifyStr(regIndex, outA, outB);
+        currBlock.blockStr += divModifyStr(regIndex, outA, outB);
         expValue = new ExpValue(regIndex++, true);
         return expValue;
     }
 
 
-    static ExpValue modOperation (ExpValue a, ExpValue b) {
+    static ExpValue modOperation (Block currBlock, ExpValue a, ExpValue b) {
         ExpValue expValue;
         String outA = a.out();
         String outB = b.out();
 
-        outStr += modModifyStr(regIndex, outA, outB);
+        currBlock.blockStr += modModifyStr(regIndex, outA, outB);
         expValue = new ExpValue(regIndex++, true);
         return expValue;
     }

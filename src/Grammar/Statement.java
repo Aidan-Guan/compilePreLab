@@ -7,18 +7,18 @@ import static Grammar.GrammarAnal.*;
 import java.io.IOException;
 
 public class Statement {
-    static void Stmt() throws IOException {
+    static void Stmt(Block currBlock) throws IOException {
         if (currentSym.value.equals("{")) {
-            GrammarAnal.Block();
+            GrammarAnal.Block(currBlock);
         }
         else if (currentSym.value.equals(";")) {
             getNextSym();
         }
         else if (currentSym.value.equals("return")) {
             getNextSym();
-            ExpValue expValue = Expression.Exp();
+            ExpValue expValue = Expression.Exp(currBlock);
             if (expValue == null) error();
-            outStr += Tools.returnOperation(expValue);
+            currBlock.blockStr += Tools.returnOperation(expValue);
             if (!currentSym.value.equals(";")) error();
             getNextSym();
         }
@@ -32,15 +32,15 @@ public class Statement {
                 getNextSym();
                 if (!currentSym.value.equals("=")) error();
                 getNextSym();
-                ExpValue expValue = Expression.Exp();
+                ExpValue expValue = Expression.Exp(currBlock);
                 if (expValue == null) error();
                 getNextSym();
                 if (currentSym.value.equals(";")) error();
 
-                if (!updateConstAndVar(ident, expValue)) error();
+                if (!updateConstAndVar(currBlock, ident, expValue)) error();
             }
             else {
-                Expression.Exp();
+                Expression.Exp(currBlock);
                 if (!currentSym.value.equals(";")) error();
                 getNextSym();
             }
@@ -49,38 +49,38 @@ public class Statement {
     }
 
 
-    static boolean updateConstAndVar(String ident, ExpValue value) {
+    static boolean updateConstAndVar(Block currBlock, String ident, ExpValue value) {
         Ident tarIdent = identMap.get(ident);
         if (tarIdent == null) return true;
 
         if (tarIdent.isConst) return false;
         int reg = tarIdent.regNum;
 
-        outStr += Tools.store(reg, value.out());
+        currBlock.blockStr += Tools.store(reg, value.out());
         return true;
     }
 
 
-    private static void IfAnal() throws IOException {
+    private static void IfAnal(Block currBlock) throws IOException {
         Block tBlock = new Block();
 
         if (!currentSym.value.equals("if")) error();
         getNextSym();
         if (!currentSym.value.equals("(")) error();
-        Cond(tBlock);
+        Cond(currBlock, tBlock);
 //TODO 把所有的stmt中对于Str的操作作为返回值return Str
         if (!currentSym.value.equals(")")) error();
 
-        Stmt();
+        Stmt(currBlock);
 
         if (!currentSym.value.equals("else")) return;
 
-        Stmt();
+        Stmt(currBlock);
     }
 
-    private static void Cond(Block tBlock) throws IOException {
+    private static void Cond(Block currBlock, Block tBlock) throws IOException {
         Blocks.Block currentBlock = new Block();
-        outStr += "\tbr label " + currentBlock.out();
+        currBlock.blockStr += "\tbr label " + currentBlock.out();
 
         ExpValue expValue = Expression.LOrExp(currentBlock, tBlock);
 

@@ -1,5 +1,6 @@
 package Grammar;
 
+import Blocks.Block;
 import Token.*;
 
 import java.io.IOException;
@@ -7,11 +8,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GrammarAnal {
+    public static Block mainBlock = new Block(true);
     static ArrayList<Token> tokens;
     static int currentTokenIndex = -1;
     static String currentBlockName = "";
     static Token currentSym;
-    static String outStr = "";
+//    static String outStr = "";
     public static int regIndex = 0;
 
 //    static HashMap<String, Integer> varMap = new HashMap<>();
@@ -21,7 +23,7 @@ public class GrammarAnal {
         tokens = lexAnalResult;
         currentSym = getNextSym();
         Comp();
-        return outStr;
+        return mainBlock.blockStr;
     }
 
 
@@ -33,46 +35,46 @@ public class GrammarAnal {
         FuncType();
         Ident();
         if (!currentSym.value.equals("(")) { error(); }
-        outStr += "(";
+        mainBlock.blockStr += "(";
 
         getNextSym();
         if (!currentSym.value.equals(")")) { error(); }
-        outStr += ")";
+        mainBlock.blockStr += ")";
         getNextSym();
 
-        Block();
+        Block(mainBlock);
     }
 
     static void FuncType() throws IOException {
         if (!currentSym.value.equals("int")) { error(); }
-        outStr += "define dso_local i32 ";
+        mainBlock.blockStr += "define dso_local i32 ";
         getNextSym();
     }
 
     static void Ident() throws IOException {
         if(!currentSym.value.equals("main")){ error(); }
-        outStr += "@main";
+        mainBlock.blockStr += "@main";
         currentBlockName = "main";
         getNextSym();
     }
 
-    static void Block() throws IOException {
+    static void Block(Block currentBlock) throws IOException {
         if(!currentSym.value.equals("{")){ error(); }
-        outStr += "{\n";
+        currentBlock.blockStr += "{\n";
         getNextSym();
         while (!currentSym.value.equals("}") && !currentSym.type.equals("ERR")) {
-            BlockItem();
+            BlockItem(currentBlock);
         }
-        outStr+="}";
+        currentBlock.blockStr+="}";
         getNextSym();
     }
 
-    static void BlockItem() throws IOException {
+    static void BlockItem(Block currBlock) throws IOException {
         if(currentSym.value.equals("int") || currentSym.value.equals("const")){
-            Declare.Decl();
+            Declare.Decl(currBlock);
         }
         else {
-            Statement.Stmt();
+            Statement.Stmt(currBlock);
         }
     }
 
