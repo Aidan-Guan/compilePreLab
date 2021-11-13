@@ -3,11 +3,13 @@ package LexAnal;
 
 import Token.Token;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 public class LexAnal {
     private static ArrayList<Token> tokens = new ArrayList<Token>();
@@ -244,6 +246,15 @@ public class LexAnal {
 //            System.exit(10);
         }
 
+    }
+
+    public static void myLex(String fileLoc) throws IOException {
+        String lex="";
+        Scanner in = new Scanner(new FileReader(fileLoc));
+        while (in.hasNextLine()) {
+        lex += in.nextLine();
+        System.out.println(lex);
+        }
     }
 
 }

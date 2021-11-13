@@ -26,11 +26,12 @@ public class Test {
 
         in = new PushbackReader(new FileReader(fileLoc));
 
+        LexAnal.myLex(fileLoc);
         tokens = LexAnal.getAllTokens(in);
 
-        for (Token item : tokens) {
-            System.out.println(item.toString());
-        }
+//        for (Token item : tokens) {
+//            System.out.println(item.toString());
+//        }
 
         outputStr = GrammarAnal.getOutputString(tokens);
         System.out.println(outputStr);
