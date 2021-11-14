@@ -23,10 +23,9 @@ x4:
 	%x10 = icmp sge i32 %x9, 2
 	br i1 %x10,label %x2, label %x8
 
-
 x8:
 	store i32 3, i32* %x0
 	br label %x1
 
-
 }
+
