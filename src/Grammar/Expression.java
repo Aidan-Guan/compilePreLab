@@ -119,20 +119,19 @@ public class Expression {
 
     static Block LOrExp(Block currentBlock, Block tBlock) throws IOException {
         Block fBlock;
-        if (currentBlock.compBlock != null) {
+        //TODO: 按照后面有没有else进行区分
+        if (!GrammarAnal.isHaveElse()) {
             fBlock = currentBlock.compBlock;
         }
         else {
             fBlock = new Block(currentBlock.compBlock);
         }
         ExpValue expValue = LAndExp(currentBlock, fBlock, tBlock);
-//        currentBlock.blockStr += "\tbr i1 "+expValue.out()+", label "+tBlock.out()+", label "+fBlock.out()+"\n";
 
 
         while (currentSym.value.equals("||")) {
             getNextSym();
             fBlock = LOrExp(fBlock, tBlock);
-//            currentBlock.blockStr += "\tbr i1 "+expValue.out()+",label "+tBlock.out()+", label"+fBlock.out()+"\n";
         }
 
         return fBlock;

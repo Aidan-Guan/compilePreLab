@@ -131,6 +131,19 @@ public class GrammarAnal {
         return null;
     }
 
+    static boolean isHaveElse() {
+        for (int i=0; currentTokenIndex+i<tokens.size(); i++) {
+            Token tmpToken = tokens.get(currentTokenIndex + i);
+            if (tmpToken.value.equals("if")) {
+                return false;
+            }
+            else if (tmpToken.value.equals("else")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     static ArrayList<Token> getConstDefInitExp() {
         ArrayList<Token> defInitTokens = new ArrayList<Token>();
