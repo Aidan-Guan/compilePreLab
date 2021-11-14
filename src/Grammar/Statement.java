@@ -85,7 +85,8 @@ public class Statement {
         if (!currentSym.value.equals("else")) return;
         getNextSym();
         Stmt(fBlock);
-        fBlock.blockStr += "\tbr label "+resBlock.out()+"\n";
+        if (!fBlock.blockStr.contains("br label"))
+            fBlock.blockStr += "\tbr label "+resBlock.out()+"\n";
 
 
     }
