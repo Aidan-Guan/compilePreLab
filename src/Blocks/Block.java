@@ -26,6 +26,7 @@ public class Block {
     }
 
     public String outputBlockStr() {
+        blockStr = "x"+regNum+":\n" + blockStr;
         return blockStr;
     }
 }

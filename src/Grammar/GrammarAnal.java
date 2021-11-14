@@ -1,6 +1,7 @@
 package Grammar;
 
 import Blocks.Block;
+import Blocks.BlockList;
 import Token.*;
 
 import java.io.IOException;
@@ -43,6 +44,7 @@ public class GrammarAnal {
         getNextSym();
 
         Block(mainBlock);
+
     }
 
     static void FuncType() throws IOException {
@@ -65,8 +67,22 @@ public class GrammarAnal {
         while (!currentSym.value.equals("}") && !currentSym.type.equals("ERR")) {
             BlockItem(currentBlock);
         }
+
+        if (currentBlock.regNum == -1) {
+            concatAllBlocks();
+        }
+
         currentBlock.blockStr+="}";
         getNextSym();
+    }
+
+    private static void concatAllBlocks() {
+        Block mainBlock = BlockList.getMainBlock();
+        mainBlock.blockStr += "\n";
+        for (Block item : BlockList.blockArrayList) {
+            if (item.regNum == -1) continue;
+            mainBlock.blockStr += item.outputBlockStr();
+        }
     }
 
     static void BlockItem(Block currBlock) throws IOException {

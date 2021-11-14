@@ -23,7 +23,7 @@ public class Statement {
             getNextSym();
         }
         else if (currentSym.value.equals("if")) {
-
+            IfAnal(currBlock);
         }
         else if (currentSym.type.equals("IDENT")) {
             Token nextToken = showNextSym();
@@ -68,14 +68,15 @@ public class Statement {
         getNextSym();
         if (!currentSym.value.equals("(")) error();
         Cond(currBlock, tBlock);
-//TODO 把所有的stmt中对于Str的操作作为返回值return Str
+
         if (!currentSym.value.equals(")")) error();
 
-        Stmt(currBlock);
+        Stmt(tBlock);
 
         if (!currentSym.value.equals("else")) return;
 
-        Stmt(currBlock);
+        Block fBlock = new Block();
+        Stmt(fBlock);
     }
 
     private static void Cond(Block currBlock, Block tBlock) throws IOException {
