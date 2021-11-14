@@ -120,7 +120,7 @@ public class Expression {
     static Block LOrExp(Block currentBlock, Block tBlock) throws IOException {
         Block fBlock = new Block();
         ExpValue expValue = LAndExp(currentBlock, fBlock);
-        currentBlock.blockStr += "\tbr i1 "+expValue.out()+",label "+tBlock.out()+", label"+fBlock.out()+"\n";
+        currentBlock.blockStr += "\tbr i1 "+expValue.out()+",label "+tBlock.out()+", label "+fBlock.out()+"\n";
 
 
         while (currentSym.value.equals("||")) {
@@ -140,7 +140,7 @@ public class Expression {
         while (currentSym.value.equals("&&")) {
             getNextSym();
             expValue = LAndExp(tBlock, fBlock);
-            currentBlock.blockStr += "\tbr i1 "+expValue.out()+", label "+tBlock.out()+", label"+fBlock.out()+"\n";
+            currentBlock.blockStr += "\tbr i1 "+expValue.out()+", label "+tBlock.out()+", label "+fBlock.out()+"\n";
         }
 
         return expValue;

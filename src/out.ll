@@ -16,19 +16,16 @@ x2:
 x3:
 	%x5 = load i32, i32* %x0
 	%x6 = icmp sle i32 %x5, 1
-	br i1 %x6,label %x2, label%x4
+	br i1 %x6,label %x2, label %x4
 
 x4:
 	%x9 = load i32, i32* %x0
 	%x10 = icmp sge i32 %x9, 2
-	br i1 %x10,label %x2, label%x8
-
-x7:
+	br i1 %x10,label %x2, label %x8
 
 x8:
 	store i32 3, i32* %x0
 	br label %x1
 
-x11:
-
 }
+

@@ -83,6 +83,7 @@ public class GrammarAnal {
         mainBlock.blockStr += "\n";
         for (Block item : BlockList.blockArrayList) {
             if (item.regNum == -1) continue;
+            else if (item.blockStr.equals("")) continue;
             mainBlock.blockStr += item.outputBlockStr()+"\n";
         }
     }
