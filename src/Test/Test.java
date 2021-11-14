@@ -33,7 +33,7 @@ public class Test {
         outputStr = GrammarAnal.getOutputString(tokens);
         System.out.println(outputStr);
 
-        filePrint(args[1]);
+//        filePrint(args[1]);
     }
 
     private static void filePrint(String fileLoc) throws IOException {

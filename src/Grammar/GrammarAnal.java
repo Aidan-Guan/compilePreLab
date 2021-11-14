@@ -62,7 +62,8 @@ public class GrammarAnal {
 
     static void Block(Block currentBlock) throws IOException {
         if(!currentSym.value.equals("{")){ error(); }
-        currentBlock.blockStr += "{\n";
+        if (currentBlock.regNum == -1)
+            currentBlock.blockStr += "{\n";
         getNextSym();
         while (!currentSym.value.equals("}") && !currentSym.type.equals("ERR")) {
             BlockItem(currentBlock);
@@ -72,7 +73,8 @@ public class GrammarAnal {
             concatAllBlocks();
         }
 
-        currentBlock.blockStr+="}";
+        if (currentBlock.regNum == -1)
+            currentBlock.blockStr+="}\n";
         getNextSym();
     }
 
@@ -81,7 +83,7 @@ public class GrammarAnal {
         mainBlock.blockStr += "\n";
         for (Block item : BlockList.blockArrayList) {
             if (item.regNum == -1) continue;
-            mainBlock.blockStr += item.outputBlockStr();
+            mainBlock.blockStr += item.outputBlockStr()+"\n";
         }
     }
 

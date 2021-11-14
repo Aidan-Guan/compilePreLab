@@ -23,7 +23,11 @@ public class Statement {
             getNextSym();
         }
         else if (currentSym.value.equals("if")) {
+            Block resBlock = new Block();
             IfAnal(currBlock);
+            while (!currentSym.value.equals("}") && !currentSym.type.equals("ERR")) {
+                BlockItem(resBlock);
+            }
         }
         else if (currentSym.type.equals("IDENT")) {
             Token nextToken = showNextSym();
@@ -67,24 +71,27 @@ public class Statement {
         if (!currentSym.value.equals("if")) error();
         getNextSym();
         if (!currentSym.value.equals("(")) error();
-        Cond(currBlock, tBlock);
+        getNextSym();
+        Block fBlock = Cond(currBlock, tBlock);
 
         if (!currentSym.value.equals(")")) error();
-
+        getNextSym();
         Stmt(tBlock);
 
         if (!currentSym.value.equals("else")) return;
-
-        Block fBlock = new Block();
+        getNextSym();
         Stmt(fBlock);
+
+
     }
 
-    private static void Cond(Block currBlock, Block tBlock) throws IOException {
+    private static Block Cond(Block currBlock, Block tBlock) throws IOException {
         Blocks.Block currentBlock = new Block();
-        currBlock.blockStr += "\tbr label " + currentBlock.out();
+        currBlock.blockStr += "\tbr label " + currentBlock.out()+"\n";
 
-        ExpValue expValue = Expression.LOrExp(currentBlock, tBlock);
+        Block fBlock = Expression.LOrExp(currentBlock, tBlock);
 
+        return fBlock;
     }
 
 

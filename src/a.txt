@@ -1,5 +1,11 @@
 int main() {
-    int five = 5;
-
+    int a = getint();
+    if (a <= 1 || a>=2) {
+        a=2;
+    }
+    else {
+        a=3;
+    }
+    a = 93+6;
     return 0;
 }
