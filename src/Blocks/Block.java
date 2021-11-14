@@ -18,6 +18,9 @@ public class Block {
     }
 
     public Block(Block compBlock) {
+        if (regIndex == 20) {
+            System.out.println("here");
+        }
         regNum = regIndex;
         blockStr = "";
         regIndex ++;

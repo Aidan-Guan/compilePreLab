@@ -188,10 +188,10 @@ public class LexAnal {
         // 读了一个之后发现不是等号，一定是小于号
         if (tokenChar != '=') {
             in.unread(tokenChar);
-            return new Token("SIGN", "!=");
+            return new Token("SIGN", "!");
         }
         else {
-            return new Token("SIGN", "!");
+            return new Token("SIGN", "!=");
         }
     }
 

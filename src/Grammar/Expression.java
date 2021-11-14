@@ -119,13 +119,34 @@ public class Expression {
 
     static Block LOrExp(Block currentBlock, Block tBlock) throws IOException {
         Block fBlock;
-        //TODO: 按照后面有没有else进行区分
-        if (!GrammarAnal.isHaveElse()) {
-            fBlock = currentBlock.compBlock;
-        }
-        else {
+
+        //TODO: 按照后面有没有或分
+        if (GrammarAnal.isHaveOr()) {
             fBlock = new Block(currentBlock.compBlock);
         }
+        else if (GrammarAnal.isHaveElse()) {
+            fBlock = new Block(currentBlock.compBlock);
+        }
+        else {
+            fBlock = currentBlock.compBlock;
+
+        }
+
+//        //TODO: 按照后面有没有else进行区分
+//        if (!GrammarAnal.isHaveElse()) {
+//            if (currentBlock.compBlock != null) {
+//                fBlock = currentBlock.compBlock;
+//            }
+//            else {
+//                fBlock = new Block(currentBlock);
+//                currentBlock = fBlock;
+//            }
+//        }
+//        else {
+//            fBlock = new Block(currentBlock.compBlock);
+//        }
+//
+
         ExpValue expValue = LAndExp(currentBlock, fBlock, tBlock);
 
 

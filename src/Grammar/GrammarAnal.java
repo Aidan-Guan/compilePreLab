@@ -98,9 +98,13 @@ public class GrammarAnal {
     }
 
     static Token getNextSym() {
+
         currentTokenIndex ++;
         try {
             currentSym = tokens.get(currentTokenIndex);
+            if (currentSym.value.equals("9")) {
+                System.out.println("here");
+            }
             return currentSym;
         }
         catch (Exception e) {
@@ -138,6 +142,19 @@ public class GrammarAnal {
                 return false;
             }
             else if (tmpToken.value.equals("else")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static boolean isHaveOr() {
+        for (int i=0; currentTokenIndex+i<tokens.size(); i++) {
+            Token tmpToken = tokens.get(currentTokenIndex + i);
+            if (tmpToken.value.equals("if")) {
+                return false;
+            }
+            else if (tmpToken.value.equals("||")) {
                 return true;
             }
         }
