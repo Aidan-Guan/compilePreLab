@@ -118,7 +118,13 @@ public class Expression {
 
 
     static Block LOrExp(Block currentBlock, Block tBlock) throws IOException {
-        Block fBlock = new Block(currentBlock.compBlock);
+        Block fBlock;
+        if (currentBlock.compBlock != null) {
+            fBlock = currentBlock.compBlock;
+        }
+        else {
+            fBlock = new Block(currentBlock.compBlock);
+        }
         ExpValue expValue = LAndExp(currentBlock, fBlock, tBlock);
 //        currentBlock.blockStr += "\tbr i1 "+expValue.out()+", label "+tBlock.out()+", label "+fBlock.out()+"\n";
 
