@@ -24,7 +24,7 @@ public class Statement {
         }
         else if (currentSym.value.equals("if")) {
             Block resBlock = new Block();
-            IfAnal(currBlock);
+            IfAnal(currBlock, resBlock);
             while (!currentSym.value.equals("}") && !currentSym.type.equals("ERR")) {
                 BlockItem(resBlock);
             }
@@ -65,7 +65,7 @@ public class Statement {
     }
 
 
-    private static void IfAnal(Block currBlock) throws IOException {
+    private static void IfAnal(Block currBlock, Block resBlock) throws IOException {
         Block tBlock = new Block();
 
         if (!currentSym.value.equals("if")) error();
@@ -76,11 +76,14 @@ public class Statement {
 
         if (!currentSym.value.equals(")")) error();
         getNextSym();
+//        tBlock.compBlock = resBlock;
         Stmt(tBlock);
+        tBlock.blockStr += "\tbr label "+resBlock.out()+"\n";
 
         if (!currentSym.value.equals("else")) return;
         getNextSym();
         Stmt(fBlock);
+        fBlock.blockStr += "\tbr label "+resBlock.out()+"\n";
 
 
     }

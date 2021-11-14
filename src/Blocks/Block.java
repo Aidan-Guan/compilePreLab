@@ -7,6 +7,8 @@ import static Grammar.GrammarAnal.*;
 public class Block {
     public int regNum;
     public String blockStr = "";
+    public Block compBlock = null; //当前块没有if等判断，此处记录直接的下一跳块
+
 
     public Block() {
         regNum = regIndex;

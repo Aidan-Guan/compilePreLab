@@ -126,7 +126,7 @@ public class Expression {
         while (currentSym.value.equals("||")) {
             getNextSym();
             fBlock = LOrExp(fBlock, tBlock);
-            currentBlock.blockStr += "\tbr i1 "+expValue.out()+",label "+tBlock.out()+", label"+fBlock.out()+"\n";
+//            currentBlock.blockStr += "\tbr i1 "+expValue.out()+",label "+tBlock.out()+", label"+fBlock.out()+"\n";
         }
 
         return fBlock;

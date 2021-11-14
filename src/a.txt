@@ -1,5 +1,5 @@
 int main() {
-    int a = getint();
+    int a = 9;
     if (a <= 1 || a>=2) {
         a=2;
     }
