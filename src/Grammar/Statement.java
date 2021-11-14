@@ -23,10 +23,11 @@ public class Statement {
             getNextSym();
         }
         else if (currentSym.value.equals("if")) {
-            Block resBlock = new Block();
-            IfAnal(currBlock, resBlock);
+            if (currBlock.compBlock == null) currBlock.compBlock = new Block();
+//            Block resBlock = new Block();
+            IfAnal(currBlock, currBlock.compBlock);
             while (!currentSym.value.equals("}") && !currentSym.type.equals("ERR")) {
-                BlockItem(resBlock);
+                BlockItem(currBlock.compBlock);
             }
         }
         else if (currentSym.type.equals("IDENT")) {
@@ -66,7 +67,8 @@ public class Statement {
 
 
     private static void IfAnal(Block currBlock, Block resBlock) throws IOException {
-        Block tBlock = new Block();
+        currBlock.compBlock = resBlock;
+        Block tBlock = new Block(currBlock.compBlock);
 
         if (!currentSym.value.equals("if")) error();
         getNextSym();
@@ -89,7 +91,7 @@ public class Statement {
     }
 
     private static Block Cond(Block currBlock, Block tBlock) throws IOException {
-        Blocks.Block currentBlock = new Block();
+        Blocks.Block currentBlock = new Block(currBlock.compBlock);
         currBlock.blockStr += "\tbr label " + currentBlock.out()+"\n";
 
         Block fBlock = Expression.LOrExp(currentBlock, tBlock);

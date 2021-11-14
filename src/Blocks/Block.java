@@ -17,6 +17,14 @@ public class Block {
         BlockList.blockArrayList.add(this);
     }
 
+    public Block(Block compBlock) {
+        regNum = regIndex;
+        blockStr = "";
+        regIndex ++;
+        this.compBlock = compBlock;
+        BlockList.blockArrayList.add(this);
+    }
+
     public Block(boolean isMain) {
         regNum = -1;
         blockStr = "";

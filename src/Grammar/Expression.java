@@ -118,7 +118,7 @@ public class Expression {
 
 
     static Block LOrExp(Block currentBlock, Block tBlock) throws IOException {
-        Block fBlock = new Block();
+        Block fBlock = new Block(currentBlock.compBlock);
         ExpValue expValue = LAndExp(currentBlock, fBlock, tBlock);
 //        currentBlock.blockStr += "\tbr i1 "+expValue.out()+", label "+tBlock.out()+", label "+fBlock.out()+"\n";
 
@@ -135,7 +135,7 @@ public class Expression {
     static ExpValue LAndExp(Block currentBlock, Block fBlock, Block tBlock) throws IOException {
         ExpValue expValue = EqExp(currentBlock);
 
-        Block newTBlock = new Block();
+        Block newTBlock = new Block(currentBlock.compBlock);
         if (!currentSym.value.equals("&&")) {
             currentBlock.blockStr += "\tbr i1 " + expValue.out()+", label "+tBlock.out()+", label "+fBlock.out()+"\n";
         }
