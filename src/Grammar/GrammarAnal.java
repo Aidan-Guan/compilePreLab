@@ -180,16 +180,19 @@ public class GrammarAnal {
 
     static boolean isContainEq() {
         int leftIndex, rightIndex;
+        leftIndex = 0;
         for (int i=0; ;i--) {
             Token tmpToken = tokens.get(currentTokenIndex + i);
-            if (tmpToken.value.equals("(") || tmpToken.value.equals("&&") || tmpToken.value.equals("||")) {
+            Token lastToken = tokens.get(currentTokenIndex+i-1);
+            if ((tmpToken.value.equals("(")&&lastToken.value.equals("if")) || tmpToken.value.equals("&&") || tmpToken.value.equals("||")) {
                 leftIndex = currentTokenIndex+i;
                 break;
             }
         }
         for (int i=0; ;i++) {
             Token tmpToken = tokens.get(currentTokenIndex + i);
-            if (tmpToken.value.equals("(") || tmpToken.value.equals("&&") || tmpToken.value.equals("||")) {
+            Token nxtToken = tokens.get(currentTokenIndex + i+1);
+            if ((tmpToken.value.equals(")") &&( nxtToken.value.equals("{")||nxtToken.type.equals("IDENT"))) || tmpToken.value.equals("&&") || tmpToken.value.equals("||")) {
                 rightIndex = currentTokenIndex+i;
                 break;
             }
@@ -197,7 +200,7 @@ public class GrammarAnal {
 
         for (int i=0; i+leftIndex<=rightIndex; i++) {
             Token tmpToken = tokens.get(i+leftIndex);
-            if (tmpToken.value.equals("==") || tmpToken.value.equals("!=")) return true;
+            if (tmpToken.value.equals("==") || tmpToken.value.equals("!=") || tmpToken.value.equals("<=") || tmpToken.value.equals(">=") || tmpToken.value.equals("<") || tmpToken.value.equals(">")) return true;
         }
         return false;
     }

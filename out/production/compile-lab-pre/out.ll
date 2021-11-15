@@ -1,5 +1,4 @@
 
-declare void @putint(i32)
 define dso_local i32 @main(){
 	%x0 = alloca i32
 	%x1 = alloca i32
@@ -15,7 +14,6 @@ define dso_local i32 @main(){
 
 x7:
 	%x26 = load i32, i32* %x0
-	call void @putint(i32 %x26)
 	ret i32 0
 
 x8:

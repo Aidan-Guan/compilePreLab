@@ -185,13 +185,14 @@ public class Expression {
         ExpValue expValue1 = RelExp(block);
         ExpValue expValue = expValue1;
 
-//        if (!(currentSym.value.equals("==")||currentSym.value.equals("!=")) &&  currentSym.value.equals("(") && (showNextSym().value.equals("{")||showNextSym().type.equals("IDENT"))) {
+
+//        if (!GrammarAnal.isContainEq()) {
 //            block.blockStr += "\t%x" + regIndex + " = icmp ne i32 " + expValue.out() +", 0\n";
 //            expValue = new ExpValue(regIndex, true);
 //            regIndex++;
 //            return expValue;
 //        }
-        if (!GrammarAnal.isContainEq()) {
+        if (!(currentSym.value.equals("==")||currentSym.value.equals("!=")) && currentSym.value.equals("(") && (showNextSym().value.equals("{")||showNextSym().type.equals("IDENT"))) {
             block.blockStr += "\t%x" + regIndex + " = icmp ne i32 " + expValue.out() +", 0\n";
             expValue = new ExpValue(regIndex, true);
             regIndex++;
@@ -221,29 +222,31 @@ public class Expression {
         ExpValue expValue1 = AddExp(block);
         ExpValue expValue = expValue1;
 
-        while (currentSym.value.equals("<") || currentSym.value.equals(">") || currentSym.value.equals("<=") || currentSym.value.equals(">=")) {
-            String op = currentSym.value;
-            getNextSym();
-            ExpValue expValue2 = RelExp(block);
+        if (currentSym.value.equals("<") || currentSym.value.equals(">") || currentSym.value.equals("<=") || currentSym.value.equals(">=")) {
+            while (currentSym.value.equals("<") || currentSym.value.equals(">") || currentSym.value.equals("<=") || currentSym.value.equals(">=")) {
+                String op = currentSym.value;
+                getNextSym();
+                ExpValue expValue2 = RelExp(block);
 
-            switch (op) {
-                case "<" -> {
-                    block.blockStr += ("\t%x" + regIndex + " = icmp slt i32 " + expValue1.out() + ", " + expValue2.out() + "\n");
+                switch (op) {
+                    case "<" -> {
+                        block.blockStr += ("\t%x" + regIndex + " = icmp slt i32 " + expValue1.out() + ", " + expValue2.out() + "\n");
+                    }
+                    case ">" -> {
+                        block.blockStr += ("\t%x" + regIndex + " = icmp sgt i32 " + expValue1.out() + ", " + expValue2.out() + "\n");
+                    }
+                    case "<=" -> {
+                        block.blockStr += ("\t%x" + regIndex + " = icmp sle i32 " + expValue1.out() + ", " + expValue2.out() + "\n");
+                    }
+                    case ">=" -> {
+                        block.blockStr += ("\t%x" + regIndex + " = icmp sge i32 " + expValue1.out() + ", " + expValue2.out() + "\n");
+                    }
                 }
-                case ">" -> {
-                    block.blockStr += ("\t%x" + regIndex + " = icmp sgt i32 " + expValue1.out() + ", " + expValue2.out() + "\n");
-                }
-                case "<=" -> {
-                    block.blockStr += ("\t%x" + regIndex + " = icmp sle i32 " + expValue1.out() + ", " + expValue2.out() + "\n");
-                }
-                case ">=" -> {
-                    block.blockStr += ("\t%x" + regIndex + " = icmp sge i32 " + expValue1.out() + ", " + expValue2.out() + "\n");
-                }
+
+                expValue = new ExpValue(regIndex, true);
+                regIndex++;
+
             }
-
-            expValue = new ExpValue(regIndex, true);
-            regIndex++;
-
         }
         return expValue;
     }
