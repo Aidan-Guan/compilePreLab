@@ -185,7 +185,7 @@ public class Expression {
         ExpValue expValue1 = RelExp(block);
         ExpValue expValue = expValue1;
 
-        if (!(currentSym.value.equals("==")||currentSym.value.equals("!=")) &&  currentSym.value.equals("(") && (showNextSym().value.equals("{")||showNextSym().type.equals("IDENT"))) {
+        if (!(currentSym.value.equals("==")||currentSym.value.equals("!=")) &&  currentSym.value.equals(")") && (showNextSym().value.equals("{")||showNextSym().type.equals("IDENT"))) {
             block.blockStr += "\t%x" + regIndex + " = icmp ne i32 " + expValue.out() +", 0\n";
             expValue = new ExpValue(regIndex, true);
             regIndex++;

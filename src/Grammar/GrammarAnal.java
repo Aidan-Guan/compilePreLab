@@ -7,6 +7,7 @@ import Token.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 
 public class GrammarAnal {
     public static Block mainBlock = new Block(true);
@@ -136,15 +137,31 @@ public class GrammarAnal {
     }
 
     static boolean isHaveElse() {
+        Stack<String> braceStack = new Stack<>();
         for (int i=0; currentTokenIndex+i<tokens.size(); i++) {
-            Token tmpToken = tokens.get(currentTokenIndex + i);
-            if (tmpToken.value.equals("if")) {
-                return false;
-            }
-            else if (tmpToken.value.equals("else")) {
+            Token tempToken = tokens.get(currentTokenIndex + i);
+
+            if (braceStack.isEmpty() && tempToken.value.equals("else")) {
                 return true;
             }
+
+            if (braceStack.isEmpty() && tempToken.value.equals("if")) {
+                return false;
+            }
+
+            if (tempToken.value.equals("{")) {
+                braceStack.push("{");
+            }
+            else if (tempToken.value.equals("}")) {
+                if (!braceStack.isEmpty()) {
+                    braceStack.pop();
+                }
+                else {
+                    return false;
+                }
+            }
         }
+
         return false;
     }
 
