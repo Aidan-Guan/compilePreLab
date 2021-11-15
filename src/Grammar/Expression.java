@@ -186,18 +186,18 @@ public class Expression {
         ExpValue expValue = expValue1;
 
 
-//        if (!GrammarAnal.isContainEq()) {
-//            block.blockStr += "\t%x" + regIndex + " = icmp ne i32 " + expValue.out() +", 0\n";
-//            expValue = new ExpValue(regIndex, true);
-//            regIndex++;
-//            return expValue;
-//        }
-        if (!(currentSym.value.equals("==")||currentSym.value.equals("!=")) && currentSym.value.equals("(") && (showNextSym().value.equals("{")||showNextSym().type.equals("IDENT"))) {
+        if (GrammarAnal.isContainNot()) {
             block.blockStr += "\t%x" + regIndex + " = icmp ne i32 " + expValue.out() +", 0\n";
             expValue = new ExpValue(regIndex, true);
             regIndex++;
             return expValue;
         }
+//        if (!(currentSym.value.equals("==")||currentSym.value.equals("!=")) && currentSym.value.equals("(") && (showNextSym().value.equals("{")||showNextSym().type.equals("IDENT"))) {
+//            block.blockStr += "\t%x" + regIndex + " = icmp ne i32 " + expValue.out() +", 0\n";
+//            expValue = new ExpValue(regIndex, true);
+//            regIndex++;
+//            return expValue;
+//        }
 
         while (currentSym.value.equals("==") || currentSym.value.equals("!=")) {
             String op = currentSym.value;

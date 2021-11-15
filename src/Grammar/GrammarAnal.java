@@ -205,6 +205,34 @@ public class GrammarAnal {
         return false;
     }
 
+    static boolean isContainNot() {
+        int lIndex, rIndex;
+        for (int i=0; ;i--) {
+            Token tmp = tokens.get(currentTokenIndex+i);
+            if (tmp.value.equals("if")) {
+                lIndex = currentTokenIndex+i;
+                break;
+            }
+        }
+        for (int i=0; ; i++) {
+            Token tmp = tokens.get(currentTokenIndex+i);
+            if (tmp.value.equals("{")) {
+                rIndex = currentTokenIndex+i;
+                break;
+            }
+        }
+        for (int i=0; i+lIndex<=rIndex; i++) {
+            Token tmp1 = tokens.get(lIndex+i);
+            Token tmp2 = tokens.get(lIndex+i+1);
+            Token tmp3 = tokens.get(lIndex+i+2);
+
+            if(tmp1.value.equals("!")&&tmp2.value.equals("!")&&tmp3.value.equals("!")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     static ArrayList<Token> getConstDefInitExp() {
         ArrayList<Token> defInitTokens = new ArrayList<Token>();
