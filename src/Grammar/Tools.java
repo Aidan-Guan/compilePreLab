@@ -10,6 +10,8 @@ import static Grammar.GrammarAnal.*;
 
 public class Tools {
 
+    public static ArrayList<Integer> i1RegArrayList = new ArrayList<>();
+
     static void checkConstDef () {
         ArrayList<Token> constDefExp = GrammarAnal.getConstDefInitExp();
         for (Token item : constDefExp) {
@@ -75,18 +77,34 @@ public class Tools {
 
     static ExpValue notOperation (Block currBlock, ExpValue a) {
         ExpValue expValue;
-        String outA = a.out();
 
+        currBlock.blockStr += notModifyStr(regIndex, a);
         expValue = new ExpValue(regIndex, true);
-        currBlock.blockStr += notModifyStr(regIndex++, outA);
-        currBlock.blockStr += zextModifyStr(regIndex, "%x"+String.valueOf(regIndex-1));
         regIndex++;
+
+//        currBlock.blockStr += zextModifyStr(regIndex, "%x"+String.valueOf(regIndex-1));
+//        regIndex++;
         return expValue;
     }
 
 
-    private static String notModifyStr(int regNum, String outA) {
-        return "\t%x" + regNum + " = icmp eq i1 " + outA + ", 0\n";
+    static ExpValue zextOperation (Block currBlock, ExpValue a) {
+        ExpValue expValue;
+        currBlock.blockStr += zextModifyStr(regIndex++, a.out());
+        expValue = new ExpValue(regIndex-1, true);
+        return expValue;
+    }
+
+
+    private static String notModifyStr(int regNum, ExpValue a) {
+        if (i1RegArrayList.contains(a.value)) {
+            i1RegArrayList.add(regNum);
+            return "\t%x" + regNum + " = icmp eq i1 " + a.out() + ", 0\n";
+        }
+        else {
+            i1RegArrayList.add(regNum);
+            return "\t%x" + regNum + " = icmp eq i32 " + a.out() + ", 0\n";
+        }
     }
 
 

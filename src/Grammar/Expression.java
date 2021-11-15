@@ -59,7 +59,8 @@ public class Expression {
                 return expValue;
             }
             else if (sign.equals("!")) {
-                return Tools.notOperation(currBlock, expValue);
+                expValue = Tools.notOperation(currBlock, expValue);
+                return Tools.zextOperation(currBlock, expValue);
             }
         }
         else if (currentSym.value.equals("(") || currentSym.type.equals("NUMBER")) {
@@ -183,6 +184,13 @@ public class Expression {
     static ExpValue EqExp(Block block) throws IOException {
         ExpValue expValue1 = RelExp(block);
         ExpValue expValue = expValue1;
+
+        if (!(currentSym.value.equals("==")||currentSym.value.equals("!="))) {
+            block.blockStr += "\t%x" + regIndex + " = icmp ne i32 " + expValue.out() +", 0\n";
+            expValue = new ExpValue(regIndex, true);
+            regIndex++;
+            return expValue;
+        }
 
         while (currentSym.value.equals("==") || currentSym.value.equals("!=")) {
             String op = currentSym.value;

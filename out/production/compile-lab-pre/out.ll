@@ -19,11 +19,11 @@ x2:
 
 x3:
 	%x5 = load i32, i32* %x0
-	%x6 = icmp eq i1 %x5, 0
+	%x6 = icmp eq i32 %x5, 0
 	%x7 = zext i1 %x6 to i32
-	%x8 = icmp eq i1 %x7, 0
+	%x8 = icmp eq i32 %x7, 0
 	%x9 = zext i1 %x8 to i32
-	%x10 = icmp eq i1 %x9, 0
+	%x10 = icmp eq i32 %x9, 0
 	%x11 = zext i1 %x10 to i32
 	%x12 = sub i32 0, %x11
 	br i1 %x12, label %x2, label %x4
