@@ -6,15 +6,15 @@ define dso_local i32 @main(){
 	br label %x3
 
 x1:
-	%x17 = load i32, i32* %x0
-	call void @putint(i32 %x17)
+	%x18 = load i32, i32* %x0
+	call void @putint(i32 %x18)
 	ret i32 0
 
 x2:
-	%x14 = sub i32 0, 1
-	%x15 = sub i32 0, %x14
+	%x15 = sub i32 0, 1
 	%x16 = sub i32 0, %x15
-	store i32 %x16, i32* %x0
+	%x17 = sub i32 0, %x16
+	store i32 %x17, i32* %x0
 	br label %x1
 
 x3:
@@ -26,7 +26,8 @@ x3:
 	%x10 = icmp eq i32 %x9, 0
 	%x11 = zext i1 %x10 to i32
 	%x12 = sub i32 0, %x11
-	br i1 %x12, label %x2, label %x4
+	%x13 = icmp ne i32 %x12, 0
+	br i1 %x13, label %x2, label %x4
 
 x4:
 	store i32 0, i32* %x0
