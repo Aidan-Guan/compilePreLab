@@ -21,8 +21,8 @@ public class Test {
     public static ArrayList<Token> tokens = new ArrayList<Token>();
 
     public static void main(String[] args) throws IOException {
-//        String fileLoc = args[0];
-        String fileLoc = "/Users/guanhuaimin/本地磁盘/学习/本地_大三上/编译原理/labs/compilePreLab/src/a.txt";
+        String fileLoc = args[0];
+//        String fileLoc = "/Users/guanhuaimin/本地磁盘/学习/本地_大三上/编译原理/labs/compilePreLab/src/a.txt";
 
         in = new PushbackReader(new FileReader(fileLoc));
 
@@ -33,7 +33,7 @@ public class Test {
         outputStr = GrammarAnal.getOutputString(tokens);
         System.out.println(outputStr);
 
-//        filePrint(args[1]);
+        filePrint(args[1]);
     }
 
     private static void filePrint(String fileLoc) throws IOException {
