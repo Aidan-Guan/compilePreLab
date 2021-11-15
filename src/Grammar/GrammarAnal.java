@@ -178,6 +178,30 @@ public class GrammarAnal {
         return false;
     }
 
+    static boolean isContainEq() {
+        int leftIndex, rightIndex;
+        for (int i=0; ;i--) {
+            Token tmpToken = tokens.get(currentTokenIndex + i);
+            if (tmpToken.value.equals("(") || tmpToken.value.equals("&&") || tmpToken.value.equals("||")) {
+                leftIndex = currentTokenIndex+i;
+                break;
+            }
+        }
+        for (int i=0; ;i++) {
+            Token tmpToken = tokens.get(currentTokenIndex + i);
+            if (tmpToken.value.equals("(") || tmpToken.value.equals("&&") || tmpToken.value.equals("||")) {
+                rightIndex = currentTokenIndex+i;
+                break;
+            }
+        }
+
+        for (int i=0; i+leftIndex<=rightIndex; i++) {
+            Token tmpToken = tokens.get(i+leftIndex);
+            if (tmpToken.value.equals("==") || tmpToken.value.equals("!=")) return true;
+        }
+        return false;
+    }
+
 
     static ArrayList<Token> getConstDefInitExp() {
         ArrayList<Token> defInitTokens = new ArrayList<Token>();

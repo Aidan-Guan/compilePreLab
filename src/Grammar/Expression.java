@@ -191,6 +191,12 @@ public class Expression {
             regIndex++;
             return expValue;
         }
+        else if (!GrammarAnal.isContainEq()) {
+            block.blockStr += "\t%x" + regIndex + " = icmp ne i32 " + expValue.out() +", 0\n";
+            expValue = new ExpValue(regIndex, true);
+            regIndex++;
+            return expValue;
+        }
 
         while (currentSym.value.equals("==") || currentSym.value.equals("!=")) {
             String op = currentSym.value;
