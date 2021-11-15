@@ -73,6 +73,28 @@ public class Tools {
     }
 
 
+    static ExpValue notOperation (Block currBlock, ExpValue a) {
+        ExpValue expValue;
+        String outA = a.out();
+
+        expValue = new ExpValue(regIndex, true);
+        currBlock.blockStr += notModifyStr(regIndex++, outA);
+        currBlock.blockStr += zextModifyStr(regIndex, "%x"+String.valueOf(regIndex-1));
+        regIndex++;
+        return expValue;
+    }
+
+
+    private static String notModifyStr(int regNum, String outA) {
+        return "\t%x" + regNum + " = icmp eq i1 " + outA + ", 0\n";
+    }
+
+
+    private static String zextModifyStr(int regNum, String outA) {
+        return "\t%x" + regNum + " = zext i1 "+outA+" to i32\n";
+    }
+
+
     private static String addModifyStr(int regNum, String outA, String outB) {
         return "\t%x" + regNum + " = add i32 " +outA + ", " + outB + "\n";
     }

@@ -10,6 +10,8 @@ public class ExpValue {
     }
 
     public String out() {
+
+
         if (isRegister) {
             return "%x"+this.value;
         }

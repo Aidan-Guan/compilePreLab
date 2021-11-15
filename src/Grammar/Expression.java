@@ -48,15 +48,18 @@ public class Expression {
     }
 
     static ExpValue UnaryExp(Block currBlock) throws IOException {
-        if (currentSym.value.equals("+") || currentSym.value.equals("-")) {
+        if (currentSym.value.equals("+") || currentSym.value.equals("-") || currentSym.value.equals("!")) {
             String sign = currentSym.value;
             getNextSym();
             ExpValue expValue = UnaryExp(currBlock);
             if (sign.equals("-")) {
                 return Tools.subOperation(currBlock, new ExpValue(0, false), expValue);
             }
-            else {
+            else if (sign.equals("+")){
                 return expValue;
+            }
+            else if (sign.equals("!")) {
+                return Tools.notOperation(currBlock, expValue);
             }
         }
         else if (currentSym.value.equals("(") || currentSym.type.equals("NUMBER")) {
