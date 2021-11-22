@@ -72,9 +72,8 @@ public class GrammarAnal {
             BlockItem(currentBlock);
         }
 
-        if (currentBlock.regNum == -1) {
+        if (currentBlock.regNum == -1 && IdentMapList.getListLength()==2) {
             concatAllBlocks();
-//            removeAllBreces();
         }
 
         if (currentBlock.regNum == -1 && IdentMapList.getListLength()==2)

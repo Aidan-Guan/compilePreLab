@@ -9,7 +9,9 @@ import java.io.IOException;
 public class Statement {
     static void Stmt(Block currBlock) throws IOException {
         if (currentSym.value.equals("{")) {
+//            IdentMapList.mapGenerate();
             GrammarAnal.Block(currBlock);
+//            IdentMapList.removeTopMap();
         }
         else if (currentSym.value.equals(";")) {
             getNextSym();
@@ -55,7 +57,7 @@ public class Statement {
 
 
     static boolean updateConstAndVar(Block currBlock, String ident, ExpValue value) {
-        Ident tarIdent = IdentMapList.getCurrMap().get(ident);
+        Ident tarIdent = IdentMapList.getTarIdentInAllBlocks(ident);
         if (tarIdent == null) return false;
 
         if (tarIdent.isConst) return false;

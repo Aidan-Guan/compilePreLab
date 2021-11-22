@@ -15,8 +15,8 @@ public class IdentMapList {
     }
 
     public static void removeTopMap() {
-        HashMap<String, Ident> tarMap = identMapList.get(mapIndex-1);
-        identMapList.remove(tarMap);
+//        HashMap<String, Ident> tarMap = identMapList.get(mapIndex-1);
+        identMapList.remove(mapIndex-1);
         mapIndex--;
     }
 
