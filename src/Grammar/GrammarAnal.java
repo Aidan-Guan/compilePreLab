@@ -65,7 +65,7 @@ public class GrammarAnal {
         IdentMapList.mapGenerate();
 
         if(!currentSym.value.equals("{")){ error(); }
-        if (currentBlock.regNum == -1) currentBlock.blockStr += "{\n";
+        if (currentBlock.regNum == -1 && IdentMapList.getListLength()==2) currentBlock.blockStr += "{\n";
 
         getNextSym();
         while (!currentSym.value.equals("}") && !currentSym.type.equals("ERR")) {
@@ -74,9 +74,10 @@ public class GrammarAnal {
 
         if (currentBlock.regNum == -1) {
             concatAllBlocks();
+//            removeAllBreces();
         }
 
-        if (currentBlock.regNum == -1)
+        if (currentBlock.regNum == -1 && IdentMapList.getListLength()==2)
             currentBlock.blockStr+="}\n";
         getNextSym();
 
@@ -91,6 +92,27 @@ public class GrammarAnal {
             else if (item.blockStr.equals("")) continue;
             mainBlock.blockStr += item.outputBlockStr()+"\n";
         }
+    }
+
+    private static void removeAllBreces() {
+        Block mainBlock = BlockList.getMainBlock();
+        Stack<Integer> braceStack = new Stack<>();
+
+        for (int i=0; i< mainBlock.blockStr.toCharArray().length; i++) {
+            if (mainBlock.blockStr.charAt(i)=='{' || mainBlock.blockStr.charAt(i)=='}') {
+                braceStack.push(i);
+            }
+        }
+
+        braceStack.pop();
+        while (true) {
+            int index = braceStack.pop();
+            if (braceStack.isEmpty()) {
+                braceStack.push(index);
+                break;
+            }
+        }
+
     }
 
     static void BlockItem(Block currBlock) throws IOException {

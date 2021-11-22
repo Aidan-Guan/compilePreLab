@@ -38,4 +38,7 @@ public class IdentMapList {
         return identMapList.get(mapIndex-1).get(identName);
     }
 
+    public static int getListLength() {
+        return mapIndex;
+    }
 }
