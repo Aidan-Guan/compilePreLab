@@ -1,7 +1,6 @@
 package Grammar;
 
 import Blocks.Block;
-import Blocks.BlockList;
 import Token.*;
 
 import static Grammar.GrammarAnal.*;
@@ -109,8 +108,8 @@ public class Expression {
         }
         else {
             if (!currentSym.type.equals("IDENT")) {error();}
-            Ident tarIdent = identMap.get(currentSym.value);
-//            Integer varReg = varMap.getOrDefault(currentSym.value, -1);
+            Ident tarIdent = IdentMapList.getTarIdentInAllBlocks(currentSym.value);
+//            Ident tarIdent = identMap.get(currentSym.value);
             if (tarIdent==null || currentSym.isConst) {error();}
 
             ExpValue expValue = new ExpValue(tarIdent.regNum,true);

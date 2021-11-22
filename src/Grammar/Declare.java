@@ -1,11 +1,10 @@
 package Grammar;
 
 import Blocks.Block;
-import Token.ExpValue;
-import Token.Ident;
-import Token.Token;
+import Token.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import static Grammar.GrammarAnal.*;
 
@@ -84,13 +83,13 @@ public class Declare {
     }
 
 
-    //TODO: 这里还没看懂
     private static boolean addConstAndVar(Block currBlock, String ident, ExpValue expValue, boolean isConst, boolean isGiven) throws IOException {
         if (expValue == null) {error();}
 
-        if (identMap.get(ident) != null) { return false; }
-
-        identMap.put(ident, new Ident(isConst, ident, regIndex));
+        //TODO
+        if (IdentMapList.getTarIdentInCurrBlock(ident) != null) { return false; }
+        HashMap<String, Ident> tarMap = IdentMapList.getCurrMap();
+        tarMap.put(ident, new Ident(isConst, ident, regIndex));
         regIndex++;
         currBlock.blockStr += "\t%x"+ (regIndex-1) +" = alloca i32\n";
 

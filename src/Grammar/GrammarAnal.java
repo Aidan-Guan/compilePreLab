@@ -15,11 +15,8 @@ public class GrammarAnal {
     static int currentTokenIndex = -1;
     static String currentBlockName = "";
     static Token currentSym;
-//    static String outStr = "";
-    public static int regIndex = 0;
 
-//    static HashMap<String, Integer> varMap = new HashMap<>();
-    static HashMap<String, Ident> identMap = new HashMap<>();
+    public static int regIndex = 0;
 
     public static String getOutputString(ArrayList<Token> lexAnalResult) throws IOException {
         tokens = lexAnalResult;
@@ -30,6 +27,8 @@ public class GrammarAnal {
 
 
     static void Comp() throws IOException {
+        // 此处是全局变量
+        IdentMapList.mapGenerate();
         FuncDef();
     }
 
@@ -62,9 +61,12 @@ public class GrammarAnal {
     }
 
     static void Block(Block currentBlock) throws IOException {
+
+        IdentMapList.mapGenerate();
+
         if(!currentSym.value.equals("{")){ error(); }
-        if (currentBlock.regNum == -1)
-            currentBlock.blockStr += "{\n";
+        if (currentBlock.regNum == -1) currentBlock.blockStr += "{\n";
+
         getNextSym();
         while (!currentSym.value.equals("}") && !currentSym.type.equals("ERR")) {
             BlockItem(currentBlock);
@@ -77,6 +79,8 @@ public class GrammarAnal {
         if (currentBlock.regNum == -1)
             currentBlock.blockStr+="}\n";
         getNextSym();
+
+        IdentMapList.removeTopMap();
     }
 
     private static void concatAllBlocks() {

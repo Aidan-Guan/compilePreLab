@@ -1,8 +1,7 @@
 package Grammar;
 
 import Blocks.Block;
-import Token.ExpValue;
-import Token.Token;
+import Token.*;
 
 import java.util.ArrayList;
 
@@ -16,7 +15,7 @@ public class Tools {
         ArrayList<Token> constDefExp = GrammarAnal.getConstDefInitExp();
         for (Token item : constDefExp) {
             if (item.type.equals("IDENT")) {
-                if (!identMap.get(item.value).isConst) error();
+                if (!IdentMapList.getCurrMap().get(item.value).isConst) error();
             }
         }
     }

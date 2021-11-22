@@ -55,7 +55,7 @@ public class Statement {
 
 
     static boolean updateConstAndVar(Block currBlock, String ident, ExpValue value) {
-        Ident tarIdent = identMap.get(ident);
+        Ident tarIdent = IdentMapList.getCurrMap().get(ident);
         if (tarIdent == null) return false;
 
         if (tarIdent.isConst) return false;
