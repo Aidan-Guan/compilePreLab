@@ -32,6 +32,7 @@ public class Test {
 
         outputStr = GrammarAnal.getOutputString(tokens);
         System.out.println(outputStr);
+        filePrint("/Users/guanhuaimin/本地磁盘/学习/本地_大三上/编译原理/labs/compilePreLab/src/out.ll");
 
 //        filePrint(args[1]);
     }

@@ -15,7 +15,7 @@ public class Tools {
         ArrayList<Token> constDefExp = GrammarAnal.getConstDefInitExp();
         for (Token item : constDefExp) {
             if (item.type.equals("IDENT")) {
-                if (!IdentMapList.getCurrMap().get(item.value).isConst) error();
+                if (!IdentMapList.getTarIdentInAllBlocks(item.value).isConst) error();
             }
         }
     }

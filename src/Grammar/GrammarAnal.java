@@ -94,26 +94,6 @@ public class GrammarAnal {
         }
     }
 
-    private static void removeAllBreces() {
-        Block mainBlock = BlockList.getMainBlock();
-        Stack<Integer> braceStack = new Stack<>();
-
-        for (int i=0; i< mainBlock.blockStr.toCharArray().length; i++) {
-            if (mainBlock.blockStr.charAt(i)=='{' || mainBlock.blockStr.charAt(i)=='}') {
-                braceStack.push(i);
-            }
-        }
-
-        braceStack.pop();
-        while (true) {
-            int index = braceStack.pop();
-            if (braceStack.isEmpty()) {
-                braceStack.push(index);
-                break;
-            }
-        }
-
-    }
 
     static void BlockItem(Block currBlock) throws IOException {
         if(currentSym.value.equals("int") || currentSym.value.equals("const")){
@@ -262,7 +242,7 @@ public class GrammarAnal {
 
     static ArrayList<Token> getConstDefInitExp() {
         ArrayList<Token> defInitTokens = new ArrayList<Token>();
-        for (int i=0; !tokens.get(currentTokenIndex+i).value.equals(";"); i++ ) {
+        for (int i=0; !tokens.get(currentTokenIndex+i).value.equals(";") && !tokens.get(currentTokenIndex+i).value.equals(","); i++ ) {
             defInitTokens.add(tokens.get(currentTokenIndex+i));
         }
         return defInitTokens;
