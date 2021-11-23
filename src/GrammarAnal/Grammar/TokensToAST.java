@@ -61,6 +61,20 @@ public class TokensToAST {
         addChild(NodeFuncDef, parent);
     }
 
+    public static void Block(AstNode parent) {
+        AstNode NodeBlock = new AstNode("<Block>");
+
+        if (!currentSym.value.equals("{")) ErrorSolu.error();
+        addChild(currentSym, NodeBlock);
+        getNextSym();
+
+        //TODO: blockitem
+
+        if (!currentSym.value.equals("}")) ErrorSolu.error();
+        addChild(currentSym, NodeBlock);
+        getNextSym();
+    }
+
 
     public static void getNextSym() {
         try {
