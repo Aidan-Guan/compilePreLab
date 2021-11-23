@@ -1,15 +1,13 @@
-package GrammarAnal;
+package GrammarAnal.Grammar;
 
 import AST.AstNode;
 import ErrorSolution.Error;
 import LexicalAnalysis.Token;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
-import java.util.SplittableRandom;
 
-import static GrammarAnal.Declare.*;
-import static GrammarAnal.Statement.stmt;
+import static GrammarAnal.Grammar.Declare.*;
+import static GrammarAnal.Grammar.Statement.stmt;
 import static LexicalAnalysis.InitLex.initLex;
 
 public class GrammarAnalysis {

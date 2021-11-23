@@ -1,11 +1,11 @@
-package GrammarAnal;
+package GrammarAnal.Grammar;
 
 import AST.AstNode;
 
 import java.util.ArrayList;
 
-import static Expression.Expressions.*;
-import static GrammarAnal.GrammarAnalysis.*;
+import static GrammarAnal.Expression.Expressions.*;
+import static GrammarAnal.Grammar.GrammarAnalysis.*;
 
 public class IfAnal {
     public static boolean cond(AstNode parent) {

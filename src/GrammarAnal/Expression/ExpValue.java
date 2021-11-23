@@ -1,4 +1,4 @@
-package Expression;
+package GrammarAnal.Expression;
 
 public class ExpValue {
     int register;

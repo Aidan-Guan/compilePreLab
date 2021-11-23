@@ -1,11 +1,11 @@
-package Expression;
+package GrammarAnal.Expression;
 
 import AST.AstNode;
 
 import java.util.ArrayList;
 
-import static GrammarAnal.GrammarAnalysis.*;
-import static GrammarAnal.Statement.*;
+import static GrammarAnal.Grammar.GrammarAnalysis.*;
+import static GrammarAnal.Grammar.Statement.*;
 
 public class Expressions {
     public static boolean exp(AstNode parent) {

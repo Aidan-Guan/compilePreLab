@@ -1,6 +1,6 @@
 package TestCompile;
 
-import GrammarAnal.GrammarAnalysis;
+import GrammarAnal.Grammar.GrammarAnalysis;
 import LexicalAnalysis.LexAnal;
 import LexicalAnalysis.Token;
 
