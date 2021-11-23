@@ -1,0 +1,104 @@
+package GrammarAnal;
+
+import AST.AstNode;
+import LexicalAnalysis.Token;
+
+import java.util.AbstractList;
+import java.util.ArrayList;
+
+import static GrammarAnal.Declare.*;
+
+public class GrammarAnalysis {
+    private static ArrayList<Token> tokens;
+    private static ArrayList<String> grammar = new ArrayList<>();
+    private static int tokensIndex = 0;
+    public static AstNode root;
+
+    static int pointer = 0;
+    static int printPointer = 0;
+
+    static void grammarAnal(ArrayList<Token> tokenList) {
+        tokens = tokenList;
+        compUnit();
+    }
+
+    static boolean compUnit() {
+        int now = pointer;
+        int nowPrint = printPointer;
+
+        AstNode nodeCompUnit = new AstNode("<CompUnit>");
+        root = nodeCompUnit;
+
+        while (decl(nodeCompUnit));
+
+        if (MainFuncDef(nodeCompUnit)) {
+            addGrammar("<CompUnit>");
+            return true;
+        }
+        return falseSolution(now, nowPrint);
+    }
+
+
+    static boolean mainFuncDef(AstNode root) {
+        int now = pointer;
+        int nowPrint = printPointer;
+        AstNode node_mainFuncDef = new AstNode("<MainFuncDef>");
+        if (symbol("INTTK", node_mainFuncDef)
+                && symbol("MAINTK", node_mainFuncDef)
+                && symbol("LPARENT", node_mainFuncDef)
+                && symbol("RPARENT", node_mainFuncDef)
+                && block(node_mainFuncDef)) {
+            addGrammar("<MainFuncDef>");
+            root.children.add(node_mainFuncDef);
+            return true;
+        }
+        return falseSolution(now, nowPrint);
+    }
+
+
+    static boolean block(AstNode root) {
+        int now = pointer;
+        int nowprint = printPointer;
+        AstNode node_block = new AstNode("<Block>");
+        if (symbol("LBRACE", node_block)) {
+            while (blockItem(node_block));
+            if (symbol("RBRACE", node_block)) {
+                root.children.add(node_block);
+                addGrammar("<Block>");
+                return true;
+            }
+        }
+        return falseSolution(now, nowprint);
+    }
+
+
+    static boolean blockItem(AstNode parent) {
+        int now = pointer;
+        int nowPrint = printPointer;
+        AstNode node_blockItem = new AstNode("<BlockItem>");
+        if (decl(node_blockItem) || stmt(node_blockItem)) {
+            parent.children.add(node_blockItem);
+            return true;
+        }
+        return falseSolution(now, nowPrint);
+    }
+
+
+
+    static void addGrammar (String string) {
+        if (printPointer == grammar.size()) {
+            grammar.add(string);
+            printPointer++;
+        }
+        else {
+            grammar.set(printPointer++, string);
+        }
+    }
+
+    static boolean falseSolution (int now, int nowPrint) {
+        pointer = now;
+        printPointer = nowPrint;
+        return false;
+    }
+
+}
