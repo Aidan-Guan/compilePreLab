@@ -1,50 +1,52 @@
 package GrammarAnal.Grammar;
 
 import AST.AstNode;
-import ErrorSolution.Error;
+import ErrorSolution.ErrorSolu;
 import LexicalAnalysis.Token;
 
 import java.util.ArrayList;
 
-import static GrammarAnal.Grammar.Declare.*;
 import static GrammarAnal.Grammar.Statement.stmt;
-import static LexicalAnalysis.InitLex.initLex;
 
 public class GrammarAnalysis {
-    private static ArrayList<String[]> lexical;
+//    private static ArrayList<String[]> lexical;
     private static ArrayList<String> grammar = new ArrayList<>();
+    public static ArrayList<Token> tokens;
+    public static int tokenIndex = 0;
     public static AstNode root;
 
-    public static int pointer = 0;
-    public static int printPointer = 0;
+//    public static int pointer = 0;
+//    public static int printPointer = 0;
 
     public static void grammarAnal(ArrayList<Token> tokenList) {
-        lexical = initLex(tokenList);
+//        lexical = initLex(tokenList);
+        tokens = tokenList;
         if (!compUnit()) {
-            Error.error();
+            ErrorSolu.error();
         }
     }
 
     static boolean compUnit() {
-        int now = pointer;
-        int nowPrint = printPointer;
+//        int now = pointer;
+//        int nowPrint = printPointer;
 
         AstNode nodeCompUnit = new AstNode("<CompUnit>");
         root = nodeCompUnit;
 
-        while (decl(nodeCompUnit));
+        while (decl(root));
 
         if (MainFuncDef(nodeCompUnit)) {
             addGrammar("<CompUnit>");
             return true;
         }
-        return falseSolution(now, nowPrint);
+        return false;
     }
 
 
     static boolean MainFuncDef(AstNode root) {
         int now = pointer;
         int nowPrint = printPointer;
+
         AstNode node_mainFuncDef = new AstNode("<MainFuncDef>");
         if (symbol("INTTK", node_mainFuncDef)
                 && symbol("MAINTK", node_mainFuncDef)
@@ -98,37 +100,39 @@ public class GrammarAnalysis {
         }
     }
 
-    public static boolean falseSolution(int now, int nowPrint) {
-        pointer = now;
-        printPointer = nowPrint;
-        return false;
-    }
+//    public static boolean falseSolution(int now, int nowPrint) {
+//        pointer = now;
+//        printPointer = nowPrint;
+//        return false;
+//    }
 
+
+//    public static boolean symbol(ArrayList<String> str, AstNode parent) {
+////        int now = pointer;
+////        int nowPrint = printPointer;
+//        Token tmp = tokens.get(tokenIndex);
+//
+//        String[] temp = lexical.get(pointer++);
+//        if (str.equals(temp[0])) {
+//            AstNode node_symbol = new AstNode(temp[0],  temp[1]);
+//            parent.children.add(node_symbol);
+//            addGrammar(temp[0] + " " + temp[1]);
+//            return true;
+//        }
+//        return falseSolution(now, nowPrint);
+//    }
 
     public static boolean symbol(String str, AstNode parent) {
-        int now = pointer;
-        int nowPrint = printPointer;
-        String[] temp = lexical.get(pointer++);
-        if (str.equals(temp[0])) {
-            AstNode node_symbol = new AstNode(temp[0],  temp[1]);
-            parent.children.add(node_symbol);
-            addGrammar(temp[0] + " " + temp[1]);
-            return true;
-        }
-        return falseSolution(now, nowPrint);
-    }
+        Token tmp = tokens.get(tokenIndex);
+        tokenIndex++;
 
-    public static boolean symbol(ArrayList<String> str, AstNode parent) {
-        int now = pointer;
-        int nowPrint = printPointer;
-        String[] temp = lexical.get(pointer++);
-        if (str.contains(temp[0])) {
-            AstNode node_symbol = new AstNode(temp[0], temp[1]);
+        if (str.equals(tmp.value)) {
+            AstNode node_symbol = new AstNode(tmp.type, tmp.value);
             parent.children.add(node_symbol);
-            addGrammar(temp[0] + " " + temp[1]);
+            addGrammar(tmp.type + " " + tmp.value);
             return true;
         }
-        return falseSolution(now, nowPrint);
+        return false;
     }
 
 

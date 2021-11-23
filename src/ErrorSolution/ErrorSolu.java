@@ -1,6 +1,6 @@
 package ErrorSolution;
 
-public class Error {
+public class ErrorSolu {
     public static void error() {
         System.exit(-1);
     }

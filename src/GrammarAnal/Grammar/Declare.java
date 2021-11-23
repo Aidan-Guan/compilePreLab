@@ -1,109 +1,72 @@
 package GrammarAnal.Grammar;
 
 import AST.AstNode;
+import ErrorSolution.ErrorSolu;
 
-import static GrammarAnal.Expression.Expressions.*;
-import static GrammarAnal.Grammar.GrammarAnalysis.*;
+import static GrammarAnal.Grammar.TokensToAST.*;
 
 
 public class Declare {
-
-    static boolean decl (AstNode parent) {
-        int now = pointer;
-        int nowPoint = printPointer;
-        if (constDecl(parent) || varDecl(parent)) {
-            return true;
+    public static void Decl(AstNode parent) {
+        if (currentSym.value.equals("const")) {
+            ConstDecl(parent);
         }
-        return falseSolution(now, nowPoint);
+        else if (currentSym.value.equals("int")) {
+            VarDecl(parent);
+        }
+        else {
+            ErrorSolu.error();
+        }
     }
 
-    static boolean constDecl (AstNode parent) {
-        int now = pointer;
-        int nowPrint = printPointer;
-        AstNode node_constDecl = new AstNode("<ConstDecl>");
-        if (symbol("CONSTTK", node_constDecl) && BType(node_constDecl) && ConstDef(node_constDecl)) {
-            while (symbol("COMMA", node_constDecl) && ConstDef(node_constDecl));
-            if (symbol("SEMICN", node_constDecl)) {
-                parent.children.add(node_constDecl);
-                addGrammar("<ConstDecl>");
-                return true;
-            }
+    public static void ConstDecl(AstNode parent) {
+        AstNode NodeConstDecl = new AstNode("<ConstDecl>");
+
+        if (!currentSym.value.equals("const")) ErrorSolu.error();
+        getNextSym();
+
+        BType(NodeConstDecl);
+
+        ConstDef(NodeConstDecl);
+
+        while (currentSym.value.equals(",")) {
+            getNextSym();
+            ConstDef(NodeConstDecl);
         }
-        return falseSolution(now, nowPrint);
+
+        if (!currentSym.value.equals(";")) { ErrorSolu.error(); }
+        getNextSym();
+
+        addChild(NodeConstDecl, parent);
     }
 
-    static boolean BType(AstNode parent) {
-        int now = pointer;
-        int nowPrint = printPointer;
-        if (symbol("INTTK", parent)) {
-            return true;
-        }
-        return falseSolution(now, nowPrint);
+    public static void BType(AstNode parent) {
+        if (!currentSym.value.equals("int")) ErrorSolu.error();
+        addChild(currentSym, parent);
+        getNextSym();
     }
 
-    static boolean ConstDef(AstNode parent) {
-        int now = pointer;
-        int nowPrint = printPointer;
-        AstNode node_constDef = new AstNode("<ConstDef>");
-        if (symbol("IDENFR", node_constDef)) {
-            if (symbol("ASSIGN", node_constDef) && constInitVal(node_constDef)) {
-                parent.children.add(node_constDef);
-                addGrammar("<ConstDef>");
-                return true;
-            }
-        }
-        return falseSolution(now, nowPrint);
+    public static void ConstDef(AstNode parent) {
+        AstNode NodeConstDef = new AstNode("<ConstDef>");
+
+        if (!currentSym.type.equals("IDENT")) ErrorSolu.error();
+        addChild(currentSym, NodeConstDef);
+        getNextSym();
+
+        if (!currentSym.value.equals("=")) ErrorSolu.error();
+        addChild(currentSym, NodeConstDef);
+        getNextSym();
+
+        ConstInitVal();
+
+        addChild(NodeConstDef, parent);
     }
 
-    static boolean constInitVal(AstNode parent) {
-        int now = pointer;
-        int nowPrint = printPointer;
-        AstNode node_constInitVal = new AstNode("<ConstInitVal>");
-        if (constExp(node_constInitVal)) {
-            parent.children.add(node_constInitVal);
-            addGrammar("<ConstInitVal>");
-            return true;
-        }
-        return falseSolution(now, nowPrint);
-    }
+    public static void ConstInitVal(AstNode parent) {
+        AstNode NodeConstInitVal = new AstNode("<ConstInitVal>");
 
-    static boolean varDecl(AstNode parent) {
-        int now = pointer;
-        int nowPrint = printPointer;
-        AstNode node_varDecl = new AstNode("<VarDecl>");
-        if(BType(node_varDecl) && varDef(node_varDecl)) {
-            while(symbol("COMMA", node_varDecl) && varDef(node_varDecl));
-            if (symbol("SEMICN", node_varDecl)) {
-                parent.children.add(node_varDecl);
-                addGrammar("<VarDecl>");
-                return true;
-            }
-        }
-        return falseSolution(now, nowPrint);
-    }
+        ConstExp();
+        addChild(NodeConstInitVal, parent);
 
-    static boolean varDef(AstNode parent) {
-        int now = pointer;
-        int nowPrint = printPointer;
-        AstNode node_varDef = new AstNode("<VarDef>");
-        if (symbol("IDENFR", node_varDef)) {
-            if (symbol("ASSIGN", node_varDef) && initVal(node_varDef));
-            parent.children.add(node_varDef);
-            addGrammar("<VarDef>");
-            return true;
-        }
-        return falseSolution(now, nowPrint);
-    }
-
-    private static boolean initVal(AstNode parent) {
-        int now = pointer;
-        int nowPrint = printPointer;
-        AstNode node_initVal = new AstNode("<InitVal>");
-        if (exp(node_initVal)) {
-            addGrammar("<InitVal>");
-            parent.children.add(node_initVal);
-            return true;
-        }
-        return falseSolution(now, nowPrint);
     }
 }

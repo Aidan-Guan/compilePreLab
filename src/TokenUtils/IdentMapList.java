@@ -1,6 +1,6 @@
 package TokenUtils;
 
-import ErrorSolution.Error;
+import ErrorSolution.ErrorSolu;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +11,7 @@ public class IdentMapList {
 
     public static HashMap<String, Ident> getCurrentMap() {
         if (mapListIndex == 0) {
-            Error.error();
+            ErrorSolu.error();
         }
         return identMapList.get(mapListIndex-1);
     }
