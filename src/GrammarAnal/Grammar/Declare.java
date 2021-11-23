@@ -30,6 +30,7 @@ public class Declare {
         ConstDef(NodeConstDecl);
 
         while (currentSym.value.equals(",")) {
+            addChild(currentSym, NodeConstDecl);
             getNextSym();
             ConstDef(NodeConstDecl);
         }
@@ -57,7 +58,7 @@ public class Declare {
         addChild(currentSym, NodeConstDef);
         getNextSym();
 
-        ConstInitVal();
+        ConstInitVal(NodeConstDef);
 
         addChild(NodeConstDef, parent);
     }
@@ -67,6 +68,49 @@ public class Declare {
 
         ConstExp();
         addChild(NodeConstInitVal, parent);
-
     }
+
+    public static void VarDecl (AstNode parent) {
+        AstNode NodeVarDecl = new AstNode("<VarDecl>");
+        BType(NodeVarDecl);
+
+        VarDef(NodeVarDecl);
+
+        while (currentSym.value.equals(",")) {
+            addChild(currentSym, NodeVarDecl);
+            getNextSym();
+            VarDef(NodeVarDecl);
+        }
+
+        if (!currentSym.value.equals(";")) ErrorSolu.error();
+        addChild(currentSym,NodeVarDecl);
+        getNextSym();
+    }
+
+    public static void VarDef(AstNode parent) {
+        AstNode NodeVarDef = new AstNode("<VarDef>");
+
+        if (!currentSym.type.equals("IDENT")) ErrorSolu.error();
+        addChild(currentSym, NodeVarDef);
+        getNextSym();
+
+        if (!currentSym.value.equals("=")) {
+            addChild(NodeVarDef, parent);
+            return;
+        }
+
+        addChild(currentSym, NodeVarDef);
+        getNextSym();
+        InitVal(NodeVarDef);
+
+        addChild(NodeVarDef, parent);
+    }
+
+    public static void InitVal(AstNode parent) {
+        AstNode NodeInitVal = new AstNode("<InitVal>");
+        Exp(NodeInitVal);
+        addChild(NodeInitVal, parent);
+    }
+
+
 }
