@@ -1,5 +1,8 @@
 package TestCompile;
 
+import LexicalAnalysis.LexAnal;
+import LexicalAnalysis.Token;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -13,6 +16,7 @@ public class Test {
 
     public static PushbackReader in;
     public static String outputStr = "";
+    public static ArrayList<Token> tokens = new ArrayList<>();
 
 
     public static void main(String[] args) throws IOException {
@@ -21,8 +25,12 @@ public class Test {
 
         in = new PushbackReader(new FileReader(fileLoc));
 
+        tokens = LexAnal.getAllTokens(in);
+        for (Token i : tokens) {
+            System.out.println(i.toString());
+        }
 
-        filePrint("/Users/guanhuaimin/本地磁盘/学习/本地_大三上/编译原理/labs/compilePreLab/src/out.ll");
+//        filePrint("/Users/guanhuaimin/本地磁盘/学习/本地_大三上/编译原理/labs/compilePreLab/src/out.ll");
 //        filePrint(args[1]);
     }
 
