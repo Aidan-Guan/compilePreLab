@@ -7,6 +7,7 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 
 import static GrammarAnal.Declare.*;
+import static GrammarAnal.Statement.stmt;
 
 public class GrammarAnalysis {
     private static ArrayList<Token> tokens;
@@ -14,8 +15,8 @@ public class GrammarAnalysis {
     private static int tokensIndex = 0;
     public static AstNode root;
 
-    static int pointer = 0;
-    static int printPointer = 0;
+    public static int pointer = 0;
+    public static int printPointer = 0;
 
     static void grammarAnal(ArrayList<Token> tokenList) {
         tokens = tokenList;
@@ -39,7 +40,7 @@ public class GrammarAnalysis {
     }
 
 
-    static boolean mainFuncDef(AstNode root) {
+    static boolean MainFuncDef(AstNode root) {
         int now = pointer;
         int nowPrint = printPointer;
         AstNode node_mainFuncDef = new AstNode("<MainFuncDef>");
@@ -85,7 +86,7 @@ public class GrammarAnalysis {
 
 
 
-    static void addGrammar (String string) {
+    public static void addGrammar(String string) {
         if (printPointer == grammar.size()) {
             grammar.add(string);
             printPointer++;
@@ -95,10 +96,37 @@ public class GrammarAnalysis {
         }
     }
 
-    static boolean falseSolution (int now, int nowPrint) {
+    public static boolean falseSolution(int now, int nowPrint) {
         pointer = now;
         printPointer = nowPrint;
         return false;
+    }
+
+
+    private static boolean symbol(String str, AstNode parent) {
+        int now = pointer;
+        int nowPrint = printPointer;
+        String[] temp = lexical.get(pointer++);
+        if (str.equals(temp[0])) {
+            AstNode node_symbol = new AstNode(temp[0],  temp[1]);
+            parent.children.add(node_symbol);
+            addGrammar(temp[0] + " " + temp[1]);
+            return true;
+        }
+        return falseSolution(now, nowPrint);
+    }
+
+    private static boolean symbol(ArrayList<String> str, AstNode parent) {
+        int now = pointer;
+        int nowPrint = printPointer;
+        String[] temp = lexical.get(pointer++);
+        if (str.contains(temp[0])) {
+            AstNode node_symbol = new AstNode(temp[0], temp[1]);
+            parent.children.add(node_symbol);
+            addGrammar(temp[0] + " " + temp[1]);
+            return true;
+        }
+        return falseSolution(now, nowPrint);
     }
 
 }
