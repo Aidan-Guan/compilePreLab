@@ -16,4 +16,12 @@ public class AstNode {
         this.type = type;
         this.value = value;
     }
+
+    /**
+     * 创建方法
+     * @param type
+     */
+    public AstNode (String type) {
+        this.type = type;
+    }
 }
