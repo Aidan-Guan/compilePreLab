@@ -1,8 +1,8 @@
 package LexicalAnalysis;
 
 public class Token {
-    String value;
-    String type;
+    public String value;
+    public String type;
 
     public Token(String type, String value) {
         this.type = type;

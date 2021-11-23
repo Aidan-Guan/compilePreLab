@@ -2,6 +2,7 @@ package GrammarAnal;
 
 import AST.AstNode;
 
+import static Expression.Expressions.*;
 import static GrammarAnal.GrammarAnalysis.*;
 
 
@@ -40,7 +41,7 @@ public class Declare {
         return falseSolution(now, nowPrint);
     }
 
-    static boolean constDef(AstNode parent) {
+    static boolean ConstDef(AstNode parent) {
         int now = pointer;
         int nowPrint = printPointer;
         AstNode node_constDef = new AstNode("<ConstDef>");

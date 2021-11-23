@@ -1,5 +1,6 @@
 package TestCompile;
 
+import GrammarAnal.GrammarAnalysis;
 import LexicalAnalysis.LexAnal;
 import LexicalAnalysis.Token;
 
@@ -29,6 +30,8 @@ public class Test {
         for (Token i : tokens) {
             System.out.println(i.toString());
         }
+
+        GrammarAnalysis.grammarAnal(tokens);
 
 //        filePrint("/Users/guanhuaimin/本地磁盘/学习/本地_大三上/编译原理/labs/compilePreLab/src/out.ll");
 //        filePrint(args[1]);

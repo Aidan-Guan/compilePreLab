@@ -5,7 +5,7 @@ import AST.AstNode;
 import java.util.ArrayList;
 
 import static GrammarAnal.GrammarAnalysis.*;
-import static GrammarAnal.Statement.lVal;
+import static GrammarAnal.Statement.*;
 
 public class Expressions {
     public static boolean exp(AstNode parent) {
@@ -141,7 +141,7 @@ public class Expressions {
     }
 
 
-    private static boolean constExp(AstNode parent) {
+    public static boolean constExp(AstNode parent) {
         int now = pointer;
         int nowPrint = printPointer;
         AstNode node_constExp = new AstNode("<ConstExp>");

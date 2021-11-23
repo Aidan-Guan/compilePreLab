@@ -1,26 +1,30 @@
 package GrammarAnal;
 
 import AST.AstNode;
+import ErrorSolution.Error;
 import LexicalAnalysis.Token;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.SplittableRandom;
 
 import static GrammarAnal.Declare.*;
 import static GrammarAnal.Statement.stmt;
+import static LexicalAnalysis.InitLex.initLex;
 
 public class GrammarAnalysis {
-    private static ArrayList<Token> tokens;
+    private static ArrayList<String[]> lexical;
     private static ArrayList<String> grammar = new ArrayList<>();
-    private static int tokensIndex = 0;
     public static AstNode root;
 
     public static int pointer = 0;
     public static int printPointer = 0;
 
-    static void grammarAnal(ArrayList<Token> tokenList) {
-        tokens = tokenList;
-        compUnit();
+    public static void grammarAnal(ArrayList<Token> tokenList) {
+        lexical = initLex(tokenList);
+        if (!compUnit()) {
+            Error.error();
+        }
     }
 
     static boolean compUnit() {
@@ -103,7 +107,7 @@ public class GrammarAnalysis {
     }
 
 
-    private static boolean symbol(String str, AstNode parent) {
+    public static boolean symbol(String str, AstNode parent) {
         int now = pointer;
         int nowPrint = printPointer;
         String[] temp = lexical.get(pointer++);
@@ -116,7 +120,7 @@ public class GrammarAnalysis {
         return falseSolution(now, nowPrint);
     }
 
-    private static boolean symbol(ArrayList<String> str, AstNode parent) {
+    public static boolean symbol(ArrayList<String> str, AstNode parent) {
         int now = pointer;
         int nowPrint = printPointer;
         String[] temp = lexical.get(pointer++);
@@ -128,5 +132,8 @@ public class GrammarAnalysis {
         }
         return falseSolution(now, nowPrint);
     }
+
+
+
 
 }

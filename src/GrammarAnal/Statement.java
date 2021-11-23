@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import static Expression.Expressions.*;
 import static GrammarAnal.GrammarAnalysis.*;
+import static GrammarAnal.IfAnal.*;
 
 public class Statement {
 
@@ -61,7 +62,7 @@ public class Statement {
         return falseSolution(now, nowPrint);
     }
 
-    private static boolean funcRParams(AstNode parent) {
+    public static boolean funcRParams(AstNode parent) {
         int now = pointer;
         int nowPrint = printPointer;
         AstNode node_funcRParams = new AstNode("<FuncRParams>");
