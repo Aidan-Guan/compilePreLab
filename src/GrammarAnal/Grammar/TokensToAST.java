@@ -1,9 +1,13 @@
 package GrammarAnal.Grammar;
 
 import AST.AstNode;
+import ErrorSolution.ErrorSolu;
 import LexicalAnalysis.Token;
 
+import java.security.spec.ECParameterSpec;
 import java.util.ArrayList;
+
+import static GrammarAnal.Grammar.Declare.*;
 
 public class TokensToAST {
     public static ArrayList<Token> tokens;
@@ -24,9 +28,37 @@ public class TokensToAST {
         root = compUnitNode;
 
         while (currentSym.value.equals("int") || currentSym.value.equals("const")) {
+            if (showFutureSym(2).value.equals("("))
+                break;
+
             Decl(root);
         }
 
+        FuncDef(compUnitNode);
+    }
+
+    public static void FuncDef(AstNode parent) {
+        AstNode NodeFuncDef = new AstNode("<FuncDef>");
+
+        if (!currentSym.value.equals("int")) ErrorSolu.error();
+        addChild(currentSym, NodeFuncDef);
+        getNextSym();
+
+        if (!currentSym.value.equals("main")) ErrorSolu.error();
+        addChild(currentSym, NodeFuncDef);
+        getNextSym();
+
+        if (!currentSym.value.equals("(")) ErrorSolu.error();
+        addChild(currentSym, NodeFuncDef);
+        getNextSym();
+
+        if (!currentSym.value.equals(")")) ErrorSolu.error();
+        addChild(currentSym, NodeFuncDef);
+        getNextSym();
+
+        Block(NodeFuncDef);
+
+        addChild(NodeFuncDef, parent);
     }
 
 
@@ -40,8 +72,8 @@ public class TokensToAST {
         }
     }
 
-    public static Token showNextSym() {
-        return tokens.get(tokenIndex+1);
+    public static Token showFutureSym(int bias) {
+        return tokens.get(tokenIndex-1+bias);
     }
 
     public static void addChild(Token child, AstNode parent) {
