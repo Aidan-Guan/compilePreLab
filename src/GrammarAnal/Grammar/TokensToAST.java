@@ -69,10 +69,27 @@ public class TokensToAST {
         getNextSym();
 
         //TODO: blockitem
+        while (!currentSym.value.equals("}") && !currentSym.type.equals("ERR")) {
+            BlockItem(NodeBlock);
+        }
+
 
         if (!currentSym.value.equals("}")) ErrorSolu.error();
         addChild(currentSym, NodeBlock);
         getNextSym();
+    }
+
+    public static void BlockItem(AstNode parent) {
+        AstNode NodeBlockItem = new AstNode("<BlockItem>");
+        String startStr = currentSym.value;
+        String type = currentSym.type;
+        if (currentSym.value.equals("int") || currentSym.value.equals("const")) {
+            Decl(NodeBlockItem);
+        }
+        else if (type.equals("IDENT") || startStr.equals(";") || startStr.equals("{")) {
+            Stmt(NodeBlockItem);
+        }
+        addChild(NodeBlockItem, parent);
     }
 
 
