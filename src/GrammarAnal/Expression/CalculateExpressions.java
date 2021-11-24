@@ -82,7 +82,7 @@ public class CalculateExpressions {
             addChild(currentSym, NodeUnaryExp);
             getNextSym();
         }
-        else if (currentSym.type.equals("IDENT")) {
+        else if (currentSym.type.equals("IDENT") || currentSym.type.equals("NUMBER")) {
             primaryExp(NodeUnaryExp);
         }
         else {ErrorSolu.error();}
@@ -138,5 +138,7 @@ public class CalculateExpressions {
             addChild(currentSym, NodePrimaryExp);
             getNextSym();
         }
+
+        addChild(NodePrimaryExp, parent);
     }
 }

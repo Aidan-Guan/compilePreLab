@@ -16,8 +16,8 @@ public class TokensToAST {
     public static int tokenIndex = 0;
 
     public static AstNode generateAST(ArrayList<Token> tokenArrayList) {
-        getNextSym(); // 第一个token
         tokens = tokenArrayList;
+        getNextSym();
 
         CompUnit();
         return root;
@@ -73,10 +73,11 @@ public class TokensToAST {
             BlockItem(NodeBlock);
         }
 
-
         if (!currentSym.value.equals("}")) ErrorSolu.error();
         addChild(currentSym, NodeBlock);
         getNextSym();
+
+        addChild(NodeBlock, parent);
     }
 
     public static void BlockItem(AstNode parent) {

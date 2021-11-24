@@ -1,7 +1,9 @@
 package TestCompile;
 
+import AST.AstNode;
 import LexicalAnalysis.LexAnal;
 import LexicalAnalysis.Token;
+import static GrammarAnal.Grammar.TokensToAST.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -30,7 +32,9 @@ public class Test {
             System.out.println(i.toString());
         }
 
-        GrammarAnalysis.grammarAnal(tokens);
+        AstNode ASTRoot = generateAST(tokens);
+
+        System.out.println("here");
 
 //        filePrint("/Users/guanhuaimin/本地磁盘/学习/本地_大三上/编译原理/labs/compilePreLab/src/out.ll");
 //        filePrint(args[1]);

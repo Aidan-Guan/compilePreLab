@@ -37,6 +37,7 @@ public class Declare {
         }
 
         if (!currentSym.value.equals(";")) { ErrorSolu.error(); }
+        addChild(currentSym, NodeConstDecl);
         getNextSym();
 
         addChild(NodeConstDecl, parent);
@@ -86,6 +87,9 @@ public class Declare {
         if (!currentSym.value.equals(";")) ErrorSolu.error();
         addChild(currentSym,NodeVarDecl);
         getNextSym();
+
+        addChild(NodeVarDecl, parent);
+
     }
 
     public static void VarDef(AstNode parent) {
