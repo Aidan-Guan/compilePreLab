@@ -15,7 +15,7 @@ import static GenerateCode.ExpressionCode.CalculateExpCode.CodeExp;
 
 public class ASTToCode {
     public static AstNode root;
-    static int regIndex = 0;
+    public static int regIndex = 0;
 
     static boolean isDefConst = false;
     static boolean isDefGlobal = false;
