@@ -23,7 +23,27 @@ public class Statement {
             getNextSym();
         }
         else if (currentSym.value.equals("if")) {
+            addChild(currentSym, NodeStmt);
+            getNextSym();
 
+            if (!currentSym.value.equals("(")) ErrorSolu.error();
+            addChild(currentSym, NodeStmt);
+            getNextSym();
+
+            Cond(NodeStmt);
+
+            if (!currentSym.value.equals(")")) ErrorSolu.error();
+            addChild(currentSym, NodeStmt);
+            getNextSym();
+
+            Stmt(NodeStmt);
+
+            if (currentSym.value.equals("else")) {
+                addChild(currentSym, NodeStmt);
+                getNextSym();
+
+                Stmt(NodeStmt);
+            }
         }
         else if (currentSym.value.equals("{")) {
             Block(NodeStmt);
