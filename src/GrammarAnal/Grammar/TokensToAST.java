@@ -4,10 +4,10 @@ import AST.AstNode;
 import ErrorSolution.ErrorSolu;
 import LexicalAnalysis.Token;
 
-import java.security.spec.ECParameterSpec;
 import java.util.ArrayList;
 
 import static GrammarAnal.Grammar.Declare.*;
+import static GrammarAnal.Grammar.Statement.*;
 
 public class TokensToAST {
     public static ArrayList<Token> tokens;

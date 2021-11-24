@@ -6,8 +6,8 @@ import LexicalAnalysis.Token;
 
 import java.util.ArrayList;
 
-import static GrammarAnal.Expression.CondExpressions.lOrExp;
-import static GrammarAnal.Grammar.GrammarAnalysis.*;
+import static GrammarAnal.Expression.CalculateExpressions.*;
+import static GrammarAnal.Expression.CondExpressions.*;
 import static GrammarAnal.Grammar.TokensToAST.*;
 
 public class Statement {

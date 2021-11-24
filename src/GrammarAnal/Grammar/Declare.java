@@ -3,6 +3,7 @@ package GrammarAnal.Grammar;
 import AST.AstNode;
 import ErrorSolution.ErrorSolu;
 
+import static GrammarAnal.Expression.CalculateExpressions.*;
 import static GrammarAnal.Grammar.TokensToAST.*;
 
 
@@ -66,7 +67,7 @@ public class Declare {
     public static void ConstInitVal(AstNode parent) {
         AstNode NodeConstInitVal = new AstNode("<ConstInitVal>");
 
-        ConstExp();
+        constExp(NodeConstInitVal);
         addChild(NodeConstInitVal, parent);
     }
 

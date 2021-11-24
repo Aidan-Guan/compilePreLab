@@ -2,6 +2,7 @@ package GrammarAnal.Expression;
 
 import AST.*;
 
+import static GrammarAnal.Expression.CalculateExpressions.*;
 import static GrammarAnal.Grammar.TokensToAST.*;
 
 public class CondExpressions {
