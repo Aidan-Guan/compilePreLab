@@ -6,7 +6,7 @@ import LexicalAnalysis.Token;
 
 import java.util.ArrayList;
 
-import static GrammarAnal.Expression.Expressions.*;
+import static GrammarAnal.Expression.CondExpressions.lOrExp;
 import static GrammarAnal.Grammar.GrammarAnalysis.*;
 import static GrammarAnal.Grammar.TokensToAST.*;
 
@@ -70,5 +70,13 @@ public class Statement {
         }
 
         addChild(NodeStmt, parent);
+    }
+
+
+    public static void Cond (AstNode parent) {
+        AstNode NodeCond = new AstNode("<Cond>");
+        lOrExp(NodeCond);
+
+        addChild(NodeCond, parent);
     }
 }

@@ -6,7 +6,7 @@ import LexicalAnalysis.Token;
 
 import java.util.ArrayList;
 
-import static GrammarAnal.Grammar.Statement.stmt;
+import static GrammarAnal.Grammar.Statement.*;
 
 public class GrammarAnalysis {
 //    private static ArrayList<String[]> lexical;
