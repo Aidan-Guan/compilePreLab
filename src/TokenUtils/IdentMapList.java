@@ -33,12 +33,12 @@ public class IdentMapList {
         identMapList.remove(mapListIndex);
     }
 
-    public Ident getIdentInCurrMap(String str) {
+    public static Ident getIdentInCurrMap(String str) {
         HashMap<String, Ident> currMap = identMapList.get(mapListIndex-1);
         return currMap.get(str);
     }
 
-    public Ident getIdentInAllMap(String str) {
+    public static Ident getIdentInAllMap(String str) {
         for (int i=mapListIndex-1; i>=0; i--) {
             Ident tarIdent = identMapList.get(i).get(str);
             if (tarIdent!=null) {

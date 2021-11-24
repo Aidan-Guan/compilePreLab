@@ -68,7 +68,6 @@ public class TokensToAST {
         addChild(currentSym, NodeBlock);
         getNextSym();
 
-        //TODO: blockitem
         while (!currentSym.value.equals("}") && !currentSym.type.equals("ERR")) {
             BlockItem(NodeBlock);
         }
