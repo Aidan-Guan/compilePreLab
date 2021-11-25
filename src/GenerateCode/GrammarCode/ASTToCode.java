@@ -111,9 +111,9 @@ public class ASTToCode {
         params.add("i32");
 
         globalMap.put("getint", new Ident("getint", IdentType.FUNC, ValueType.INT, new ArrayList<>()));
-        globalMap.put("getch", new Ident("getint", IdentType.FUNC, ValueType.INT, new ArrayList<>()));
-        globalMap.put("putint", new Ident("getint", IdentType.FUNC, ValueType.INT, params));
-        globalMap.put("putch", new Ident("getint", IdentType.FUNC, ValueType.INT, params));
+        globalMap.put("getch", new Ident("getch", IdentType.FUNC, ValueType.INT, new ArrayList<>()));
+        globalMap.put("putint", new Ident("putint", IdentType.FUNC, ValueType.INT, params));
+        globalMap.put("putch", new Ident("putch", IdentType.FUNC, ValueType.INT, params));
 
         IdentMapList.addMap(globalMap);
     }

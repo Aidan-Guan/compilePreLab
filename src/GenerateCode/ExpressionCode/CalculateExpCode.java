@@ -144,14 +144,14 @@ public class CalculateExpCode {
             ArrayList<String> params = new ArrayList<>();
             ArrayList<String> paramsType = ident.funcParams;
 
-            if (parent.children.get(2).value.equals("<FuncRParams>")) {
+            if (parent.children.get(2).type.equals("<FuncRParams>")) {
                 params = FuncRParams(parent.children.get(2));
             }
 
             String out = "";
             String outDecl = "";
 
-            for (int i=0; i<=params.size(); i++) {
+            for (int i=0; i<params.size(); i++) {
                 if (i == 0) {
                     out += paramsType.get(i) + " " + params.get(i);
                     outDecl += paramsType.get(i);
@@ -201,7 +201,7 @@ public class CalculateExpCode {
         if (firstChild.type.equals("NUMBER")) {
             return CodeNumber(parent.children.get(0));
         }
-        else if (firstChild.type.equals("LVal")) {
+        else if (firstChild.type.equals("<LVal>")) {
             String reg = CodeLVal(parent.children.get(0));
             String identName = parent.children.get(0).children.get(0).value;
             isDefConst = false;

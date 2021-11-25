@@ -94,6 +94,11 @@ public class CalculateExpressions {
     public static void FuncParams(AstNode parent) {
         AstNode NodeFuncParams = new AstNode("<FuncParams>");
 
+        if (currentSym.value.equals(")")) {
+            addChild(NodeFuncParams, parent);
+            return;
+        }
+
         Exp(NodeFuncParams);
 
         while (currentSym.value.equals(",")) {
@@ -134,11 +139,24 @@ public class CalculateExpressions {
             getNextSym();
 
         }
-        else if (currentSym.type.equals("NUMBER") || currentSym.type.equals("IDENT")) {
+        else if (currentSym.type.equals("NUMBER")) {
             addChild(currentSym, NodePrimaryExp);
             getNextSym();
         }
+        else if (currentSym.type.equals("IDENT")) {
+            LVal(NodePrimaryExp);
+        }
 
         addChild(NodePrimaryExp, parent);
+    }
+
+    static void LVal(AstNode parent) {
+        AstNode NodeLVal = new AstNode("<LVal>");
+        if (!currentSym.type.equals("IDENT")) ErrorSolu.error();
+
+        addChild(currentSym, NodeLVal);
+        getNextSym();
+
+        addChild(NodeLVal, parent);
     }
 }
