@@ -180,7 +180,7 @@ public class CalculateExpCode {
         return null;
     }
 
-    static String CodeLVal(AstNode parent) {
+    public static String CodeLVal(AstNode parent) {
         String identName = parent.children.get(0).value;
         if (CodeIsConst(identName)) { isDefConst = true; }
 

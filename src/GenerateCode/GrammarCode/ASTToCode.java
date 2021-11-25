@@ -13,11 +13,14 @@ import java.util.HashMap;
 
 import static GenerateCode.ExpressionCode.CalculateExpCode.CodeExp;
 import static GenerateCode.GrammarCode.DeclareCode.*;
+import static GenerateCode.GrammarCode.StatementCode.*;
 
 public class ASTToCode {
     public static AstNode root;
-    public static int regIndex = 0;
+    public static int regIndex = 1;
+    public static int blockIndex = 0;
 
+    public static boolean isReturn = false;
     public static boolean isDefConst = false;
     public static boolean isDefGlobal = false;
     public static StringBuilder outStr = new StringBuilder();
