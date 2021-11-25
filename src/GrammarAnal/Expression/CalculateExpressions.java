@@ -150,7 +150,7 @@ public class CalculateExpressions {
         addChild(NodePrimaryExp, parent);
     }
 
-    static void LVal(AstNode parent) {
+    public static void LVal(AstNode parent) {
         AstNode NodeLVal = new AstNode("<LVal>");
         if (!currentSym.type.equals("IDENT")) ErrorSolu.error();
 
