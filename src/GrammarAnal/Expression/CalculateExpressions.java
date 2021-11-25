@@ -92,7 +92,7 @@ public class CalculateExpressions {
 
 
     public static void FuncParams(AstNode parent) {
-        AstNode NodeFuncParams = new AstNode("<FuncParams>");
+        AstNode NodeFuncParams = new AstNode("<FuncRParams>");
 
         if (currentSym.value.equals(")")) {
             addChild(NodeFuncParams, parent);
