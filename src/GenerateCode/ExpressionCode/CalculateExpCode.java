@@ -34,5 +34,28 @@ public class CalculateExpCode {
 
     public static ExpValue CodeMulExp(AstNode parent) {
         //TODO: here
+        int childIndex = 0;
+        ExpValue value1 = CodeUnaryExp(parent.children.get(childIndex));
+        childIndex++;
+
+        String op = parent.children.get(childIndex).value;
+        while (op.equals("*") || op.equals("/") || op.equals("%")) {
+            op = parent.children.get(childIndex).value;
+            childIndex++;
+            ExpValue value2 = CodeUnaryExp(parent.children.get(childIndex));
+            switch (op) {
+                case "*" -> {
+                    outStr.append("\t%" + regIndex + " = mul i32 " + value1.out() + ", " + value2.out() + "\n");
+                }
+                case "/" -> {
+                    outStr.append("\t%" + regIndex + " = sdiv i32 %" + value1.out() + ", %" + value2.out() + "\n");
+                }
+                case "%" -> {
+                    outStr.append("\t%" + regIndex + " = srem i32 %" + value1.out() + ", %" + value2.out() + "\n");
+                }
+            }
+            regIndex++;
+        }
+        return new ExpValue(regIndex-1, "i32");
     }
 }
