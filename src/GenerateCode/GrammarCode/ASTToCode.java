@@ -95,7 +95,7 @@ public class ASTToCode {
     public static int i32Toi1(ExpValue value) {
         if (value.valueType.equals("i32")) {
             int reg = regIndex++;
-            outStr.append("\t%" + reg + " = icmp ne i32 " + value.out() + ", 0\n");
+            outStr.append("\t%x" + reg + " = icmp ne i32 " + value.out() + ", 0\n");
             return reg;
         }
         else {

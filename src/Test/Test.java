@@ -1,4 +1,4 @@
-package TestCompile;
+package Test;
 
 import AST.AstNode;
 import LexicalAnalysis.LexAnal;

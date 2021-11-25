@@ -111,7 +111,7 @@ public class CalculateExpCode {
         if (type.equals("<PrimaryExp>")) {
             return CodePrimaryExp(parent.children.get(0));
         }
-        else if (type.equals("UnaryOp")) {
+        else if (type.equals("<UnaryOp>")) {
             String op = CodeUnaryOp(parent.children.get(0));
             switch (op) {
                 case "-" -> {

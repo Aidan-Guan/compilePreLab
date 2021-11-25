@@ -45,7 +45,7 @@ public class CondExpCode {
                     ExpValue regValue = CondEqExp(child);
 
                     int reg = i32Toi1(regValue);
-                    outStr.append("\tbr i1 %" + reg + ", label %block" + tLabel + ", label %block" + fLabel + "\n");
+                    outStr.append("\tbr i1 %x" + reg + ", label %block" + tLabel + ", label %block" + fLabel + "\n");
                 }
                 else {
                     if (rLabel != -1) { outStr.append("\nblock" + rLabel + ":\n"); }
@@ -78,12 +78,12 @@ public class CondExpCode {
                 if (op.equals("==")) {
                     if (value.valueType.equals("i1")) {
                         int temp = regIndex++;
-                        outStr.append("%x" + temp + " = zext i1 " + value.out() + " to i32\n");
+                        outStr.append("\t%x" + temp + " = zext i1 " + value.out() + " to i32\n");
                         valueReg = temp;
                         type = "i32";
                     }
                     resultReg = regIndex++;
-                    outStr.append("\t%" + resultReg +" = icmp eq i32 %x" + preReg + ", %x" + valueReg + "\n");
+                    outStr.append("\t%x" + resultReg +" = icmp eq i32 %x" + preReg + ", %x" + valueReg + "\n");
                     preReg = resultReg;
                     type = "i1";
 
@@ -95,11 +95,11 @@ public class CondExpCode {
                 else if (op.equals("!=")) {
                     if (value.valueType.equals("i1")) {
                         int temp = regIndex++;
-                        outStr.append("\t%" + temp + " = zext i1 %x" + valueReg + " to i32\n");
+                        outStr.append("\t%x" + temp + " = zext i1 %x" + valueReg + " to i32\n");
                         valueReg = temp;
                     }
                     resultReg = regIndex++;
-                    outStr.append("\t%" + resultReg +" = icmp ne i32 %x" + preReg + ", %x" + valueReg + "\n");
+                    outStr.append("\t%x" + resultReg +" = icmp ne i32 %x" + preReg + ", %x" + valueReg + "\n");
                     preReg = resultReg;
                     type = "i1";
 
@@ -129,10 +129,8 @@ public class CondExpCode {
         for(int i = 0; i <= node.children.size()-1; i++){
             AstNode child = node.children.get(i);
             String childOp = child.value;
-            if (childOp.equals("<") || childOp.equals("<=") || childOp.equals(">") || childOp.equals(">=")) {
-                op = childOp;
-            }
-            else if (child.type.equals("<AddExp>")){
+
+            if (child.type.equals("<AddExp>")){
                 expValue = CodeAddExp(child);
                 switch (op) {
                     case "<" -> {
@@ -155,7 +153,7 @@ public class CondExpCode {
                     }
                     case ">" -> {
                         resultReg = regIndex++;
-                        outStr.append("%x" + resultReg + " = icmp sgt i32 %x" + expValuePre.register + ", %x" + expValue.register + "\n");
+                        outStr.append("\t%x" + resultReg + " = icmp sgt i32 %x" + expValuePre.register + ", %x" + expValue.register + "\n");
                         expValuePre = new ExpValue(resultReg, "i1");
                         if (i != node.children.size() - 1) {
                             preReg = regIndex++;
@@ -173,6 +171,9 @@ public class CondExpCode {
                     }
                     default -> expValuePre = expValue;
                 }
+            }
+            else if (childOp.equals("<") || childOp.equals("<=") || childOp.equals(">") || childOp.equals(">=")) {
+                op = childOp;
             }
         }
         return expValuePre;

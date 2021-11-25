@@ -97,6 +97,8 @@ public class DeclareCode {
                 outStr.append("\tstore i32 " + value.out() + ", i32* " + ident.out() + "\n");
             }
             isDefConst = false;
+
+            currMap.put(identName, ident);
         }
     }
 

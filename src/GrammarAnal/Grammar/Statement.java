@@ -51,7 +51,9 @@ public class Statement {
         else if (currentSym.type.equals("IDENT")) {
             Token tmp = showFutureSym(1);
             if (tmp.value.equals("=")) {
+                addChild(currentSym, NodeStmt);
                 getNextSym();
+                addChild(currentSym, NodeStmt);
                 getNextSym();
                 Exp(NodeStmt);
                 if (!currentSym.value.equals(";")) ErrorSolu.error();
