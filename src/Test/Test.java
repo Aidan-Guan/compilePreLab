@@ -6,6 +6,7 @@ import LexicalAnalysis.Token;
 
 import static GenerateCode.GrammarCode.ASTToCode.generateIntermediateCode;
 import static GrammarAnal.Grammar.TokensToAST.*;
+import static LexicalAnalysis.LexAnal.myLex;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ public class Test {
 //        String fileLoc = "/Users/guanhuaimin/本地磁盘/学习/本地_大三上/编译原理/labs/compilePreLab/src/a.txt";
 
         in = new PushbackReader(new FileReader(fileLoc));
+
+        myLex(fileLoc);
 
         tokens = LexAnal.getAllTokens(in);
         for (Token i : tokens) {
