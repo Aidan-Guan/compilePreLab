@@ -18,52 +18,92 @@ public class CalculateExpCode {
     }
 
     public static ExpValue CodeAddExp(AstNode parent) {
-        int childIndex = 0;
-        ExpValue value1 = CodeMulExp(parent.children.get(childIndex));
-        childIndex++;
+        int registerPre = -1;
+        int valuePre = 0;
+        String op = "";
+        boolean flg = true;
 
-        while (parent.children.get(childIndex).value.equals("+") || parent.children.get(childIndex).value.equals("-")) {
-            String op = parent.children.get(childIndex).value;
-            childIndex++;
-            ExpValue value2 = CodeMulExp(parent.children.get(childIndex));
-            if (op.equals("+")) {
-                outStr.append("\t%" + regIndex + " = add i32 " + value2.out() + ", " + value1.out() + "\n");
+        for(AstNode child: parent.children){
+            if (child.type.equals("<MulExp>")) {
+                ExpValue value = CodeMulExp(child);
+                if(value == null) return null;
+                int reg = value.register;
+
+                if (flg) {
+                    registerPre = reg;
+                    valuePre = value.value;
+                    flg = false;
+                }
+
+                if (op.equals("+")) {
+                    int newReg = regIndex++;
+                    if(!isDefGlobal)
+                        outStr.append("\t%x" + newReg + " = add i32 %x" + registerPre + ", %x" + reg + "\n");
+                    registerPre = newReg;
+                    valuePre = valuePre + value.value;
+                }
+                else if (op.equals("-")) {
+                    int newReg = regIndex++;
+                    if(!isDefGlobal)
+                        outStr.append("\t%x" + newReg + " = sub i32 %x" + registerPre + ", %x" + reg + "\n");
+                    registerPre = newReg;
+                    valuePre = valuePre - value.value;
+                }
             }
-            else if (op.equals("-")) {
-                outStr.append("\t%" + regIndex + " = sub i32 %" + value1.out() + ", %" + value2.out() + "\n");
+            else if (child.value.equals("+") || child.value.equals("-")) {
+                op = child.value;
             }
-            regIndex++;
         }
-
-        return new ExpValue(regIndex-1, "i32" );
+        return new ExpValue(registerPre, "i32", valuePre);
     }
 
-    public static ExpValue CodeMulExp(AstNode parent) {
-        //TODO: here
-        int childIndex = 0;
-        ExpValue value1 = CodeUnaryExp(parent.children.get(childIndex));
-        childIndex++;
 
-        String op = parent.children.get(childIndex).value;
-        while (op.equals("*") || op.equals("/") || op.equals("%")) {
-            op = parent.children.get(childIndex).value;
-            childIndex++;
-            ExpValue value2 = CodeUnaryExp(parent.children.get(childIndex));
-            switch (op) {
-                case "*" -> {
-                    outStr.append("\t%" + regIndex + " = mul i32 " + value1.out() + ", " + value2.out() + "\n");
+    static ExpValue CodeMulExp(AstNode parent) {
+        int registerPre = -1;
+        int valuePre = 0;
+        String op = "";
+        boolean flag = true;
+        for(AstNode child: parent.children){
+            if (child.type.equals("<UnaryExp>")) {
+                ExpValue registerValue = CodeUnaryExp(child);
+                if(registerValue == null) return null;
+                int registerNow = registerValue.register;
+                if (flag) {
+                    registerPre = registerNow;
+                    valuePre = registerValue.value;
+                    flag = false;
                 }
-                case "/" -> {
-                    outStr.append("\t%" + regIndex + " = sdiv i32 %" + value1.out() + ", %" + value2.out() + "\n");
-                }
-                case "%" -> {
-                    outStr.append("\t%" + regIndex + " = srem i32 %" + value1.out() + ", %" + value2.out() + "\n");
+                switch (op) {
+                    case "*" -> {
+                        int newReg = regIndex++;
+                        if(!isDefGlobal)
+                            outStr.append("\t%x" + newReg + " = mul i32 %x" + registerPre + ", %x" + registerNow + "\n");
+                        registerPre = newReg;
+                        valuePre = valuePre * registerValue.value;
+                    }
+                    case "/" -> {
+                        int newReg = regIndex++;
+                        if(!isDefGlobal)
+                            outStr.append("\t%x" + newReg + " = sdiv i32 %x" + registerPre + ", %x" + registerNow + "\n");
+                        registerPre = newReg;
+                        valuePre = valuePre / registerValue.value;
+                    }
+                    case "%" -> {
+                        int newReg = regIndex++;
+                        if(!isDefGlobal)
+                            outStr.append("\t%x" + newReg + " = srem i32 %x" + registerPre + ", %x" + registerNow + "\n");
+                        registerPre = newReg;
+                        valuePre = valuePre % registerValue.value;
+                    }
                 }
             }
-            regIndex++;
+            else if (child.value.equals("*") || child.value.equals("/") || child.value.equals("%")) {
+                op = child.value;
+            }
         }
-        return new ExpValue(regIndex-1, "i32");
+        return new ExpValue(registerPre, "i32", valuePre);
     }
+
 
     static ExpValue CodeUnaryExp (AstNode parent) {
         String type = parent.children.get(0).type;
@@ -76,7 +116,7 @@ public class CalculateExpCode {
             switch (op) {
                 case "-" -> {
                     ExpValue value1 = CodeUnaryExp(parent.children.get(1));
-                    outStr.append("\t%" + regIndex + " = sub i32 0, " + value1.out() + "\n");
+                    outStr.append("\t%x" + regIndex + " = sub i32 0, " + value1.out() + "\n");
                     regIndex++;
                     return new ExpValue(regIndex-1, "i32");
                 }
@@ -85,9 +125,9 @@ public class CalculateExpCode {
                 }
                 case "!" -> {
                     ExpValue value1 = CodeUnaryExp(parent.children.get(1));
-                    outStr.append("\t%" + regIndex + " = icmp eq i32 " + value1.out() + ", 0\n");
+                    outStr.append("\t%x" + regIndex + " = icmp eq i32 " + value1.out() + ", 0\n");
                     regIndex++;
-                    outStr.append("\t%" + regIndex + " = zext i1 %" + (regIndex-1) + " to i32\n");
+                    outStr.append("\t%x" + regIndex + " = zext i1 %x" + (regIndex-1) + " to i32\n");
                     regIndex++;
                     return new ExpValue(regIndex-1, "i32");
                 }
@@ -127,7 +167,7 @@ public class CalculateExpCode {
                     outStr.insert(0, "declare i32 @" + ident.name + "(" + outDecl + ")\n");
                     ident.isDeclared = true;
                 }
-                outStr.append("\t%" + regIndex + " = call i32 @" + ident.name + "(" + out + ")\n");
+                outStr.append("\t%x" + regIndex + " = call i32 @" + ident.name + "(" + out + ")\n");
                 regIndex++;
                 return new ExpValue(regIndex-1, "i32");
             }
@@ -158,7 +198,7 @@ public class CalculateExpCode {
     static ExpValue CodePrimaryExp(AstNode parent) {
         AstNode firstChild = parent.children.get(0);
 
-        if (firstChild.type.equals("<Number>")) {
+        if (firstChild.type.equals("NUMBER")) {
             return CodeNumber(parent.children.get(0));
         }
         else if (firstChild.type.equals("LVal")) {
@@ -167,7 +207,7 @@ public class CalculateExpCode {
             isDefConst = false;
 
             if (!isDefGlobal) {
-                outStr.append("\t%" + regIndex + " = load i32, i32* " + reg + "\n");
+                outStr.append("\t%x" + regIndex + " = load i32, i32* " + reg + "\n");
                 regIndex++;
             }
             return new ExpValue(regIndex-1, "i32");
@@ -192,10 +232,10 @@ public class CalculateExpCode {
     }
 
     static ExpValue CodeNumber(AstNode parent) {
-        int value = Integer.parseInt(parent.children.get(0).value);
+        int value = Integer.parseInt(parent.value);
 
         if (!isDefGlobal) {
-            outStr.append("\t%" + regIndex + " = add i32 0, " + value + "\n");
+            outStr.append("\t%x" + regIndex + " = add i32 0, " + value + "\n");
             regIndex++;
         }
         return new ExpValue(regIndex-1, "i32", value);

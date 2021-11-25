@@ -3,6 +3,8 @@ package TestCompile;
 import AST.AstNode;
 import LexicalAnalysis.LexAnal;
 import LexicalAnalysis.Token;
+
+import static GenerateCode.GrammarCode.ASTToCode.generateIntermediateCode;
 import static GrammarAnal.Grammar.TokensToAST.*;
 
 import java.io.*;
@@ -34,9 +36,12 @@ public class Test {
 
         AstNode ASTRoot = generateAST(tokens);
 
-        System.out.println("here");
+        outputStr = generateIntermediateCode(ASTRoot).toString();
 
-//        filePrint("/Users/guanhuaimin/本地磁盘/学习/本地_大三上/编译原理/labs/compilePreLab/src/out.ll");
+        System.out.print(outputStr);
+
+
+        filePrint("/Users/guanhuaimin/本地磁盘/学习/本地_大三上/编译原理/labs/compilePreLab/src/out.ll");
 //        filePrint(args[1]);
     }
 

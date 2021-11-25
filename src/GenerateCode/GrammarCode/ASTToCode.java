@@ -26,11 +26,12 @@ public class ASTToCode {
     public static StringBuilder outStr = new StringBuilder();
 
 
-    public static void generateIntermediateCode (AstNode ASTroot) {
+    public static StringBuilder generateIntermediateCode (AstNode ASTroot) {
         root = ASTroot;
         identMapInit();
 
         CodeCompUnit(root);
+        return outStr;
     }
 
     static void CodeCompUnit (AstNode parent) {
@@ -94,7 +95,7 @@ public class ASTToCode {
     public static int i32Toi1(ExpValue value) {
         if (value.valueType.equals("i32")) {
             int reg = regIndex++;
-            outStr.append("\t%" + reg + " = icmp ne i32 %" + value.register + ", 0\n");
+            outStr.append("\t%" + reg + " = icmp ne i32 " + value.out() + ", 0\n");
             return reg;
         }
         else {
@@ -113,5 +114,7 @@ public class ASTToCode {
         globalMap.put("getch", new Ident("getint", IdentType.FUNC, ValueType.INT, new ArrayList<>()));
         globalMap.put("putint", new Ident("getint", IdentType.FUNC, ValueType.INT, params));
         globalMap.put("putch", new Ident("getint", IdentType.FUNC, ValueType.INT, params));
+
+        IdentMapList.addMap(globalMap);
     }
 }

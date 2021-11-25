@@ -1,5 +1,6 @@
-const int a =  3*4+5*6;
-int main () {
-    int a = 3*4+5*6;
-    int b = 5;
+int a = 5;
+int main() {
+    int b = getint();
+    putint(a + b);
+    return 0;
 }
