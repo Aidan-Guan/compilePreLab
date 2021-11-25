@@ -86,9 +86,20 @@ public class ASTToCode {
     }
 
 
-
     static ExpValue CodeInitVal (AstNode parent) {
         return CodeExp(parent.children.get(0));
+    }
+
+
+    public static int i32Toi1(ExpValue value) {
+        if (value.valueType.equals("i32")) {
+            int reg = regIndex++;
+            outStr.append("\t%" + reg + " = icmp ne i32 %" + value.register + ", 0\n");
+            return reg;
+        }
+        else {
+            return value.register;
+        }
     }
 
 

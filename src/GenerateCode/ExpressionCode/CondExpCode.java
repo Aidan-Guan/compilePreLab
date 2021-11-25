@@ -105,7 +105,7 @@ public class CondExpCode {
 
                     if (i != parent.children.size()-1) {
                         preReg = regIndex++;
-                        outStr.append("\t%" + preReg + " = zext i1 %" + resultReg + " to i32\n")
+                        outStr.append("\t%" + preReg + " = zext i1 %" + resultReg + " to i32\n");
                     }
                 }
                 else {
@@ -128,55 +128,51 @@ public class CondExpCode {
 
         for(int i = 0; i <= node.children.size()-1; i++){
             AstNode child = node.children.get(i);
-            switch (child.type) {
-                case "<AddExp>" -> {
-                    expValue = CodeAddExp(child);
-
-                    switch (op) {
-                        case "<" -> {
-                            resultReg = regIndex++;
-                            outStr.append("%" + resultReg + " = icmp slt i32 %" + expValuePre.register + ", %" + expValue.register + "\n");
-                            expValuePre = new ExpValue(resultReg, "i1");
-                            if (i != node.children.size() - 1) {
-                                preReg = regIndex++;
-                                outStr.append( "%" + preReg + " = zext i1 %" + resultReg + " to i32\n");
-                            }
+            String childOp = child.value;
+            if (childOp.equals("<") || childOp.equals("<=") || childOp.equals(">") || childOp.equals(">=")) {
+                op = childOp;
+            }
+            else if (child.type.equals("<AddExp>")){
+                expValue = CodeAddExp(child);
+                switch (op) {
+                    case "<" -> {
+                        resultReg = regIndex++;
+                        outStr.append("%" + resultReg + " = icmp slt i32 %" + expValuePre.register + ", %" + expValue.register + "\n");
+                        expValuePre = new ExpValue(resultReg, "i1");
+                        if (i != node.children.size() - 1) {
+                            preReg = regIndex++;
+                            outStr.append( "%" + preReg + " = zext i1 %" + resultReg + " to i32\n");
                         }
-                        case "<=" -> {
-                            resultReg = regIndex++;
-                            outStr.append("%" + resultReg + " = icmp sle i32 %" + expValuePre.register + ", %" + expValue.register + "\n");
-                            expValuePre = new ExpValue(resultReg, "i1");
-                            if (i != node.children.size() - 1) {
-                                preReg = regIndex++;
-                                outStr.append("%" + preReg + " = zext i1 %" + resultReg + " to i32\n");
-                            }
-                        }
-                        case ">" -> {
-                            resultReg = regIndex++;
-                            outStr.append("%" + resultReg + " = icmp sgt i32 %" + expValuePre.register + ", %" + expValue.register + "\n");
-                            expValuePre = new ExpValue(resultReg, "i1");
-                            if (i != node.children.size() - 1) {
-                                preReg = regIndex++;
-                                outStr.append("%" + preReg + " = zext i1 %" + resultReg + " to i32\n");
-                            }
-                        }
-                        case ">=" -> {
-                            resultReg = regIndex++;
-                            outStr.append("%" + resultReg + " = icmp sge i32 %" + expValuePre.register + ", %" + expValue.register + "\n");
-                            expValuePre = new ExpValue(resultReg, "i1");
-                            if (i != node.children.size() - 1) {
-                                preReg = regIndex++;
-                                outStr.append("%" + preReg + " = zext i1 %" + resultReg + " to i32\n");
-                            }
-                        }
-                        default -> expValuePre = expValue;
                     }
+                    case "<=" -> {
+                        resultReg = regIndex++;
+                        outStr.append("%" + resultReg + " = icmp sle i32 %" + expValuePre.register + ", %" + expValue.register + "\n");
+                        expValuePre = new ExpValue(resultReg, "i1");
+                        if (i != node.children.size() - 1) {
+                            preReg = regIndex++;
+                            outStr.append("%" + preReg + " = zext i1 %" + resultReg + " to i32\n");
+                        }
+                    }
+                    case ">" -> {
+                        resultReg = regIndex++;
+                        outStr.append("%" + resultReg + " = icmp sgt i32 %" + expValuePre.register + ", %" + expValue.register + "\n");
+                        expValuePre = new ExpValue(resultReg, "i1");
+                        if (i != node.children.size() - 1) {
+                            preReg = regIndex++;
+                            outStr.append("%" + preReg + " = zext i1 %" + resultReg + " to i32\n");
+                        }
+                    }
+                    case ">=" -> {
+                        resultReg = regIndex++;
+                        outStr.append("%" + resultReg + " = icmp sge i32 %" + expValuePre.register + ", %" + expValue.register + "\n");
+                        expValuePre = new ExpValue(resultReg, "i1");
+                        if (i != node.children.size() - 1) {
+                            preReg = regIndex++;
+                            outStr.append("%" + preReg + " = zext i1 %" + resultReg + " to i32\n");
+                        }
+                    }
+                    default -> expValuePre = expValue;
                 }
-                //TODO 这里需要改成if条件
-                case "LSS" -> op = "<";
-                case "LEQ" -> op = "<=";
-                case "GRE" -> op = ">";
-                case "GEQ" -> op = ">=";
             }
         }
         return expValuePre;
