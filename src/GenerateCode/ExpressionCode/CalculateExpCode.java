@@ -210,7 +210,7 @@ public class CalculateExpCode {
                 outStr.append("\t%x" + regIndex + " = load i32, i32* " + reg + "\n");
                 regIndex++;
             }
-            return new ExpValue(regIndex-1, "i32");
+            return new ExpValue(regIndex-1, "i32", getIdentValue(identName));
 
         }
         else if (firstChild.value.equals("(")) {
@@ -267,5 +267,13 @@ public class CalculateExpCode {
 
         ErrorSolu.error();
         return false;
+    }
+
+    static int getIdentValue (String identName) {
+        Ident ident = IdentMapList.getGlobalMap().get(identName);
+        if (ident != null) {
+            return ident.value;
+        }
+        return -1;
     }
 }
