@@ -53,6 +53,35 @@ public class ASTToCode {
         }
     }
 
+    static void CodeFuncDef(AstNode parent) {
+        outStr.append("define dso_local i32 @main(){\n");
+
+        CodeBlock(parent.children.get(4));
+
+        outStr.append("}\n");
+    }
+
+    static void CodeBlock(AstNode parent) {
+        HashMap<String, Ident> currMap = new HashMap<>();
+        IdentMapList.addMap(currMap);
+
+        for (AstNode child: parent.children) {
+            if (child.type.equals("<BlockItem>")) {
+                CodeBlockItem(child);
+            }
+        }
+
+        IdentMapList.removeFisrtMap();
+    }
+
+    static void CodeBlockItem (AstNode parent) {
+        switch (parent.children.get(0).type) {
+            case "<VarDecl>" -> CodeVarDecl(parent.children.get(0));
+            case "<ConstDecl>" -> CodeConstDecl(parent.children.get(0));
+            case "<Stmt>" -> CodeStmt(parent.children.get(0));
+        }
+    }
+
 
 
     static ExpValue CodeInitVal (AstNode parent) {
