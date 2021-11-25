@@ -1,5 +1,3 @@
-FROM openjdk:15-alpine
+FROM openjdk:15
 WORKDIR /app/
-COPY ./src/ /app/
-
-
+COPY ./out/production/compile-lab-pre /app/
