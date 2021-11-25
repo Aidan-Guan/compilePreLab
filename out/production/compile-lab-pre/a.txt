@@ -1,6 +1,6 @@
 int main() {
     int a;
     a = 5;
-    putch((a));
+    putint((a));
     return 0;
 }

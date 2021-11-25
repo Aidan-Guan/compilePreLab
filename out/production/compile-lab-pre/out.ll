@@ -177,4 +177,13 @@ define dso_local i32 @main(){
 	%x4 = call i32 @putint(i32 %x3)
 	%x5 = add i32 0, 0
 	ret i32 %x5
+}declare i32 @putch(i32)
+define dso_local i32 @main(){
+	%x1 = alloca i32
+	%x2 = add i32 0, 5
+	store i32 %x2, i32* %x1
+	%x3 = load i32, i32* %x1
+	%x4 = call i32 @putch(i32 %x3)
+	%x5 = add i32 0, 0
+	ret i32 %x5
 }
