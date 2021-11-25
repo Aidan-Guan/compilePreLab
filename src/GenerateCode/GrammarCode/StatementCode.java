@@ -5,6 +5,7 @@ import ErrorSolution.ErrorSolu;
 import GrammarAnal.Expression.*;
 
 import static GenerateCode.ExpressionCode.CalculateExpCode.*;
+import static GenerateCode.ExpressionCode.CondExpCode.*;
 import static GenerateCode.GrammarCode.ASTToCode.*;
 
 public class StatementCode {
@@ -70,4 +71,9 @@ public class StatementCode {
             outStr.append("\tret i32 " + value1.out() + "\n");
         }
     }
+
+    static void CodeCond(AstNode parent, int tLabel, int fLabel) {
+        CodeLOrExp(parent.children.get(0), tLabel, fLabel);
+    }
+
 }
