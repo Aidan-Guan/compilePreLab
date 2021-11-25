@@ -319,4 +319,36 @@ define dso_local i32 @main(){
 	%x11 = call i32 @putint(i32 %x10)
 	%x12 = add i32 0, 0
 	ret i32 %x12
+}declare i32 @putint(i32)
+@a = dso_local global i32 6
+@b = dso_local global i32 1
+define dso_local i32 @main(){
+	%x4 = alloca i32
+	%x5 = load i32, i32* @b
+	store i32 %x5, i32* %x4
+	%x6 = alloca i32
+	%x7 = add i32 0, 8
+	store i32 %x7, i32* %x6
+	%x8 = load i32, i32* %x6
+	%x9 = load i32, i32* %x4
+	%x10 = add i32 %x8, %x9
+	%x11 = call i32 @putint(i32 %x10)
+	%x12 = add i32 0, 0
+	ret i32 %x12
+}declare i32 @putint(i32)
+@a = dso_local global i32 6
+@b = dso_local global i32 7
+define dso_local i32 @main(){
+	%x4 = alloca i32
+	%x5 = load i32, i32* @b
+	store i32 %x5, i32* %x4
+	%x6 = alloca i32
+	%x7 = add i32 0, 8
+	store i32 %x7, i32* %x6
+	%x8 = load i32, i32* %x6
+	%x9 = load i32, i32* %x4
+	%x10 = add i32 %x8, %x9
+	%x11 = call i32 @putint(i32 %x10)
+	%x12 = add i32 0, 0
+	ret i32 %x12
 }
