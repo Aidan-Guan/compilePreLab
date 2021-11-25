@@ -17,8 +17,8 @@ public class ASTToCode {
     public static AstNode root;
     public static int regIndex = 0;
 
-    static boolean isDefConst = false;
-    static boolean isDefGlobal = false;
+    public static boolean isDefConst = false;
+    public static boolean isDefGlobal = false;
     public static StringBuilder outStr = new StringBuilder();
 
 
