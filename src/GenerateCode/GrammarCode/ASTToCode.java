@@ -20,6 +20,7 @@ public class ASTToCode {
     public static int regIndex = 1;
     public static int blockIndex = 0;
 
+    public static boolean isBreak = false;
     public static boolean isReturn = false;
     public static boolean isDefConst = false;
     public static boolean isDefGlobal = false;
@@ -70,6 +71,10 @@ public class ASTToCode {
         IdentMapList.addMap(currMap);
 
         for (AstNode child: parent.children) {
+            if (isBreak) {
+                isBreak = false;
+                return;
+            }
             if (child.type.equals("<BlockItem>")) {
                 CodeBlockItem(child);
             }
@@ -100,6 +105,17 @@ public class ASTToCode {
         }
         else {
             return value.register;
+        }
+    }
+
+    public static AstNode getWhileBlock (AstNode node) {
+        AstNode child = node;
+        while (true) {
+            AstNode parent = child.parent;
+            if (parent.children.size()>0 && parent.children.get(0).value!=null && parent.children.get(0).value.equals("while")) {
+                return parent;
+            }
+            child = parent;
         }
     }
 

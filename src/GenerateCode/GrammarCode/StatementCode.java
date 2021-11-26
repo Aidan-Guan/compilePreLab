@@ -7,11 +7,13 @@ import GrammarAnal.Expression.*;
 import static GenerateCode.ExpressionCode.CalculateExpCode.*;
 import static GenerateCode.ExpressionCode.CondExpCode.*;
 import static GenerateCode.GrammarCode.ASTToCode.*;
+import static GrammarAnal.Grammar.TokensToAST.*;
 
 public class StatementCode {
     static void CodeStmt(AstNode parent) {
         String type = parent.children.get(0).type;
         String value = parent.children.get(0).value;
+        AstNode currBlock = parent.children.get(0);
 
         if (type.equals("<LVal>")) {
             String reg = CodeLVal(parent.children.get(0));
@@ -69,6 +71,8 @@ public class StatementCode {
             int condLabel = blockIndex++;
             int tLabel = blockIndex++;
             int fLabel = blockIndex++;
+            getWhileBlock(currBlock).tBlock = tLabel;
+            getWhileBlock(currBlock).fBlock = fLabel;
 
             // 跳转到cond部分
             outStr.append("\tbr label %block" + condLabel + "\n");
@@ -91,9 +95,11 @@ public class StatementCode {
             outStr.append("\nblock" + fLabel + ":\n");
         }
         else if (value.equals("break")) {
-            int breakBlock = blockIndex++;
-            parent.breakBlock = breakBlock;
+            int breakBlock = getWhileBlock(parent).fBlock;
+
             outStr.append("\tbr label %block" + breakBlock + "\n");
+
+            isBreak = true;
             return;
         }
         else if (value.equals("continue")) {

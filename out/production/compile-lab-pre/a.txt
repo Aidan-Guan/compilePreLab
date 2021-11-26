@@ -1,5 +1,11 @@
 int main() {
-    while (1==1);
+
+    int a;
+    while (1<2) {
+
+        break;
+        a = 2;
+    }
 
     return 0;
 }

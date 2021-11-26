@@ -109,11 +109,37 @@ public class TokensToAST {
 
     public static void addChild(Token child, AstNode parent) {
         AstNode kid = new AstNode(child.type, child.value);
+        kid.parent = parent;
         parent.children.add(kid);
     }
 
     public static void addChild(AstNode child, AstNode parent) {
         child.parent = parent;
         parent.children.add(child);
+    }
+
+    public static AstNode findBlockParent (AstNode childNode) {
+        AstNode child = childNode;
+        if (child.type.equals("<Block>")) {
+            return child;
+        }
+
+        while (true) {
+            AstNode parent = child.parent;
+            if (parent.type.equals("<Block>")) {
+                return parent;
+            }
+            child = parent;
+        }
+    }
+
+    public static void setChildBlockInfo (AstNode parent) {
+        for (AstNode child: parent.children) {
+            if (parent.breakBlock != -1) child.breakBlock = parent.breakBlock;
+
+            if (parent.continueBlock != -1) child.continueBlock = parent.continueBlock;
+
+            setChildBlockInfo(child);
+        }
     }
 }
