@@ -87,6 +87,9 @@ public class StatementCode {
             if (isReturn) {
                 isReturn = false;
             }
+            if (isBreak) {
+                isBreak = false;
+            }
 //            if (!isReturn)
 //                outStr.append("\tbr label %block" + fLabel + "\n");
 //            else
@@ -111,7 +114,7 @@ public class StatementCode {
             outStr.append("\tret i32 " + value1.out() + "\n");
         }
 
-        if (parent.condBlock != -1) {
+        if (parent.condBlock != -1 && !isBreak) {
             outStr.append("\tbr label %block" + parent.condBlock + "\n");
         }
 

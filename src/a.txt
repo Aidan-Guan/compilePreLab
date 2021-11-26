@@ -3,8 +3,8 @@ int main() {
     int a;
     while (1<2) {
 
-        break;
         a = 2;
+        break;
     }
 
     return 0;

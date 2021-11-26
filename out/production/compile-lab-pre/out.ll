@@ -348,4 +348,106 @@ block1:
 block2:
 	%x5 = add i32 0, 0
 	ret i32 %x5
+}define dso_local i32 @main(){
+	%x1 = alloca i32
+	br label %block0
+
+block0:
+	%x2 = add i32 0, 1
+	%x3 = add i32 0, 2
+	%x4 = icmp slt i32 %x2, %x3
+	br i1 %x4, label %block1, label %block2
+
+block1:
+	br label %block2
+	br label %block0
+
+block2:
+	%x5 = add i32 0, 0
+	ret i32 %x5
+}define dso_local i32 @main(){
+	%x1 = alloca i32
+	br label %block0
+
+block0:
+	%x2 = add i32 0, 1
+	%x3 = add i32 0, 2
+	%x4 = icmp slt i32 %x2, %x3
+	br i1 %x4, label %block1, label %block2
+
+block1:
+	br label %block2
+	br label %block0
+
+block2:
+	%x5 = add i32 0, 0
+	ret i32 %x5
+}define dso_local i32 @main(){
+	%x1 = alloca i32
+	br label %block0
+
+block0:
+	%x2 = add i32 0, 1
+	%x3 = add i32 0, 2
+	%x4 = icmp slt i32 %x2, %x3
+	br i1 %x4, label %block1, label %block2
+
+block1:
+	br label %block2
+	br label %block0
+
+block2:
+	%x5 = add i32 0, 0
+	ret i32 %x5
+}define dso_local i32 @main(){
+	%x1 = alloca i32
+	br label %block0
+
+block0:
+	%x2 = add i32 0, 1
+	%x3 = add i32 0, 2
+	%x4 = icmp slt i32 %x2, %x3
+	br i1 %x4, label %block1, label %block2
+
+block1:
+	br label %block2
+	br label %block0
+
+block2:
+	%x5 = add i32 0, 0
+	ret i32 %x5
+}define dso_local i32 @main(){
+	%x1 = alloca i32
+	br label %block0
+
+block0:
+	%x2 = add i32 0, 1
+	%x3 = add i32 0, 2
+	%x4 = icmp slt i32 %x2, %x3
+	br i1 %x4, label %block1, label %block2
+
+block1:
+	br label %block2
+
+block2:
+	%x5 = add i32 0, 0
+	ret i32 %x5
+}define dso_local i32 @main(){
+	%x1 = alloca i32
+	br label %block0
+
+block0:
+	%x2 = add i32 0, 1
+	%x3 = add i32 0, 2
+	%x4 = icmp slt i32 %x2, %x3
+	br i1 %x4, label %block1, label %block2
+
+block1:
+	%x5 = add i32 0, 2
+	store i32 %x5, i32* %x1
+	br label %block0
+
+block2:
+	%x6 = add i32 0, 0
+	ret i32 %x6
 }

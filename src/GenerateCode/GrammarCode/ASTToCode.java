@@ -71,10 +71,8 @@ public class ASTToCode {
         IdentMapList.addMap(currMap);
 
         for (AstNode child: parent.children) {
-            if (isBreak) {
-                isBreak = false;
-                return;
-            }
+            if (isBreak) { return; }
+
             if (child.type.equals("<BlockItem>")) {
                 CodeBlockItem(child);
             }
