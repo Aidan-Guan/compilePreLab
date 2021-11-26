@@ -8,7 +8,11 @@ public class AstNode {
     public ArrayList<AstNode> children = new ArrayList<>();
     public AstNode parent;
 
+    public int tBlock = -1;
+    public int fBlock = -1;
     public int condBlock = -1;
+    public int breakBlock = -1;
+    public int continueBlock = -1;
 
     /**
      * 创建方法

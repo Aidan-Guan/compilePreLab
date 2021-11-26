@@ -62,6 +62,14 @@ public class Statement {
 
             Stmt(NodeStmt);
         }
+        else if (currentSym.value.equals("break") || currentSym.value.equals("continue")) {
+            addChild(currentSym, NodeStmt);
+            getNextSym();
+
+            if (!currentSym.value.equals(";")) ErrorSolu.error();
+            addChild(currentSym, NodeStmt);
+            getNextSym();
+        }
         else if (currentSym.value.equals("{")) {
             Block(NodeStmt);
         }

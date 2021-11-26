@@ -90,6 +90,15 @@ public class StatementCode {
 
             outStr.append("\nblock" + fLabel + ":\n");
         }
+        else if (value.equals("break")) {
+            int breakBlock = blockIndex++;
+            parent.breakBlock = breakBlock;
+            outStr.append("\tbr label %block" + breakBlock + "\n");
+            return;
+        }
+        else if (value.equals("continue")) {
+
+        }
         else if (value.equals("return")) {
             isReturn = true;
             ExpValue value1 = CodeExp(parent.children.get(1));
