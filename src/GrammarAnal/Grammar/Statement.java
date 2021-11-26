@@ -83,6 +83,10 @@ public class Statement {
                 getNextSym();
             }
         }
+        else if (currentSym.value.equals(";")) {
+            addChild(currentSym, NodeStmt);
+            getNextSym();
+        }
         else {
             ErrorSolu.error();
         }
