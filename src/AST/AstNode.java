@@ -6,6 +6,7 @@ public class AstNode {
     public String type;
     public String value;
     public ArrayList<AstNode> children = new ArrayList<>();
+    public AstNode parent;
 
     public int condBlock = -1;
 

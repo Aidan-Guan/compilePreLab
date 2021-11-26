@@ -113,6 +113,7 @@ public class TokensToAST {
     }
 
     public static void addChild(AstNode child, AstNode parent) {
+        child.parent = parent;
         parent.children.add(child);
     }
 }

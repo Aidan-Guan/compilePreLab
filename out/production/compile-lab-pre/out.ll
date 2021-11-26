@@ -135,4 +135,35 @@ block1:
 block2:
 	%x4 = add i32 0, 0
 	ret i32 %x4
+}define dso_local i32 @main(){
+	%x1 = alloca i32
+	%x2 = add i32 0, 1
+	store i32 %x2, i32* %x1
+	br label %block0
+
+block0:
+	%x3 = load i32, i32* %x1
+	%x4 = add i32 0, 1
+	%x5 = icmp slt i32 %x3, %x4
+	br i1 %x5, label %block1, label %block2
+
+block1:
+	%x6 = add i32 0, 2
+	store i32 %x6, i32* %x1
+	%x7 = load i32, i32* %x1
+	%x8 = add i32 0, 3
+	%x9 = icmp eq i32 %x7, %x8
+	br i1 %x9, label %block3, label %block4
+
+block3:
+	br label %block-1
+	br label %block4
+
+block4:
+	%x10 = add i32 0, 3
+	store i32 %x10, i32* %x1
+
+block2:
+	%x11 = add i32 0, 0
+	ret i32 %x11
 }
