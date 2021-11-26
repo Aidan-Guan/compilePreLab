@@ -17,6 +17,7 @@ public class Statement {
         if (currentSym.value.equals("return")) {
             addChild(currentSym, NodeStmt);
             getNextSym();
+
             Exp(NodeStmt);
             if (!currentSym.value.equals(";")) ErrorSolu.error();
             addChild(currentSym, NodeStmt);
@@ -45,6 +46,22 @@ public class Statement {
                 Stmt(NodeStmt);
             }
         }
+        else if (currentSym.value.equals("while")) {
+            addChild(currentSym, NodeStmt);
+            getNextSym();
+
+            if (!currentSym.value.equals("(")) ErrorSolu.error();
+            addChild(currentSym, NodeStmt);
+            getNextSym();
+
+            Cond(NodeStmt);
+
+            if (!currentSym.value.equals(")")) ErrorSolu.error();
+            addChild(currentSym, NodeStmt);
+            getNextSym();
+
+            Stmt(NodeStmt);
+        }
         else if (currentSym.value.equals("{")) {
             Block(NodeStmt);
         }
@@ -52,8 +69,6 @@ public class Statement {
             Token tmp = showFutureSym(1);
             if (tmp.value.equals("=")) {
                 LVal(NodeStmt);
-//                addChild(currentSym, NodeStmt);
-//                getNextSym();
                 addChild(currentSym, NodeStmt);
                 getNextSym();
                 Exp(NodeStmt);

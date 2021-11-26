@@ -351,4 +351,17 @@ define dso_local i32 @main(){
 	%x11 = call i32 @putint(i32 %x10)
 	%x12 = add i32 0, 0
 	ret i32 %x12
+}declare i32 @getint()
+define dso_local i32 @main(){
+	%x1 = alloca i32
+	%x2 = call i32 @getint()
+	store i32 %x2, i32* %x1
+	%x3 = alloca i32
+	%x4 = add i32 0, 0
+	store i32 %x4, i32* %x3
+	%x5 = alloca i32
+	%x6 = add i32 0, 0
+	store i32 %x6, i32* %x5
+	%x7 = add i32 0, 0
+	ret i32 %x7
 }
