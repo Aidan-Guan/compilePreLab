@@ -135,11 +135,11 @@ public class CondExpCode {
                 switch (op) {
                     case "<" -> {
                         resultReg = regIndex++;
-                        outStr.append("%x" + resultReg + " = icmp slt i32 " + expValuePre.out() + ", " + expValue.out() + "\n");
+                        outStr.append("\t%x" + resultReg + " = icmp slt i32 " + expValuePre.out() + ", " + expValue.out() + "\n");
                         expValuePre = new ExpValue(resultReg, "i1");
                         if (i != node.children.size() - 1) {
                             preReg = regIndex++;
-                            outStr.append( "%x" + preReg + " = zext i1 %x" + resultReg + " to i32\n");
+                            outStr.append( "\t%x" + preReg + " = zext i1 %x" + resultReg + " to i32\n");
                         }
                     }
                     case "<=" -> {

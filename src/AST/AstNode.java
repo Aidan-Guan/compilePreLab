@@ -7,6 +7,8 @@ public class AstNode {
     public String value;
     public ArrayList<AstNode> children = new ArrayList<>();
 
+    public int condBlock = -1;
+
     /**
      * 创建方法
      * @param type

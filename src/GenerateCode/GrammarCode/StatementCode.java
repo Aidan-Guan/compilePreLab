@@ -65,11 +65,41 @@ public class StatementCode {
                 outStr.append("\nblock" + rLabel + ":\n");
             }
         }
+        else if (value.equals("while")) {
+            int condLabel = blockIndex++;
+            int tLabel = blockIndex++;
+            int fLabel = blockIndex++;
+
+            // 跳转到cond部分
+            outStr.append("\tbr label %block" + condLabel + "\n");
+            outStr.append("\nblock" + condLabel + ":\n");
+            CodeCond(parent.children.get(2), tLabel, fLabel);
+
+
+            outStr.append("\nblock" + tLabel + ":\n");
+            parent.children.get(4).condBlock = condLabel;
+            CodeStmt(parent.children.get(4));
+
+            if (isReturn) {
+                isReturn = false;
+            }
+//            if (!isReturn)
+//                outStr.append("\tbr label %block" + fLabel + "\n");
+//            else
+//                isReturn = false;
+
+            outStr.append("\nblock" + fLabel + ":\n");
+        }
         else if (value.equals("return")) {
             isReturn = true;
             ExpValue value1 = CodeExp(parent.children.get(1));
             outStr.append("\tret i32 " + value1.out() + "\n");
         }
+
+        if (parent.condBlock != -1) {
+            outStr.append("\tbr label %block" + parent.condBlock + "\n");
+        }
+
     }
 
     static void CodeCond(AstNode parent, int tLabel, int fLabel) {
