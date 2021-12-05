@@ -36,21 +36,22 @@ public class StatementCode {
 
         else if (value.equals("if")) {
 
-            int trueLabel = blockIndex++;
-            int falseLabel = blockIndex++;
+            int tLabel = blockIndex++;
+            int fLabel = blockIndex++;
             boolean flag = false;
-            CodeCond(parent.children.get(2), trueLabel, falseLabel);
+
+            CodeCond(parent.children.get(2), tLabel, fLabel);
 
             if (parent.children.size() == 5) {
-                outStr.append("\nblock" + trueLabel + ":\n");
+                outStr.append("\nblock" + tLabel + ":\n");
 
                 CodeStmt(parent.children.get(4));
                 if (!isReturn && !hasLoopControl(parent.children.get(4)))
-                    outStr.append("\tbr label %block" + falseLabel + "\n");
+                    outStr.append("\tbr label %block" + fLabel + "\n");
                 else
                     isReturn = false;
 
-                outStr.append("\nblock" + falseLabel + ":\n");
+                outStr.append("\nblock" + fLabel + ":\n");
             }
             else if (parent.children.size() == 7) {
                 int nextLabel;
@@ -63,7 +64,7 @@ public class StatementCode {
                     flag = true;
                 }
                 parent.copyNextLabel(parent);
-                outStr.append("\nblock" + trueLabel + ":\n");
+                outStr.append("\nblock" + tLabel + ":\n");
 
                 CodeStmt(parent.children.get(4));
 
@@ -72,70 +73,51 @@ public class StatementCode {
                 else
                     isReturn = false;
 
-                outStr.append("\nblock" + falseLabel + ":\n");
+                outStr.append("\nblock" + fLabel + ":\n");
                 CodeStmt(parent.children.get(6));
-                if (!isReturn && !hasLoopControl(parent.children.get(6))){
-                    if(!labels.contains(nextLabel)) {
-                        outStr.append("\tbr label %block" + nextLabel + "\n");
-                        labels.add(nextLabel);
-                    }
+
+                if (!isReturn && !hasLoopControl(parent.children.get(6)) && !labels.contains(nextLabel)){
+                    outStr.append("\tbr label %block" + nextLabel + "\n");
+                    labels.add(nextLabel);
                 }
-                else isReturn = false;
-                if (!flag)
-                    outStr.append("\nblock" + nextLabel + ":\n");
+                else {
+                    isReturn = false;
+                }
+
+                if (!flag) outStr.append("\nblock" + nextLabel + ":\n");
             }
         }
         else if (value.equals("while")) {
 
             int condLabel = blockIndex++;
-            int trueLabel = blockIndex++;
-            int falseLabel = blockIndex++;
-            ArrayList<Integer> whileLabels = new ArrayList<>();
-            whileLabels.add(condLabel);
-            whileLabels.add(trueLabel);
-            whileLabels.add(falseLabel);
-            parent.loopLabel = whileLabels;
+            int tLabel = blockIndex++;
+            int fLabel = blockIndex++;
+
+            ArrayList<Integer> loopLabels = new ArrayList<>();
+
+            loopLabels.add(condLabel);
+            loopLabels.add(tLabel);
+            loopLabels.add(fLabel);
+
+            parent.loopLabel = loopLabels;
+
             copyWhile(parent);
             outStr.append("\tbr label %block" + condLabel + "\n");
             outStr.append("\nblock" + condLabel + ":\n");
-            CodeCond(parent.children.get(2), trueLabel, falseLabel);
-            outStr.append("\nblock" + trueLabel + ":\n");
+
+            CodeCond(parent.children.get(2), tLabel, fLabel);
+
+            outStr.append("\nblock" + tLabel + ":\n");
+
             CodeStmt(parent.children.get(4));
+
             if (!isReturn)
                 outStr.append("\tbr label %block" + condLabel + "\n");
-            else isReturn = false;
-            outStr.append("\nblock" + falseLabel + ":\n");
+            else
+                isReturn = false;
 
+            outStr.append("\nblock" + fLabel + ":\n");
         }
-//        else if (value.equals("while")) {
-//            int condLabel = blockIndex++;
-//            int tLabel = blockIndex++;
-//            int fLabel = blockIndex++;
-//            ArrayList loopLabels = new ArrayList();
-//
-//            loopLabels.add(condLabel);
-//            loopLabels.add(tLabel);
-//            loopLabels.add(fLabel);
-//
-//            parent.loopLabel = loopLabels;
-//            copyWhile(parent);
-//
-//            outStr.append("\tbr label %block" + condLabel + "\n");
-//            outStr.append("\nblock" + condLabel + ":\n");
-//
-//            CodeCond(parent.children.get(2), tLabel, fLabel);
-//            outStr.append("\nblock" + tLabel + ":\n");
-//            CodeStmt(parent.children.get(4));
-//
-//            if (!isReturn) {
-//                outStr.append("\tbr label %block" + condLabel + "\n");
-//            }
-//            else {
-//                isReturn = false;
-//            }
-//
-//            outStr.append("\nblock" + fLabel + ":\n");
-//        }
         else if (value.equals("break")) {
             int breakBlock = parent.loopLabel.get(2);
             outStr.append("\tbr label %block" + breakBlock + "\n");
