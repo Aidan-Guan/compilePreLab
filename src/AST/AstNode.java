@@ -73,7 +73,7 @@ public class AstNode {
             AstNode stmtNode = node.children.get(6);
             AstNode newNode = stmtNode.children.get(0);
 
-            if(newNode.value!=null && newNode.value.equals("if")){
+            if(newNode.value.equals("if")){
                 stmtNode.nextLabel = nextLabel;
                 copyNextLabel(newNode);
             }
