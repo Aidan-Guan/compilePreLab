@@ -13,6 +13,7 @@ public class AstNode {
     public int condBlock = -1;
     public int breakBlock = -1;
     public int continueBlock = -1;
+    public ArrayList<Integer> loopLabel;
 
     /**
      * 创建方法
@@ -30,5 +31,22 @@ public class AstNode {
      */
     public AstNode (String type) {
         this.type = type;
+    }
+
+
+    public int getContinueBlock () {
+        return this.loopLabel.get(0);
+    }
+
+
+    public int getBreakBlock () {
+        return this.loopLabel.get(2);
+    }
+
+    public static void copyWhile(AstNode parent) {
+        for (AstNode child: parent.children) {
+            child.loopLabel = parent.loopLabel;
+            copyWhile(child);
+        }
     }
 }
