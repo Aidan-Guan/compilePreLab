@@ -21,6 +21,7 @@ public class ASTToCode {
     public static int blockIndex = 0;
 
     public static boolean isBreak = false;
+    public static boolean isContinue = false;
     public static boolean isReturn = false;
     public static boolean isDefConst = false;
     public static boolean isDefGlobal = false;
@@ -72,6 +73,9 @@ public class ASTToCode {
 
         for (AstNode child: parent.children) {
             if (isBreak) { return; }
+
+//            if (isContinue) { isContinue = false; }
+
 
             if (child.type.equals("<BlockItem>")) {
                 CodeBlockItem(child);

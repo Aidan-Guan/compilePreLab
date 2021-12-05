@@ -38,10 +38,12 @@ public class StatementCode {
                 outStr.append("\nblock" + tLabel + ":\n");
                 CodeStmt(parent.children.get(4));
 
-                if (!isReturn)
+                if (!isReturn && !isContinue)
                     outStr.append("\tbr label %block" + fLabel + "\n");
-                else
+                else {
                     isReturn = false;
+                    isContinue = false;
+                }
 
                 outStr.append("\nblock" + fLabel + ":\n");
             }
@@ -71,8 +73,10 @@ public class StatementCode {
             int condLabel = blockIndex++;
             int tLabel = blockIndex++;
             int fLabel = blockIndex++;
+
             getWhileBlock(currBlock).tBlock = tLabel;
             getWhileBlock(currBlock).fBlock = fLabel;
+            getWhileBlock(currBlock).condBlock = condLabel;
 
             // 跳转到cond部分
             outStr.append("\tbr label %block" + condLabel + "\n");
@@ -84,12 +88,10 @@ public class StatementCode {
             parent.children.get(4).condBlock = condLabel;
             CodeStmt(parent.children.get(4));
 
-            if (isReturn) {
-                isReturn = false;
-            }
-            if (isBreak) {
-                isBreak = false;
-            }
+            if (isReturn) { isReturn = false; }
+            if (isBreak) { isBreak = false; }
+            if (isContinue) { isContinue = false;}
+
 //            if (!isReturn)
 //                outStr.append("\tbr label %block" + fLabel + "\n");
 //            else
@@ -98,15 +100,18 @@ public class StatementCode {
             outStr.append("\nblock" + fLabel + ":\n");
         }
         else if (value.equals("break")) {
-            int breakBlock = getWhileBlock(parent).fBlock;
+            int breakBlock = getWhileBlock(currBlock).fBlock;
 
             outStr.append("\tbr label %block" + breakBlock + "\n");
-
             isBreak = true;
             return;
         }
         else if (value.equals("continue")) {
+            int continueBlock = getWhileBlock(currBlock).condBlock;
 
+            outStr.append("\tbr label %block" + continueBlock + "\n");
+            isContinue = true;
+            return;
         }
         else if (value.equals("return")) {
             isReturn = true;
@@ -114,7 +119,7 @@ public class StatementCode {
             outStr.append("\tret i32 " + value1.out() + "\n");
         }
 
-        if (parent.condBlock != -1 && !isBreak) {
+        if (parent.condBlock != -1 && !isBreak && !isContinue) {
             outStr.append("\tbr label %block" + parent.condBlock + "\n");
         }
 
