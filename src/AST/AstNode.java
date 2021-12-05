@@ -14,7 +14,7 @@ public class AstNode {
     public int breakBlock = -1;
     public int continueBlock = -1;
     public ArrayList<Integer> loopLabel;
-    public int nextLabel;
+    public int nextLabel = -1;
 
     /**
      * 创建方法

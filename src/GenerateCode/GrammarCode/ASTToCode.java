@@ -18,7 +18,7 @@ import static GenerateCode.GrammarCode.StatementCode.*;
 public class ASTToCode {
     public static AstNode root;
     public static int regIndex = 1;
-    public static int blockIndex = 0;
+    public static int blockIndex = 1;
 
     public static boolean isBreak = false;
     public static boolean isContinue = false;
@@ -72,7 +72,7 @@ public class ASTToCode {
         IdentMapList.addMap(currMap);
 
         for (AstNode child: parent.children) {
-            if (isBreak) { return; }
+//            if (isBreak) { return; }
 
 //            if (isContinue) { isContinue = false; }
 
