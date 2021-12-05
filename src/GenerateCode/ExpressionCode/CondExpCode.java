@@ -26,7 +26,7 @@ public class CondExpCode {
                         outStr.append("\nblock" + rLabel + ":\n");
                     }
                     rLabel = blockIndex++;
-                    CodeLAndExp(child, tLabel, fLabel);
+                    CodeLAndExp(child, tLabel, rLabel);
                 }
             }
         }

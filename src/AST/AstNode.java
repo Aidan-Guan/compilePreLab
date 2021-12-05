@@ -14,7 +14,7 @@ public class AstNode {
     public int breakBlock = -1;
     public int continueBlock = -1;
     public ArrayList<Integer> loopLabel;
-    public int nextLabel;
+    public int nextLabel = -1;
 
     /**
      * 创建方法
@@ -73,7 +73,7 @@ public class AstNode {
             AstNode stmtNode = node.children.get(6);
             AstNode newNode = stmtNode.children.get(0);
 
-            if(newNode.value.equals("if")){
+            if(newNode.value!=null && newNode.value.equals("if")){
                 stmtNode.nextLabel = nextLabel;
                 copyNextLabel(newNode);
             }
