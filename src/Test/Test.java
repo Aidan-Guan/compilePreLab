@@ -14,7 +14,7 @@ import java.util.ArrayList;
 /**
  * https://github.com/Aidan-Guan/compilePreLab.git
  * Aidan-Guan
- * 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
+ * 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
  */
 
 public class Test {
@@ -25,8 +25,8 @@ public class Test {
 
 
     public static void main(String[] args) throws IOException {
-//        String fileLoc = args[0];
-        String fileLoc = "/Users/guanhuaimin/本地磁盘/学习/本地_大三上/编译原理/labs/compilePreLab/src/a.txt";
+        String fileLoc = args[0];
+//        String fileLoc = "/Users/guanhuaimin/本地磁盘/学习/本地_大三上/编译原理/labs/compilePreLab/src/a.txt";
 
         in = new PushbackReader(new FileReader(fileLoc));
 
@@ -44,8 +44,8 @@ public class Test {
         System.out.print(outputStr);
 
 
-        filePrint("/Users/guanhuaimin/本地磁盘/学习/本地_大三上/编译原理/labs/compilePreLab/src/out.ll");
-//        filePrint(args[1]);
+//        filePrint("/Users/guanhuaimin/本地磁盘/学习/本地_大三上/编译原理/labs/compilePreLab/src/out.ll");
+        filePrint(args[1]);
     }
 
     private static void filePrint(String fileLoc) throws IOException {
