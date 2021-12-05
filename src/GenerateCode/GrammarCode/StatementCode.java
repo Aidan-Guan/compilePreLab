@@ -12,6 +12,9 @@ import static GenerateCode.ExpressionCode.CondExpCode.*;
 import static GenerateCode.GrammarCode.ASTToCode.*;
 
 public class StatementCode {
+
+    public static ArrayList<Integer> labels = new ArrayList<>();
+
     static void CodeStmt(AstNode parent) {
         String type = parent.children.get(0).type;
         String value = parent.children.get(0).value;
@@ -30,45 +33,101 @@ public class StatementCode {
         else if (type.equals("<Exp>")) {
             CodeExp(parent.children.get(0));
         }
+//        else if (value.equals("if")) {
+//            boolean flg = false;
+//            int tLabel = blockIndex++;
+//            int fLabel = blockIndex++;
+//
+//            CodeCond(parent.children.get(2), tLabel, fLabel);
+//
+//            if (parent.children.size() == 5) {
+//                outStr.append("\nblock" + tLabel + ":\n");
+//                CodeStmt(parent.children.get(4));
+//
+//                if (!isReturn && !hasLoopControl(parent.children.get(4)))
+//                    outStr.append("\tbr label %block" + fLabel + "\n");
+//                else {
+//                    isReturn = false;
+//                    isContinue = false;
+//                }
+//
+//                outStr.append("\nblock" + fLabel + ":\n");
+//            }
+//            else if (parent.children.size() == 7) {
+//                int rLabel = blockIndex++;
+//
+//                outStr.append("\nblock" + tLabel + ":\n");
+//                CodeStmt(parent.children.get(4));
+//
+//                if (!isReturn && !hasLoopControl(parent.children.get(4)))
+//                    outStr.append("\tbr label %block" + rLabel + "\n");
+//                else
+//                    isReturn = false;
+//
+//                outStr.append("\nblock" + fLabel + ":\n");
+//                CodeStmt(parent.children.get(6));
+//
+//                if (!isReturn && !hasLoopControl(parent.children.get(4))) {
+//                    if (!labels.contains(rLabel)) {
+//                        outStr.append("\tbr label %block" + rLabel + "\n");
+//                        labels.add(rLabel);
+//                    }
+//                }
+//                else
+//                    isReturn = false;
+//
+//                outStr.append("\nblock" + rLabel + ":\n");
+//            }
+//        }
         else if (value.equals("if")) {
-            int tLabel = blockIndex++;
-            int fLabel = blockIndex++;
 
-            CodeCond(parent.children.get(2), tLabel, fLabel);
+            int trueLabel = blockIndex++;
+            int falseLabel = blockIndex++;
+            boolean flag = false;
+            CodeCond(parent.children.get(2), trueLabel, falseLabel);
 
             if (parent.children.size() == 5) {
-                outStr.append("\nblock" + tLabel + ":\n");
+                outStr.append("\nblock" + trueLabel + ":\n");
+
                 CodeStmt(parent.children.get(4));
-
-                if (!isReturn && !isContinue)
-                    outStr.append("\tbr label %block" + fLabel + "\n");
-                else {
+                if (!isReturn && !hasLoopControl(parent.children.get(4)))
+                    outStr.append("\tbr label %block" + falseLabel + "\n");
+                else
                     isReturn = false;
-                    isContinue = false;
-                }
 
-                outStr.append("\nblock" + fLabel + ":\n");
+                outStr.append("\nblock" + falseLabel + ":\n");
             }
             else if (parent.children.size() == 7) {
-                int rLabel = blockIndex++;
+                int nextLabel;
+                if(parent.nextLabel == -1){
+                    nextLabel = blockIndex++;
+                    parent.nextLabel = nextLabel;
+                }
+                else {
+                    nextLabel = parent.nextLabel;
+                    flag = true;
+                }
+                parent.copyNextLabel(parent);
+                outStr.append("\nblock" + trueLabel + ":\n");
 
-                outStr.append("\nblock" + tLabel + ":\n");
                 CodeStmt(parent.children.get(4));
 
-                if (!isReturn)
-                    outStr.append("\tbr label %block" + rLabel + "\n");
+                if (!isReturn && !hasLoopControl(parent.children.get(4)))
+                    outStr.append("\tbr label %block" + nextLabel + "\n");
                 else
                     isReturn = false;
 
-                outStr.append("\nblock" + fLabel + ":\n");
+                outStr.append("\nblock" + falseLabel + ":\n");
                 CodeStmt(parent.children.get(6));
-
-                if (!isReturn)
-                    outStr.append("\tbr label %block" + rLabel + "\n");
-                else
-                    isReturn = false;
-
-                outStr.append("\nblock" + rLabel + ":\n");
+                if (!isReturn && !hasLoopControl(parent.children.get(6))){
+                    if(!labels.contains(nextLabel)) {
+                        outStr.append("\tbr label %block" + nextLabel + "\n");
+                        labels.add(nextLabel);
+                    }
+                }
+                else isReturn = false;
+                if (!flag)
+                    outStr.append("\nblock" + nextLabel + ":\n");
             }
         }
         else if (value.equals("while")) {
@@ -101,7 +160,7 @@ public class StatementCode {
             outStr.append("\nblock" + fLabel + ":\n");
         }
         else if (value.equals("break")) {
-            int breakBlock = getWhileBlock(currBlock).fBlock;
+            int breakBlock = parent.loopLabel.get(2);
             outStr.append("\tbr label %block" + breakBlock + "\n");
         }
         else if (value.equals("continue")) {
@@ -114,9 +173,7 @@ public class StatementCode {
             outStr.append("\tret i32 " + value1.out() + "\n");
         }
 
-//        if (parent.condBlock != -1 && !isBreak && !isContinue) {
-//            outStr.append("\tbr label %block" + parent.condBlock + "\n");
-//        }
+
 
     }
 
