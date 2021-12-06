@@ -157,6 +157,17 @@ public class CalculateExpressions {
         addChild(currentSym, NodeLVal);
         getNextSym();
 
+        while (currentSym.value.equals("[")) {
+            addChild(currentSym, NodeLVal);
+            getNextSym();
+
+            Exp(NodeLVal);
+
+            if (!currentSym.value.equals("]")) ErrorSolu.error();
+            addChild(currentSym, NodeLVal);
+            getNextSym();
+        }
+
         addChild(NodeLVal, parent);
     }
 }
