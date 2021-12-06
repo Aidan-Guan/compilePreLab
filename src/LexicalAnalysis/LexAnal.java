@@ -126,6 +126,8 @@ public class LexAnal {
                 case '-' -> { return new Token("SIGN", "-"); }
                 case '*' -> { return new Token("SIGN", "*"); }
                 case '%' -> { return new Token("SIGN", "%"); }
+                case '[' -> { return new Token("SIGN", "["); }
+                case ']' -> { return new Token("SIGN", "]"); }
                 case '=' -> { return eqAnal(); }
                 case ',' -> { return new Token("SIGN", ","); }
                 case '<' -> { return lOrLeAnal(); }
