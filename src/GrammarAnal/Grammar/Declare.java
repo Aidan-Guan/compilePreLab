@@ -134,6 +134,17 @@ public class Declare {
         addChild(currentSym, NodeVarDef);
         getNextSym();
 
+        while (currentSym.value.equals("[")) {
+            addChild(currentSym, NodeVarDef);
+            getNextSym();
+
+            constExp(NodeVarDef);
+
+            if (!currentSym.value.equals("]")) ErrorSolu.error();
+            addChild(currentSym, NodeVarDef);
+            getNextSym();
+        }
+
         if (!currentSym.value.equals("=")) {
             addChild(NodeVarDef, parent);
             return;
