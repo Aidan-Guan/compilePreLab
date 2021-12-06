@@ -15,6 +15,15 @@ public class Ident {
     public boolean isDeclared = false;
 
     /**
+     * 数组相关
+     */
+    public int dim;
+    public ArrayList<Integer> dimSize;
+    public ArrayList<Integer> dimElse;
+    public String arrayType;
+
+
+    /**
      * 创建函数
      * @param name
      * @param identType
@@ -39,6 +48,16 @@ public class Ident {
         this.name = name;
         this.identType = identType;
         this.valueType = valueType;
+        this.regIndex = regIndex;
+    }
+
+
+    public Ident (String name, IdentType identType, ValueType valueType, int dim, ArrayList<Integer> dimSize, int regIndex) {
+        this.name = name;
+        this.identType = identType;
+        this.valueType = valueType;
+        this.dim = dim;
+        this.dimSize = dimSize;
         this.regIndex = regIndex;
     }
 

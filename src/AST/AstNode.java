@@ -1,5 +1,7 @@
 package AST;
 
+import TokenUtils.Ident;
+
 import java.util.ArrayList;
 
 public class AstNode {
@@ -15,6 +17,10 @@ public class AstNode {
     public int continueBlock = -1;
     public ArrayList<Integer> loopLabel;
     public int nextLabel = -1;
+
+    public ArrayList<Integer> arrayInfo = new ArrayList<>();
+    public Ident arraySym;
+    public int dep;
 
     /**
      * 创建方法

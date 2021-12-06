@@ -25,6 +25,7 @@ public class ASTToCode {
     public static boolean isReturn = false;
     public static boolean isDefConst = false;
     public static boolean isDefGlobal = false;
+    public static boolean isArray = true;
     public static StringBuilder outStr = new StringBuilder();
 
 

@@ -17,6 +17,14 @@ public class CalculateExpCode {
         return CodeAddExp(parent.children.get(0));
     }
 
+
+    public static ExpValue CodeConstExp (AstNode parent) {
+        isDefConst = true;
+        ExpValue value = CodeAddExp(parent.children.get(0));
+        isDefConst = false;
+        return value;
+    }
+
     public static ExpValue CodeAddExp(AstNode parent) {
         int registerPre = -1;
         int valuePre = 0;
