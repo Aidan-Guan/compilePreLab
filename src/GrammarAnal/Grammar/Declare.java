@@ -56,6 +56,17 @@ public class Declare {
         addChild(currentSym, NodeConstDef);
         getNextSym();
 
+        while (currentSym.value.equals("[")) {
+            addChild(currentSym, NodeConstDef);
+            getNextSym();
+
+            constExp(NodeConstDef);
+
+            if (!currentSym.value.equals("]")) ErrorSolu.error();
+            addChild(currentSym, NodeConstDef);
+            getNextSym();
+        }
+
         if (!currentSym.value.equals("=")) ErrorSolu.error();
         addChild(currentSym, NodeConstDef);
         getNextSym();
@@ -68,8 +79,32 @@ public class Declare {
     public static void ConstInitVal(AstNode parent) {
         AstNode NodeConstInitVal = new AstNode("<ConstInitVal>");
 
-        constExp(NodeConstInitVal);
-        addChild(NodeConstInitVal, parent);
+        if (currentSym.value.equals("{")) {
+            addChild(currentSym, NodeConstInitVal);
+            getNextSym();
+
+            if (currentSym.value.equals("}")) {
+                addChild(currentSym, NodeConstInitVal);
+                getNextSym();
+            }
+            else {
+                ConstInitVal(NodeConstInitVal);
+                while (currentSym.value.equals(",")) {
+                    addChild(currentSym, NodeConstInitVal);
+                    getNextSym();
+
+                    ConstInitVal(NodeConstInitVal);
+                }
+
+                if (!currentSym.value.equals("}")) ErrorSolu.error();
+                addChild(currentSym, NodeConstInitVal);
+                getNextSym();
+            }
+        }
+        else {
+            constExp(NodeConstInitVal);
+            addChild(NodeConstInitVal, parent);
+        }
     }
 
     public static void VarDecl (AstNode parent) {
