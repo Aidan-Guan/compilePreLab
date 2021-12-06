@@ -103,8 +103,8 @@ public class Declare {
         }
         else {
             constExp(NodeConstInitVal);
-            addChild(NodeConstInitVal, parent);
         }
+        addChild(NodeConstInitVal, parent);
     }
 
     public static void VarDecl (AstNode parent) {
@@ -159,7 +159,30 @@ public class Declare {
 
     public static void InitVal(AstNode parent) {
         AstNode NodeInitVal = new AstNode("<InitVal>");
-        Exp(NodeInitVal);
+
+        if (currentSym.value.equals("{")) {
+            addChild(currentSym, NodeInitVal);
+            getNextSym();
+
+            if (currentSym.value.equals("}")) {
+                addChild(currentSym, NodeInitVal);
+                getNextSym();
+            }
+            else {
+                InitVal(NodeInitVal);
+                while (currentSym.value.equals(",")) {
+                    addChild(currentSym, NodeInitVal);
+                    getNextSym();
+                    InitVal(NodeInitVal);
+                }
+
+                if (!currentSym.value.equals("}")) ErrorSolu.error();
+                addChild(currentSym, NodeInitVal);
+                getNextSym();
+            }
+        }
+        else Exp(NodeInitVal);
+
         addChild(NodeInitVal, parent);
     }
 
