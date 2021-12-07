@@ -250,8 +250,114 @@ public class DeclareCode {
 //        }
 //    }
 
-    static ExpValue CodeConstInitVal (AstNode parent) {
-        return CodeExp(parent.children.get(0));
+    public static ExpValue CodeConstInitVal(AstNode node){
+        if (!isDefGlobal) {
+            if(node.children.size() == 1){
+                return CodeConstExp(node.children.get(0));
+            }
+            else {
+                int pos = 0;
+                int dep = node.dep;
+                ArrayList <Integer> arrayInfo = node.arrayInfo;
+                for(AstNode child : node.children){
+
+                    if (child.type.equals("<ConstInitVal>")) {
+                        child.arraySym = node.arraySym;
+                        if (child.children.size() > 1){
+                            arrayInfo.set(node.dep, pos);
+                            child.arrayInfo = arrayInfo;
+                            child.dep = node.dep+1;
+                            CodeConstInitVal(child);
+                        }
+                        else {
+                            arrayInfo.set(arrayInfo.size() - 1, pos);
+                            child.arrayInfo = arrayInfo;
+                            child.dep = node.dep+1;
+                            int dim = node.arraySym.dim;
+                            int registerNew = regIndex++;
+                            Ident arraySym = node.arraySym;
+                            outStr.append("\t%x" +registerNew + " = getelementptr " + arraySym.arrayType + ", " + arraySym.arrayType + "* " + arraySym.out() + ", i32 0");
+                            for(int i = 0; i < dim; i++){
+                                outStr.append(", i32 " + arrayInfo.get(i));
+                            }
+                            outStr.append("\n");
+
+                            ExpValue expValue = CodeConstInitVal(child);
+                            outStr.append("\tstore i32 %x" + expValue.register + ", i32* %x" + registerNew + "\n");
+                        }
+
+                    }
+                    else if (child.value.equals("[")) {
+                        dep++;
+                        if(arrayInfo.size() < dep)
+                            arrayInfo.add(-1);
+                    }
+                    else if (child.value.equals(",")) {
+                        pos += 1;
+                    }
+                }
+            }
+
+        }
+        else {
+            if(node.children.size() == 1){
+                ExpValue exp = CodeExp(node.children.get(0));
+                if (isArray)
+                    outStr.append(" " +  exp.value);
+                return exp;
+            }
+            else {
+                Ident arraySym = node.arraySym;
+                int pos = 0, dep = node.dep;
+                int thisDimSize = arraySym.dimSize.get(dep);
+                int dimSum = arraySym.dim;
+                String arrayType = "";
+                for(int i = dep + 1; i < dimSum; i++){
+                    arrayType += " [" + arraySym.dimSize.get(i) + " x";
+                }
+                arrayType += " i32";
+                for (int i = dep + 1; i < dimSum; i++){
+                    arrayType += "]";
+                }
+                outStr.append("[");
+
+                for(AstNode child : node.children){
+                    if(child.type.equals("<ConstInitVal>")){
+                        child.arraySym = node.arraySym;
+                        child.dep = node.dep+1;
+                        if(pos != 0)
+                            outStr.append(",");
+                        outStr.append(arrayType);
+                        CodeConstInitVal(child);
+                        thisDimSize--;
+                    }
+                    else if(child.value.equals("[")){
+                        dep++;
+                    }
+                    else if(child.value.equals(",")){
+                        pos += 1;
+                    }
+                }
+                while(thisDimSize > 0){
+                    if(pos != 0){
+                        outStr.append(",");
+                    }
+                    if(!arrayType.equals(" i32"))
+                        outStr.append(arrayType + " zeroinitializer");
+                    else
+                        outStr.append( arrayType + " " + 0);
+                    thisDimSize--;
+                    pos++;
+                }
+                outStr.append("]");
+            }
+        }
+        return null;
     }
+
+
+//    static ExpValue CodeConstInitVal (AstNode parent) {
+//        return CodeExp(parent.children.get(0));
+//    }
 
 }
