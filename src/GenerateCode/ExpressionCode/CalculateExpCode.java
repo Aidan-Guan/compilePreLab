@@ -9,6 +9,7 @@ import TokenUtils.IdentType;
 import TokenUtils.ValueType;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static GenerateCode.GrammarCode.ASTToCode.*;
 
@@ -210,15 +211,30 @@ public class CalculateExpCode {
             return CodeNumber(parent.children.get(0));
         }
         else if (firstChild.type.equals("<LVal>")) {
-            String reg = CodeLVal(parent.children.get(0));
-            String identName = parent.children.get(0).children.get(0).value;
-            isDefConst = false;
 
-            if (!isDefGlobal) {
-                outStr.append("\t%x" + regIndex + " = load i32, i32* " + reg + "\n");
-                regIndex++;
-            }
-            return new ExpValue(regIndex-1, "i32", getIdentValue(identName));
+            ExpValue expValue = CodeLVal(parent.children.get(0));
+            String regBefore;
+            if(expValue.valueType.equals("ident"))
+                regBefore = expValue.registerString;
+            else
+                regBefore = "%x" + expValue.register;
+            String ident = parent.children.get(0).children.get(0).value;
+//                isDefiningConst = false;
+            int regNew = regIndex++;
+            if(!isDefGlobal)
+                outStr.append("\t%" + regNew + " = load i32, i32* " + regBefore + "\n");
+            return new ExpValue(regNew, "i32", Objects.requireNonNull(IdentMapList.getIdentInAllMap(ident)).value);
+
+
+//            String reg = CodeLVal(parent.children.get(0));
+//            String identName = parent.children.get(0).children.get(0).value;
+//            isDefConst = false;
+//
+//            if (!isDefGlobal) {
+//                outStr.append("\t%x" + regIndex + " = load i32, i32* " + reg + "\n");
+//                regIndex++;
+//            }
+//            return new ExpValue(regIndex-1, "i32", getIdentValue(identName));
 
         }
         else if (firstChild.value.equals("(")) {
@@ -228,15 +244,51 @@ public class CalculateExpCode {
         return null;
     }
 
-    public static String CodeLVal(AstNode parent) {
-        String identName = parent.children.get(0).value;
-        if (CodeIsConst(identName)) { isDefConst = true; }
+//    public static String CodeLVal(AstNode parent) {
+//        String identName = parent.children.get(0).value;
+//        if (CodeIsConst(identName)) { isDefConst = true; }
+//
+//        if (isDefConst && !CodeIsConst(identName)) {
+//            ErrorSolu.error();
+//        }
+//
+//        return CodeGetReg(identName);
+//    }
 
-        if (isDefConst && !CodeIsConst(identName)) {
-            ErrorSolu.error();
+    public static ExpValue CodeLVal(AstNode node){
+        if(node.children.size() == 1){
+            String Ident = node.children.get(0).value;
+            if(isConst(Ident)) isDefConst = true;
+            if(isDefConst){
+                if(!isConst(Ident))
+                    throw new java.lang.Error("can not define const by var");
+            }
+            return new ExpValue(getSymReg(Ident));
         }
+        else {
+            String ident = node.children.get(0).value;
+            ArrayList <Integer> arrayParam = new ArrayList<>();
+            for(AstNode child : node.children){
+                if(child.type.equals("<Exp>")){
+                    arrayParam.add(CodeExp(child).register);
+                }
+            }
+            int registerNew = regIndex++;
+            Ident arraySym = IdentMapList.getIdentInAllMap(ident);
 
-        return CodeGetReg(identName);
+            if(arraySym.dim != arrayParam.size()) throw new java.lang.Error("dim is not correspond");
+            String registerString;
+            if(arraySym.identType == IdentType.GLOBAL_ARRAY_CONST || arraySym.identType == IdentType.GLOBAL_ARRAY_VAR)
+                registerString = "@" + arraySym.name;
+            else registerString = arraySym.out();
+
+            outStr.append("\t%" +registerNew + " = getelementptr " + arraySym.arrayType + ", " + arraySym.arrayType + "* " + registerString + ", i32 0");
+            for(int i = 0; i < arraySym.dim; i++){
+                outStr.append(", i32 %x" + arrayParam.get(i));
+            }
+            outStr.append("\n");
+            return new ExpValue(registerNew);
+        }
     }
 
     static ExpValue CodeNumber(AstNode parent) {
@@ -284,4 +336,31 @@ public class CalculateExpCode {
         }
         return -1;
     }
+
+    private static boolean isConst(String Ident){
+        Ident sym = IdentMapList.getGlobalMap().get(Ident);
+        if(sym != null){
+            return sym.identType == IdentType.CONST || sym.identType == IdentType.GLOBAL_CONST || sym.identType == IdentType.ARRAY_CONST || sym.identType ==IdentType.GLOBAL_ARRAY_CONST;
+        }
+        else {
+            if (IdentMapList.getIdentInAllMap(Ident)!=null) {
+                return  sym.identType == IdentType.CONST || sym.identType == IdentType.GLOBAL_CONST || sym.identType == IdentType.ARRAY_CONST || sym.identType ==IdentType.GLOBAL_ARRAY_CONST;
+            }
+        }
+        throw new java.lang.Error("symbol used before declaration");
+    }
+
+    private static String getSymReg(String Ident){
+        Ident sym = IdentMapList.getIdentInAllMap(Ident);
+        String reg = "";
+        if(sym != null){
+            if(sym.identType == IdentType.GLOBAL_CONST || sym.identType == IdentType.GLOBAL_VAR || sym.identType == IdentType.GLOBAL_ARRAY_CONST || sym.identType == IdentType.GLOBAL_ARRAY_VAR)
+                reg =  "@" + sym.name;
+            else reg = "%x" + sym.regIndex;
+        }
+
+        if(!reg.equals(""))return reg;
+        else throw new java.lang.Error("symbol used before declaration");
+    }
+
 }

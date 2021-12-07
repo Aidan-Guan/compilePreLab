@@ -18,14 +18,25 @@ public class StatementCode {
     static void CodeStmt(AstNode parent) {
         String type = parent.children.get(0).type;
         String value = parent.children.get(0).value;
-        AstNode currBlock = parent.children.get(0);
 
         if (type.equals("<LVal>")) {
-            String reg = CodeLVal(parent.children.get(0));
+            ExpValue expValue = CodeLVal(parent.children.get(0));
+            String regIdent;
+            if(expValue.valueType.equals("ident"))
+                regIdent= expValue.registerString;
+            else
+                regIdent = "%x" + expValue.register;
 
-            if (isDefConst) ErrorSolu.error();
-            ExpValue value1 = CodeExp(parent.children.get(2));
-            outStr.append("\tstore i32 " + value1.out() + ", i32* " + reg + "\n");
+            if(isDefConst)
+                throw new java.lang.Error("const can not be assigned again");
+            int regExp = CodeExp(parent.children.get(2)).register;
+            outStr.append("\tstore i32 %" + regExp + ", i32* " + regIdent + "\n");
+
+//            String reg = CodeLVal(parent.children.get(0));
+//
+//            if (isDefConst) ErrorSolu.error();
+//            ExpValue value1 = CodeExp(parent.children.get(2));
+//            outStr.append("\tstore i32 " + value1.out() + ", i32* " + reg + "\n");
         }
         else if (type.equals("<Block>")) {
             CodeBlock(parent.children.get(0));
