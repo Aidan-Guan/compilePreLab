@@ -278,6 +278,7 @@ public class CalculateExpCode {
                 if(child.type.equals("<Exp>")){
 
                     arrayParam.add(CodeExp(child).register);
+
                 }
             }
             int registerNew = regIndex++;
