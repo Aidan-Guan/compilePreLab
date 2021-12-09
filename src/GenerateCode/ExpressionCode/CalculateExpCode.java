@@ -222,7 +222,7 @@ public class CalculateExpCode {
 //                isDefiningConst = false;
             int regNew = regIndex++;
             if(!isDefGlobal)
-                outStr.append("\t%" + regNew + " = load i32, i32* " + regBefore + "\n");
+                outStr.append("\t%x" + regNew + " = load i32, i32* " + regBefore + "\n");
             return new ExpValue(regNew, "i32", Objects.requireNonNull(IdentMapList.getIdentInAllMap(ident)).value);
 
 
@@ -338,7 +338,7 @@ public class CalculateExpCode {
     }
 
     private static boolean isConst(String Ident){
-        Ident sym = IdentMapList.getGlobalMap().get(Ident);
+        Ident sym = IdentMapList.getIdentInAllMap(Ident);
         if(sym != null){
             return sym.identType == IdentType.CONST || sym.identType == IdentType.GLOBAL_CONST || sym.identType == IdentType.ARRAY_CONST || sym.identType ==IdentType.GLOBAL_ARRAY_CONST;
         }

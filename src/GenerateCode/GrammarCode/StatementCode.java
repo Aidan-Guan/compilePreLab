@@ -30,7 +30,7 @@ public class StatementCode {
             if(isDefConst)
                 throw new java.lang.Error("const can not be assigned again");
             int regExp = CodeExp(parent.children.get(2)).register;
-            outStr.append("\tstore i32 %" + regExp + ", i32* " + regIdent + "\n");
+            outStr.append("\tstore i32 %x" + regExp + ", i32* " + regIdent + "\n");
 
 //            String reg = CodeLVal(parent.children.get(0));
 //
