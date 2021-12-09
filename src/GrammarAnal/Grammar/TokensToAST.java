@@ -96,6 +96,7 @@ public class TokensToAST {
     public static void getNextSym() {
         try {
             currentSym = tokens.get(tokenIndex);
+            currentSym.index = tokenIndex;
             tokenIndex++;
         }
         catch (Exception e ) {
@@ -105,6 +106,24 @@ public class TokensToAST {
 
     public static Token showFutureSym(int bias) {
         return tokens.get(tokenIndex-1+bias);
+    }
+
+
+    public static Token getIsEq () {
+        Token tmp = showFutureSym(1);
+        if (!tmp.value.equals("[")) {
+            return tmp;
+        }
+
+        int index = tokenIndex;
+
+        while (tokens.get(index).value.equals("[") && !tokens.get(index).value.equals(";")) {
+            while (!tokens.get(index).value.equals("]") && !tokens.get(index).value.equals(";")) {
+                index++;
+            }
+            index++;
+        }
+        return tokens.get(index);
     }
 
     public static void addChild(Token child, AstNode parent) {

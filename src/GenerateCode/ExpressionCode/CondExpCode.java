@@ -162,7 +162,7 @@ public class CondExpCode {
                     }
                     case ">=" -> {
                         resultReg = regIndex++;
-                        outStr.append("%x" + resultReg + " = icmp sge i32 %x" + expValuePre.register + ", %x" + expValue.register + "\n");
+                        outStr.append("\t%x" + resultReg + " = icmp sge i32 %x" + expValuePre.register + ", %x" + expValue.register + "\n");
                         expValuePre = new ExpValue(resultReg, "i1");
                         if (i != node.children.size() - 1) {
                             preReg = regIndex++;

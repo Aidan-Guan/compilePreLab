@@ -74,7 +74,8 @@ public class Statement {
             Block(NodeStmt);
         }
         else if (currentSym.type.equals("IDENT")) {
-            Token tmp = showFutureSym(1);
+//            Token tmp = showFutureSym(1);
+            Token tmp = getIsEq();
             if (tmp.value.equals("=")) {
                 LVal(NodeStmt);
                 addChild(currentSym, NodeStmt);
@@ -109,4 +110,6 @@ public class Statement {
 
         addChild(NodeCond, parent);
     }
+
+
 }
