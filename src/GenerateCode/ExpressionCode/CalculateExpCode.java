@@ -129,7 +129,7 @@ public class CalculateExpCode {
                     int regNew = regIndex++;
                     int value = value1.value;
                     if(!isDefGlobal)
-                        outStr.append("\t%" + regNew + " = sub i32 0, %" + regBefore + "\n");
+                        outStr.append("\t%x" + regNew + " = sub i32 0, %x" + regBefore + "\n");
                     return new ExpValue(regNew, "i32", 0-value);
                 }
                 case "+" -> {
