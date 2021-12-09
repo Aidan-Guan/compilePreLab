@@ -125,4 +125,238 @@ block15:
 block12:
 	%x63 = add i32 0, 0
 	ret i32 %x63
+}declare void @putint(i32)
+@field = dso_local global [2 x i32] zeroinitializer
+define dso_local i32 @main(){
+	%x2 = add i32 0, 1
+	%x3 = alloca [1 x i32]
+	%x4 = add i32 0, 3
+	%x5 = alloca [3 x i32]
+	%x6 = alloca i32
+	%x7 = add i32 0, 0
+	%x8 = getelementptr  [2 x i32],  [2 x i32]* @field, i32 0, i32 %x7
+declare i32 @getint()
+@field = dso_local global [2 x i32] zeroinitializer
+define dso_local i32 @main(){
+	%x2 = add i32 0, 1
+	%x3 = alloca [1 x i32]
+	%x4 = add i32 0, 3
+	%x5 = alloca [3 x i32]
+	%x6 = alloca i32
+	%x7 = add i32 0, 0
+	%x8 = getelementptr  [2 x i32],  [2 x i32]* @field, i32 0, i32 %x7
+	%x9 = call i32 @getint()
+	store i32 %x9, i32* %x8
+	%x10 = add i32 0, 1
+	%x11 = getelementptr  [2 x i32],  [2 x i32]* @field, i32 0, i32 %x10
+	%x12 = call i32 @getint()
+	store i32 %x12, i32* %x11
+	%x13 = add i32 0, 0
+	%x14 = add i32 0, 0
+	%x15 = add i32 %x13, %x14
+	%x16 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x15
+	%x17 = add i32 0, 1
+	%x18 = sub i32 0, %x17
+	store i32 %x18, i32* %x16
+	%x19 = add i32 0, 1
+	%x20 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x19
+	%x21 = add i32 0, 0
+	%x22 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x21
+	%x23 = load i32, i32* %x22
+	%x24 = add i32 0, 2
+	%x25 = sub i32 %x23, %x24
+	store i32 %x25, i32* %x20
+	%x26 = add i32 0, 1
+	%x27 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x26
+	%x28 = load i32, i32* %x27
+	store i32 %x28, i32* %x6
+	%x29 = add i32 0, 2
+	%x30 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x29
+	%x31 = add i32 0, 16
+	store i32 %x31, i32* %x30
+	%x32 = add i32 0, 3
+	%x33 = add i32 0, 0
+	%x34 = getelementptr  [2 x i32],  [2 x i32]* @field, i32 0, i32 %x33
+	%x35 = load i32, i32* %x34
+	%x36 = sub i32 %x32, %x35
+	%x37 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x36
+	%x38 = load i32, i32* %x37
+	%x39 = add i32 0, 2
+	%x40 = add i32 %x38, %x39
+	%x41 = load i32, i32* %x6
+	%x42 = add i32 %x40, %x41
+	call void @putint(i32 %x42)
+	%x43 = add i32 0, 0
+	ret i32 %x43
+}declare void @putint(i32)
+@field = dso_local global [2 x i32] zeroinitializer
+define dso_local i32 @main(){
+	%x2 = add i32 0, 1
+	%x3 = alloca [1 x i32]
+	%x4 = add i32 0, 3
+	%x5 = alloca [3 x i32]
+	%x6 = alloca i32
+	%x7 = add i32 0, 0
+	%x8 = getelementptr  [2 x i32],  [2 x i32]* @field, i32 0, i32 %x7
+declare i32 @getint()
+@field = dso_local global [2 x i32] zeroinitializer
+define dso_local i32 @main(){
+	%x2 = add i32 0, 1
+	%x3 = alloca [1 x i32]
+	%x4 = add i32 0, 3
+	%x5 = alloca [3 x i32]
+	%x6 = alloca i32
+	%x7 = add i32 0, 0
+	%x8 = getelementptr  [2 x i32],  [2 x i32]* @field, i32 0, i32 %x7
+	%x9 = call i32 @getint()
+	store i32 %x9, i32* %x8
+	%x10 = add i32 0, 1
+	%x11 = getelementptr  [2 x i32],  [2 x i32]* @field, i32 0, i32 %x10
+	%x12 = call i32 @getint()
+	store i32 %x12, i32* %x11
+	%x13 = add i32 0, 0
+	%x14 = add i32 0, 0
+	%x15 = add i32 %x13, %x14
+	%x16 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x15
+	%x17 = add i32 0, 1
+	%x18 = sub i32 0, %x17
+	store i32 %x18, i32* %x16
+	%x19 = add i32 0, 1
+	%x20 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x19
+	%x21 = add i32 0, 0
+	%x22 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x21
+	%x23 = load i32, i32* %x22
+	%x24 = add i32 0, 2
+	%x25 = sub i32 %x23, %x24
+	store i32 %x25, i32* %x20
+	%x26 = add i32 0, 1
+	%x27 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x26
+	%x28 = load i32, i32* %x27
+	store i32 %x28, i32* %x6
+	%x29 = add i32 0, 2
+	%x30 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x29
+	%x31 = add i32 0, 16
+	store i32 %x31, i32* %x30
+	%x32 = add i32 0, 3
+	%x33 = add i32 0, 0
+	%x34 = getelementptr  [2 x i32],  [2 x i32]* @field, i32 0, i32 %x33
+	%x35 = load i32, i32* %x34
+	%x36 = sub i32 %x32, %x35
+	%x37 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x36
+	%x38 = load i32, i32* %x37
+	%x39 = add i32 0, 2
+	%x40 = add i32 %x38, %x39
+	%x41 = load i32, i32* %x6
+	%x42 = add i32 %x40, %x41
+	call void @putint(i32 %x42)
+	%x43 = add i32 0, 0
+	ret i32 %x43
+}declare void @putint(i32)
+declare i32 @getint()
+@field = dso_local global [2 x i32] zeroinitializer
+define dso_local i32 @main(){
+	%x2 = add i32 0, 1
+	%x3 = alloca [1 x i32]
+	%x4 = add i32 0, 3
+	%x5 = alloca [3 x i32]
+	%x6 = alloca i32
+	%x7 = add i32 0, 0
+	%x8 = getelementptr  [2 x i32],  [2 x i32]* @field, i32 0, i32 %x7
+	%x9 = call i32 @getint()
+	store i32 %x9, i32* %x8
+	%x10 = add i32 0, 1
+	%x11 = getelementptr  [2 x i32],  [2 x i32]* @field, i32 0, i32 %x10
+	%x12 = call i32 @getint()
+	store i32 %x12, i32* %x11
+	%x13 = add i32 0, 0
+	%x14 = add i32 0, 0
+	%x15 = add i32 %x13, %x14
+	%x16 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x15
+	%x17 = add i32 0, 1
+	%x18 = sub i32 0, %x17
+	store i32 %x18, i32* %x16
+	%x19 = add i32 0, 1
+	%x20 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x19
+	%x21 = add i32 0, 0
+	%x22 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x21
+	%x23 = load i32, i32* %x22
+	%x24 = add i32 0, 2
+	%x25 = sub i32 %x23, %x24
+	store i32 %x25, i32* %x20
+	%x26 = add i32 0, 1
+	%x27 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x26
+	%x28 = load i32, i32* %x27
+	store i32 %x28, i32* %x6
+	%x29 = add i32 0, 2
+	%x30 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x29
+	%x31 = add i32 0, 16
+	store i32 %x31, i32* %x30
+	%x32 = add i32 0, 3
+	%x33 = add i32 0, 0
+	%x34 = getelementptr  [2 x i32],  [2 x i32]* @field, i32 0, i32 %x33
+	%x35 = load i32, i32* %x34
+	%x36 = sub i32 %x32, %x35
+	%x37 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x36
+	%x38 = load i32, i32* %x37
+	%x39 = add i32 0, 2
+	%x40 = add i32 %x38, %x39
+	%x41 = load i32, i32* %x6
+	%x42 = add i32 %x40, %x41
+	call void @putint(i32 %x42)
+	%x43 = add i32 0, 0
+	ret i32 %x43
+}declare void @putint(i32)
+declare i32 @getint()
+@field = dso_local global [2 x i32] zeroinitializer
+define dso_local i32 @main(){
+	%x2 = add i32 0, 1
+	%x3 = alloca [1 x i32]
+	%x4 = add i32 0, 3
+	%x5 = alloca [3 x i32]
+	%x6 = alloca i32
+	%x7 = add i32 0, 0
+	%x8 = getelementptr  [2 x i32],  [2 x i32]* @field, i32 0, i32 %x7
+	%x9 = call i32 @getint()
+	store i32 %x9, i32* %x8
+	%x10 = add i32 0, 1
+	%x11 = getelementptr  [2 x i32],  [2 x i32]* @field, i32 0, i32 %x10
+	%x12 = call i32 @getint()
+	store i32 %x12, i32* %x11
+	%x13 = add i32 0, 0
+	%x14 = add i32 0, 0
+	%x15 = add i32 %x13, %x14
+	%x16 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x15
+	%x17 = add i32 0, 1
+	%x18 = sub i32 0, %x17
+	store i32 %x18, i32* %x16
+	%x19 = add i32 0, 1
+	%x20 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x19
+	%x21 = add i32 0, 0
+	%x22 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x21
+	%x23 = load i32, i32* %x22
+	%x24 = add i32 0, 2
+	%x25 = sub i32 %x23, %x24
+	store i32 %x25, i32* %x20
+	%x26 = add i32 0, 1
+	%x27 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x26
+	%x28 = load i32, i32* %x27
+	store i32 %x28, i32* %x6
+	%x29 = add i32 0, 2
+	%x30 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x29
+	%x31 = add i32 0, 16
+	store i32 %x31, i32* %x30
+	%x32 = add i32 0, 3
+	%x33 = add i32 0, 0
+	%x34 = getelementptr  [2 x i32],  [2 x i32]* @field, i32 0, i32 %x33
+	%x35 = load i32, i32* %x34
+	%x36 = sub i32 %x32, %x35
+	%x37 = getelementptr  [3 x i32],  [3 x i32]* %x5, i32 0, i32 %x36
+	%x38 = load i32, i32* %x37
+	%x39 = add i32 0, 2
+	%x40 = add i32 %x38, %x39
+	%x41 = load i32, i32* %x6
+	%x42 = add i32 %x40, %x41
+	call void @putint(i32 %x42)
+	%x43 = add i32 0, 0
+	ret i32 %x43
 }

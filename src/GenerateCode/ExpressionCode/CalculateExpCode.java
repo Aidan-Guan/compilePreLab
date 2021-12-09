@@ -176,21 +176,12 @@ public class CalculateExpCode {
                 int regNew = regIndex++;
                 // 函数声明
                 if(!ident.isDeclared){
-                    outStr.append("declare i32 @" + ident.name + "(" + outDecl + ")\n" + outStr);
+                    outStr.insert (0, "declare i32 @" + ident.name + "(" + outDecl + ")\n");
                     ident.isDeclared = true;
                 }
                 // 函数调用
                 outStr.append("\t%x" + regNew + " = call i32 @" + ident.name + "(" + out + ")\n");
                 return new ExpValue(regNew, "i32");
-//
-//
-//                if (!ident.isDeclared) {
-//                    outStr.insert(0, "declare i32 @" + ident.name + "(" + outDecl + ")\n");
-//                    ident.isDeclared = true;
-//                }
-//                outStr.append("\t%x" + regIndex + " = call i32 @" + ident.name + "(" + out + ")\n");
-//                regIndex++;
-//                return new ExpValue(regIndex-1, "i32");
             }
             else if (ident.valueType == ValueType.VOID) {
                 if (!ident.isDeclared) {
