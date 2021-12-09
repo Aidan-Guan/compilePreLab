@@ -261,9 +261,9 @@ public class CalculateExpCode {
 //        return CodeGetReg(identName);
 //    }
 
-    public static ExpValue CodeLVal(AstNode node){
-        if(node.children.size() == 1){
-            String Ident = node.children.get(0).value;
+    public static ExpValue CodeLVal(AstNode parent){
+        if(parent.children.size() == 1){
+            String Ident = parent.children.get(0).value;
             if(isConst(Ident)) isDefConst = true;
             if(isDefConst){
                 if(!isConst(Ident))
@@ -272,9 +272,9 @@ public class CalculateExpCode {
             return new ExpValue(getSymReg(Ident));
         }
         else {
-            String ident = node.children.get(0).value;
+            String ident = parent.children.get(0).value;
             ArrayList <Integer> arrayParam = new ArrayList<>();
-            for(AstNode child : node.children){
+            for(AstNode child : parent.children){
                 if(child.type.equals("<Exp>")){
                     arrayParam.add(CodeExp(child).register);
                 }

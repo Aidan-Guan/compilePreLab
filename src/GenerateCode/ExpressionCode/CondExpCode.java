@@ -119,15 +119,15 @@ public class CondExpCode {
         return new ExpValue(preReg, type);
     }
 
-    static ExpValue CodeRelExp(AstNode node){
+    static ExpValue CodeRelExp(AstNode parent){
         ExpValue expValue;
         ExpValue expValuePre = new ExpValue(-1, "i32");
         int preReg = -1;
         int resultReg;
         String op = "";
 
-        for(int i = 0; i <= node.children.size()-1; i++){
-            AstNode child = node.children.get(i);
+        for(int i = 0; i <= parent.children.size()-1; i++){
+            AstNode child = parent.children.get(i);
             String childOp = child.value;
 
             if (child.type.equals("<AddExp>")){
@@ -137,7 +137,7 @@ public class CondExpCode {
                         resultReg = regIndex++;
                         outStr.append("\t%x" + resultReg + " = icmp slt i32 " + expValuePre.out() + ", " + expValue.out() + "\n");
                         expValuePre = new ExpValue(resultReg, "i1");
-                        if (i != node.children.size() - 1) {
+                        if (i != parent.children.size() - 1) {
                             preReg = regIndex++;
                             outStr.append( "\t%x" + preReg + " = zext i1 %x" + resultReg + " to i32\n");
                         }
@@ -146,7 +146,7 @@ public class CondExpCode {
                         resultReg = regIndex++;
                         outStr.append("\t%x" + resultReg + " = icmp sle i32 %x" + expValuePre.register + ", %x" + expValue.register + "\n");
                         expValuePre = new ExpValue(resultReg, "i1");
-                        if (i != node.children.size() - 1) {
+                        if (i != parent.children.size() - 1) {
                             preReg = regIndex++;
                             outStr.append("\t%x" + preReg + " = zext i1 %x" + resultReg + " to i32\n");
                         }
@@ -155,7 +155,7 @@ public class CondExpCode {
                         resultReg = regIndex++;
                         outStr.append("\t%x" + resultReg + " = icmp sgt i32 %x" + expValuePre.register + ", %x" + expValue.register + "\n");
                         expValuePre = new ExpValue(resultReg, "i1");
-                        if (i != node.children.size() - 1) {
+                        if (i != parent.children.size() - 1) {
                             preReg = regIndex++;
                             outStr.append("%x" + preReg + " = zext i1 %x" + resultReg + " to i32\n");
                         }
@@ -164,7 +164,7 @@ public class CondExpCode {
                         resultReg = regIndex++;
                         outStr.append("\t%x" + resultReg + " = icmp sge i32 %x" + expValuePre.register + ", %x" + expValue.register + "\n");
                         expValuePre = new ExpValue(resultReg, "i1");
-                        if (i != node.children.size() - 1) {
+                        if (i != parent.children.size() - 1) {
                             preReg = regIndex++;
                             outStr.append("%x" + preReg + " = zext i1 %x" + resultReg + " to i32\n");
                         }
