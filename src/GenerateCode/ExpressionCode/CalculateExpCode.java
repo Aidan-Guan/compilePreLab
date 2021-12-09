@@ -276,6 +276,7 @@ public class CalculateExpCode {
             ArrayList <Integer> arrayParam = new ArrayList<>();
             for(AstNode child : parent.children){
                 if(child.type.equals("<Exp>")){
+
                     arrayParam.add(CodeExp(child).register);
                 }
             }
