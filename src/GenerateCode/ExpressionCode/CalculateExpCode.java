@@ -125,9 +125,13 @@ public class CalculateExpCode {
             switch (op) {
                 case "-" -> {
                     ExpValue value1 = CodeUnaryExp(parent.children.get(1));
-                    outStr.append("\t%x" + regIndex + " = sub i32 0, " + value1.out() + "\n");
-                    regIndex++;
-                    return new ExpValue(regIndex-1, "i32");
+                    int regBefore = value1.register;
+                    int regNew = regIndex++;
+                    int value = value1.value;
+                    if(!isDefGlobal)
+                        outStr.append("\t%" + regNew + " = sub i32 0, %" + regBefore + "\n");
+                    return new ExpValue(regNew, "i32", 0-value);
+
                 }
                 case "+" -> {
                     return CodeUnaryExp(parent.children.get(1));
