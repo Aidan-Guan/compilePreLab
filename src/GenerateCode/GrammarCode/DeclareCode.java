@@ -91,10 +91,10 @@ public class DeclareCode {
                         ExpValue newVal = CodeConstExp(child);
                         dimSize.add(newVal.value);
                     }
-                    else if (child.value.equals("[")) {
+                    else if (child.value!=null && child.value.equals("[")) {
                         dim++;
                     }
-                    else if (child.value.equals("=")) {
+                    else if (child.value!=null && child.value.equals("=")) {
                         isAssign = true;
                     }
                 }
@@ -152,10 +152,10 @@ public class DeclareCode {
                     ExpValue newVal = CodeConstExp(child);
                     dimSize.add(newVal.value);
                 }
-                else if (child.value.equals("[")) {
+                else if (child.value!=null && child.value.equals("[")) {
                     dim++;
                 }
-                else if (child.value.equals("=")) {
+                else if (child.value!=null && child.value.equals("=")) {
                     isAssign = true;
                 }
             }
@@ -236,8 +236,8 @@ public class DeclareCode {
                         isDefConst = true;
                         dimSize.add(newValue.value);
                     }
-                    else if (child.value.equals("["))  dim++;
-                    else if (child.value.equals("="))  isAssign = true;
+                    else if (child.value!=null && child.value.equals("["))  dim++;
+                    else if (child.value!=null && child.value.equals("="))  isAssign = true;
                 }
 
                 Ident newSym = new Ident(identName, IdentType.GLOBAL_ARRAY_CONST, ValueType.INT, dim, dimSize, regIndex++);

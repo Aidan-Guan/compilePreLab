@@ -1,21 +1,6 @@
-int one = 1;
-
+int arr[2][2] = {{1, 1}, {4, 5}};
 int main() {
-    int c = 2 + 2;
-    while (c < 75) {
-        int d;
-        d = 42;
-        while (c < 100) {
-            c = c + d;
-            if (c > 99) {
-                int e;
-                e = d * 2;
-                if (one == 1) {
-                    c = e * 2;
-                }
-            }
-        }
-    }
-    putint(c);
+    arr[1] = 2;
+    putint(arr[1][0]);
     return 0;
 }

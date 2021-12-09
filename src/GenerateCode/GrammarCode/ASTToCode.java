@@ -138,7 +138,7 @@ public class ASTToCode {
                     else if (child.value.equals(",")) {
                         pos += 1;
                     }
-                    else if (child.value.equals("[")) {
+                    else if (child.value.equals("{")) {
                         dep++;
                         if(arrayInfo.size() < dep)
                             arrayInfo.add(-1);
@@ -233,8 +233,8 @@ public class ASTToCode {
 
         globalMap.put("getint", new Ident("getint", IdentType.FUNC, ValueType.INT, new ArrayList<>()));
         globalMap.put("getch", new Ident("getch", IdentType.FUNC, ValueType.INT, new ArrayList<>()));
-        globalMap.put("putint", new Ident("putint", IdentType.FUNC, ValueType.INT, params));
-        globalMap.put("putch", new Ident("putch", IdentType.FUNC, ValueType.INT, params));
+        globalMap.put("putint", new Ident("putint", IdentType.FUNC, ValueType.VOID, params));
+        globalMap.put("putch", new Ident("putch", IdentType.FUNC, ValueType.VOID, params));
 
         IdentMapList.addMap(globalMap);
     }
