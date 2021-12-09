@@ -95,7 +95,7 @@ public class CalculateExpCode {
                         if(!isDefGlobal)
                             outStr.append("\t%x" + newReg + " = sdiv i32 %x" + registerPre + ", %x" + registerNow + "\n");
                         registerPre = newReg;
-//                        valuePre = valuePre / registerValue.value;
+                        valuePre = valuePre / registerValue.value;
                     }
                     case "%" -> {
                         int newReg = regIndex++;
@@ -131,7 +131,6 @@ public class CalculateExpCode {
                     if(!isDefGlobal)
                         outStr.append("\t%" + regNew + " = sub i32 0, %" + regBefore + "\n");
                     return new ExpValue(regNew, "i32", 0-value);
-
                 }
                 case "+" -> {
                     return CodeUnaryExp(parent.children.get(1));

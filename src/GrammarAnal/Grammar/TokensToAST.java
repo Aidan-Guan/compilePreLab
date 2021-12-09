@@ -5,6 +5,7 @@ import ErrorSolution.ErrorSolu;
 import LexicalAnalysis.Token;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import static GrammarAnal.Grammar.Declare.*;
 import static GrammarAnal.Grammar.Statement.*;
@@ -116,13 +117,23 @@ public class TokensToAST {
         }
 
         int index = tokenIndex;
+        Stack<String> braceStack = new Stack<>();
 
-        while (tokens.get(index).value.equals("[") && !tokens.get(index).value.equals(";")) {
-            while (!tokens.get(index).value.equals("]") && !tokens.get(index).value.equals(";")) {
-                index++;
+        while (true) {
+            if (tokens.get(index).value.equals("[")) {
+                braceStack.push("[");
             }
+
+            if (tokens.get(index).value.equals("]")) {
+                braceStack.pop();
+            }
+
             index++;
+            if (braceStack.isEmpty() && !tokens.get(index).value.equals("[")) {
+                break;
+            }
         }
+
         return tokens.get(index);
     }
 

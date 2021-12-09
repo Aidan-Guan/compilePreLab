@@ -25,42 +25,6 @@ public class DeclareCode {
         }
     }
 
-
-//    static void CodeVarDef(AstNode parent) {
-//        String identName = parent.children.get(0).value;
-//
-//        if (isDefGlobal) {
-//            HashMap<String, Ident> globalMap = IdentMapList.getGlobalMap();
-//            Ident ident = new Ident(identName, IdentType.GLOBAL_VAR, ValueType.INT, regIndex++);
-//
-//            int identValue = 0;
-//            if (parent.children.size() > 1) {
-//                identValue = CodeInitVal(parent.children.get(2)).value;
-//            }
-//
-//            outStr.append("@" + identName + " = dso_local global i32 " + identValue + "\n");
-//            ident.value = identValue;
-//            globalMap.put(identName, ident);
-//            return;
-//        }
-//        else {
-//            HashMap<String, Ident> identMap = IdentMapList.getCurrentMap();
-//            if (IdentMapList.getIdentInCurrMap(identName)!=null) ErrorSolu.error();
-//
-//
-//            Ident ident = new Ident(identName, IdentType.VAR, ValueType.INT, regIndex++);
-//            outStr.append("\t" + ident.out() + " = alloca i32\n");
-//
-//            if (parent.children.size()>1) {
-//                ExpValue value1 = CodeInitVal(parent.children.get(2));
-//                ident.value = value1.value;
-//
-//                outStr.append("\tstore i32 " + value1.out() + ", i32* " + ident.out() + "\n");
-//            }
-//
-//            identMap.put(identName, ident);
-//        }
-//    }
     static void CodeVarDef(AstNode node){
         String Ident = node.children.get(0).value;
     //    if(!isInTable(Ident));
@@ -167,6 +131,9 @@ public class DeclareCode {
             outStr.append("\t" + newSym.out() + " = alloca");
             String arrayType = "";
             for(int i = 0; i < dim; i++){
+                if (dimSize.get(i)<0) {
+                    ErrorSolu.error();
+                }
                 outStr.append(" [" + dimSize.get(i) + " x");
                 arrayType += " [" + dimSize.get(i) + " x";
             }
@@ -349,38 +316,6 @@ public class DeclareCode {
 
     }
 
-//    static void CodeConstDef (AstNode parent) {
-//        String identName = parent.children.get(0).value;
-//
-//        if (isDefGlobal) {
-//            Ident ident = new Ident(identName, IdentType.GLOBAL_CONST, ValueType.INT, regIndex++);
-//            HashMap<String, Ident> globalMap = IdentMapList.getGlobalMap();
-//
-//            int value = 0;
-//            if (parent.children.size()>1) {
-//                value = CodeConstInitVal(parent.children.get(2)).value;
-//            }
-//
-//            outStr.append( "@" + identName + " = dso_local global i32 " + value + "\n");
-//            ident.value = value;
-//
-//            globalMap.put(identName, ident);
-//        }
-//        else {
-//            Ident ident = new Ident(identName, IdentType.CONST, ValueType.INT, regIndex++);
-//            HashMap<String, Ident> currMap = IdentMapList.getCurrentMap();
-//
-//            outStr.append("\t" + ident.out() + " = alloca i32\n");
-//            isDefConst = true;
-//            if (parent.children.size() > 1) {
-//                ExpValue value = CodeConstInitVal(parent.children.get(2));
-//                outStr.append("\tstore i32 " + value.out() + ", i32* " + ident.out() + "\n");
-//            }
-//            isDefConst = false;
-//
-//            currMap.put(identName, ident);
-//        }
-//    }
 
     public static ExpValue CodeConstInitVal(AstNode node){
         if (!isDefGlobal) {
