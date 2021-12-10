@@ -20,8 +20,6 @@ public class ASTToCode {
     public static int regIndex = 1;
     public static int blockIndex = 1;
 
-    public static boolean isBreak = false;
-    public static boolean isContinue = false;
     public static boolean isReturn = false;
     public static boolean isDefConst = false;
     public static boolean isDefGlobal = false;
@@ -93,11 +91,6 @@ public class ASTToCode {
             case "<Stmt>" -> CodeStmt(parent.children.get(0));
         }
     }
-
-
-//    static ExpValue CodeInitVal (AstNode parent) {
-//        return CodeExp(parent.children.get(0));
-//    }
 
     static ExpValue CodeInitVal(AstNode parent){
 
@@ -199,8 +192,6 @@ public class ASTToCode {
         }
         return null;
     }
-
-
 
     public static int i32Toi1(ExpValue value) {
         if (value.valueType.equals("i32")) {

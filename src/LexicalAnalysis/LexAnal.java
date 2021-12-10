@@ -20,6 +20,12 @@ public class LexAnal {
     public static Map<String, String> tokenTable = new HashMap<>();
 
 
+    /**
+     *
+     * @param reader
+     * @return
+     * @throws IOException
+     */
     public static ArrayList<Token> getAllTokens (PushbackReader reader) throws IOException {
         in = reader;
         getTokenInit();
