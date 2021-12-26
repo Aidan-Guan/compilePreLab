@@ -139,8 +139,12 @@ public class StatementCode {
         }
         else if (value.equals("return")) {
             isReturn = true;
-            ExpValue value1 = CodeExp(parent.children.get(1));
-            outStr.append("\tret i32 " + value1.out() + "\n");
+            if(parent.children.size() > 2) {
+                int returnReg = CodeExp(parent.children.get(1)).register;
+                outStr.append("\tret i32 %x").append(returnReg).append("\n");
+            }else{
+                outStr.append("\tret void\n");
+            }
         }
 
 
