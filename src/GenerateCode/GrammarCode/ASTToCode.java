@@ -79,6 +79,15 @@ public class ASTToCode {
 //        outStr.append("}\n");
 //    }
 
+    static String CodeBType(AstNode node){
+        if (node.children.get(0).type.equals("INTTK"))
+            return "i32";
+        else if (node.children.get(0).type.equals("VOIDTK"))
+            return "void";
+        else
+            throw new java.lang.Error("unknown func type");
+    }
+
     static void CodeFuncDef(AstNode parent) {
         isReturn = false;
         blockIndex = 0;
@@ -141,6 +150,73 @@ public class ASTToCode {
             outStr.append("\tret void\n");
         outStr.append("}\n");
 
+    }
+
+    public static ArrayList<String> CodeFuncFParams(AstNode parent) {
+        ArrayList<String> params = new ArrayList<>();
+
+        for(AstNode child: parent.children){
+            if(child.type.equals("<FuncFParam>")){
+                params.add(FuncFParam(child));
+            }
+        }
+        return params;
+    }
+
+    public static String FuncFParam(AstNode parent) {
+
+        if(parent.children.size() == 2){
+            String ident = parent.children.get(1).value;
+            int regIdent = regIndex++;
+            Ident newSym = new Ident(ident, IdentType.FUNC_VAR, ValueType.INT, regIdent);
+            IdentMapList.getCurrentMap().put(ident, newSym);
+            if(regIdent == 0)
+                outStr.append("i32 %").append(regIdent);
+            else
+                outStr.append(", i32 %").append(regIdent);
+            regIndex = regIdent+1;
+            return "i32";
+
+        }
+        else if (parent.children.size() > 2){
+            String ident = parent.children.get(1).value;
+            int regIdent = regIndex++;
+            int dim = 0;
+            ArrayList<Integer> dimSize = new ArrayList<>();
+            for(AstNode child: parent.children){
+                if(child.type.equals("<ConstExp>")){
+                    dim++;
+                    ExpValue expValue = CodeExp(child);
+                    dimSize.add(expValue.value);
+                }
+            }
+
+            // get array type;
+            StringBuilder arrayType = new StringBuilder();
+            for(int i = 0; i < dim; i++){
+                if (i == 0)
+                    arrayType.append("[").append(dimSize.get(i)).append(" x");
+                else
+                    arrayType.append(" [").append(dimSize.get(i)).append(" x");
+            }
+            if(dim == 0)
+                arrayType.append("i32");
+            else
+                arrayType.append(" i32");
+            arrayType.append("]".repeat(Math.max(0, dim)));
+
+            if(regIdent == 0)
+                outStr.append(arrayType).append("* %x").append(regIdent);
+            else
+                outStr.append(", ").append(arrayType).append("* %x").append(regIdent);
+
+            Ident newSym = new Ident(ident, IdentType.FUNC_ARRAY, ValueType.INT, dim, dimSize, regIdent);
+            IdentMapList.getCurrentMap().put(ident, newSym);
+            newSym.arrayType = arrayType.toString();
+            regIndex = regIdent+1;
+            return arrayType.toString() + "*";
+        }
+        return null;
     }
 
     static void CodeBlock(AstNode parent) {
