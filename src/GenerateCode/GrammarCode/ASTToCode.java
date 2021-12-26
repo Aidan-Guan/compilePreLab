@@ -37,7 +37,10 @@ public class ASTToCode {
 
     static void CodeCompUnit (AstNode parent) {
         for (AstNode child: parent.children) {
-            if (child.type.equals("<VarDecl>")) {
+            if (child.type.equals("<MainFuncDef>")) {
+                CodeMainFuncDef(child);
+            }
+            else if (child.type.equals("<VarDecl>")) {
                 isDefGlobal = true;
                 isDefConst = true;
                 CodeVarDecl(child);
@@ -58,12 +61,31 @@ public class ASTToCode {
         }
     }
 
-    static void CodeFuncDef(AstNode parent) {
+    static void CodeMainFuncDef(AstNode parent) {
+        blockIndex = 0;
+        isReturn = false;
+        regIndex = 1;
         outStr.append("define dso_local i32 @main(){\n");
-
         CodeBlock(parent.children.get(4));
 
         outStr.append("}\n");
+    }
+
+//    static void CodeFuncDef(AstNode parent) {
+//        outStr.append("define dso_local i32 @main(){\n");
+//
+//        CodeBlock(parent.children.get(4));
+//
+//        outStr.append("}\n");
+//    }
+
+    static void CodeFuncDef(AstNode parent) {
+        isReturn = false;
+        blockIndex = 0;
+        regIndex = 0;
+
+        HashMap<String, Ident> newMap = new HashMap<>();
+        IdentMapList.addMap(newMap);
     }
 
     static void CodeBlock(AstNode parent) {

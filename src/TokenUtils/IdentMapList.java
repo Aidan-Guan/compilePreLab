@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class IdentMapList {
-    static ArrayList<HashMap<String, Ident>> identMapList = new ArrayList<>();
+
+    static ArrayList<IdentMap> identMapList = new ArrayList<>();
     static int mapListIndex = 0;
 
     /**
@@ -18,7 +19,7 @@ public class IdentMapList {
         if (mapListIndex == 0) {
             ErrorSolu.error();
         }
-        return identMapList.get(mapListIndex-1);
+        return identMapList.get(mapListIndex-1).map;
     }
 
     /**
@@ -28,17 +29,31 @@ public class IdentMapList {
     public static HashMap<String, Ident> getGlobalMap() {
         if (mapListIndex == 0) ErrorSolu.error();
 
-        return identMapList.get(0);
+        return identMapList.get(0).map;
     }
 
     /**
-     * 添加新符号表
+     * 添加新符号表 不命名
      * @param newMap
      */
     public static void addMap(HashMap<String, Ident> newMap) {
-        identMapList.add(newMap);
+        IdentMap map = new IdentMap(newMap);
+        identMapList.add(map);
         mapListIndex++;
     }
+
+    /**
+     * 命名新建符号表
+     * @param mapName
+     * @param newMap
+     */
+    public static void addMap(String mapName, HashMap<String, Ident> newMap) {
+        IdentMap map = new IdentMap(mapName, newMap);
+        identMapList.add(map);
+        mapListIndex++;
+    }
+
+
 
     /**
      * 删除栈顶符号表
@@ -56,7 +71,7 @@ public class IdentMapList {
      */
     public static Ident getIdentInAllMap(String str) {
         for (int i=mapListIndex-1; i>=0; i--) {
-            Ident tarIdent = identMapList.get(i).get(str);
+            Ident tarIdent = identMapList.get(i).map.get(str);
             if (tarIdent!=null) {
                 return tarIdent;
             }
@@ -65,9 +80,9 @@ public class IdentMapList {
     }
 
 
-    public static Ident getIdentInCurrMap(String str) {
-        HashMap<String, Ident> currMap = identMapList.get(mapListIndex-1);
-        return currMap.get(str);
-    }
+//    public static Ident getIdentInCurrMap(String str) {
+//        HashMap<String, Ident> currMap = identMapList.get(mapListIndex-1);
+//        return currMap.get(str);
+//    }
 
 }
