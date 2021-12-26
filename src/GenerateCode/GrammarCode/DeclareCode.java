@@ -162,6 +162,8 @@ public class DeclareCode {
     }
 
 
+
+
     static void CodeConstDecl (AstNode parent) {
         for (AstNode child: parent.children) {
             if (child.type.equals("<ConstDef>")) {

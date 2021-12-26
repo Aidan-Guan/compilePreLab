@@ -78,4 +78,34 @@ define dso_local i32 @main(){
 	call void @putint(i32 %x6)
 	%x7 = add i32 0, 0
 	ret i32 %x7
+}declare void @putint(i32)
+define dso_local i32 @main(){
+	%x1 = add i32 0, 1
+	%x2 = sub i32 0, %x1
+	%x3 = alloca [-1 x i32]
+	%x4 = add i32 0, 0
+	%x5 = getelementptr  [-1 x i32],  [-1 x i32]* %x3, i32 0, i32 %x4
+	%x6 = load i32, i32* %x5
+	call void @putint(i32 %x6)
+	%x7 = add i32 0, 0
+	ret i32 %x7
+}declare void @putint(i32)
+define dso_local i32 @func1(){
+	%x1 = add i32 0, 555
+	ret i32 %x1
+}
+define dso_local i32 @func2(){
+	%x1 = add i32 0, 111
+	ret i32 %x1
+}
+define dso_local i32 @main(){
+	%x1 = alloca i32
+	%x2 = call i32 @func1()
+	store i32 %x2, i32* %x1
+	%x3 = load i32, i32* %x1
+	%x4 = call i32 @func2()
+	%x5 = sub i32 %x3, %x4
+	call void @putint(i32 %x5)
+	%x6 = add i32 0, 0
+	ret i32 %x6
 }

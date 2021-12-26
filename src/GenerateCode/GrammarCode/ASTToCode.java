@@ -80,9 +80,9 @@ public class ASTToCode {
 //    }
 
     static String CodeBType(AstNode node){
-        if (node.children.get(0).type.equals("INTTK"))
+        if (node.children.get(0).value.equals("int"))
             return "i32";
-        else if (node.children.get(0).type.equals("VOIDTK"))
+        else if (node.children.get(0).value.equals("void"))
             return "void";
         else
             throw new java.lang.Error("unknown func type");
@@ -225,8 +225,8 @@ public class ASTToCode {
             IdentMapList.addMap(new HashMap<String, Ident>());
         }
         for (AstNode child: parent.children) {
-            if (child.type != null && child.type.equals("<BlockItem>"));
-            CodeBlockItem(child);
+            if (child.type != null && child.type.equals("<BlockItem>"))
+                CodeBlockItem(child);
         }
 
         if (!isFuncBlock) {

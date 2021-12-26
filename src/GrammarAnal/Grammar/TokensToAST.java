@@ -41,7 +41,7 @@ public class TokensToAST {
             Decl(root);
         }
 
-        while ((currentSym.value.equals("int") || currentSym.value.equals("void")) && (showFutureSym(2).value.equals("("))) {
+        while ((currentSym.value.equals("int") || currentSym.value.equals("void")) && !(showFutureSym(1).value.equals("main")) && (showFutureSym(2).value.equals("("))) {
             FuncDef(compUnitNode);
         }
 
@@ -50,13 +50,21 @@ public class TokensToAST {
         }
     }
 
+    public static void FuncType(AstNode parent) {
+        AstNode node_funcType = new AstNode("<FuncType>");
+
+        if (!(currentSym.value.equals("int") || currentSym.value.equals("void"))) ErrorSolu.error();
+        addChild(currentSym, node_funcType);
+        getNextSym();
+
+        addChild(node_funcType, parent);
+    }
+
 
     public static void FuncDef (AstNode parent) {
         AstNode funcDefNode = new AstNode("<FuncDef>");
 
-        if (!(currentSym.value.equals("int") || currentSym.value.equals("void"))) ErrorSolu.error();
-        addChild(currentSym, funcDefNode);
-        getNextSym();
+        FuncType(funcDefNode);
 
         if (!currentSym.type.equals("IDENT")) ErrorSolu.error();
         addChild(currentSym, funcDefNode);
@@ -66,7 +74,7 @@ public class TokensToAST {
         addChild(currentSym, funcDefNode);
         getNextSym();
 
-        if (!funcFParams(funcDefNode)) ErrorSolu.error();
+        if (!currentSym.value.equals(")") && !funcFParams(funcDefNode)) ErrorSolu.error();
 
 
         if (!currentSym.value.equals(")")) ErrorSolu.error();
@@ -138,7 +146,7 @@ public class TokensToAST {
 
 
     public static boolean MainFuncDef(AstNode parent) {
-        AstNode NodeFuncDef = new AstNode("<FuncDef>");
+        AstNode NodeFuncDef = new AstNode("<MainFuncDef>");
 
         if (!currentSym.value.equals("int")) ErrorSolu.error();
         addChild(currentSym, NodeFuncDef);
