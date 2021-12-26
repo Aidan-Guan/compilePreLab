@@ -18,10 +18,16 @@ public class Statement {
             addChild(currentSym, NodeStmt);
             getNextSym();
 
-            Exp(NodeStmt);
-            if (!currentSym.value.equals(";")) ErrorSolu.error();
-            addChild(currentSym, NodeStmt);
-            getNextSym();
+            if (currentSym.value.equals(";")) {
+                addChild(currentSym, NodeStmt);
+                getNextSym();
+            }
+            else  {
+                Exp(NodeStmt);
+                if (!currentSym.value.equals(";")) ErrorSolu.error();
+                addChild(currentSym, NodeStmt);
+                getNextSym();
+            }
         }
         else if (currentSym.value.equals("if")) {
             addChild(currentSym, NodeStmt);
@@ -74,7 +80,6 @@ public class Statement {
             Block(NodeStmt);
         }
         else if (currentSym.type.equals("IDENT")) {
-//            Token tmp = showFutureSym(1);
             Token tmp = getIsEq();
             if (tmp.value.equals("=")) {
                 LVal(NodeStmt);

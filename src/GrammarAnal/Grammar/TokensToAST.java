@@ -85,7 +85,7 @@ public class TokensToAST {
     private static boolean funcFParams (AstNode parent) {
         AstNode NodeFuncFParams = new AstNode("<FuncFParams>");
 
-        if (!funcFParam) {
+        if (!funcFParam(NodeFuncFParams)) {
             return false;
         }
 
@@ -98,7 +98,7 @@ public class TokensToAST {
         return true;
     }
 
-    private static  boolean funcFParam (AstNode parent) {
+    public static boolean funcFParam (AstNode parent) {
         AstNode NodeFuncFParam = new AstNode("<FuncFParam>");
 
         BType(NodeFuncFParam);
