@@ -261,43 +261,144 @@ public class CalculateExpCode {
 //        return CodeGetReg(identName);
 //    }
 
-    public static ExpValue CodeLVal(AstNode parent){
-        if(parent.children.size() == 1){
-            String Ident = parent.children.get(0).value;
-            if(isConst(Ident)) isDefConst = true;
-            if(isDefConst){
-                if(!isConst(Ident))
-                    throw new java.lang.Error("can not define const by var");
-            }
-            return new ExpValue(getSymReg(Ident));
-        }
-        else {
-            String ident = parent.children.get(0).value;
-            ArrayList <Integer> arrayParam = new ArrayList<>();
-            for(AstNode child : parent.children){
-                if(child.type.equals("<Exp>")){
+//    public static ExpValue CodeLVal(AstNode parent){
+//        if(parent.children.size() == 1){
+//            String Ident = parent.children.get(0).value;
+//            if(isConst(Ident)) isDefConst = true;
+//            if(isDefConst){
+//                if(!isConst(Ident))
+//                    throw new java.lang.Error("can not define const by var");
+//            }
+//            return new ExpValue(getSymReg(Ident));
+//        }
+//        else {
+//            String ident = parent.children.get(0).value;
+//            ArrayList <Integer> arrayParam = new ArrayList<>();
+//            for(AstNode child : parent.children){
+//                if(child.type.equals("<Exp>")){
+//
+//                    arrayParam.add(CodeExp(child).register);
+//
+//                }
+//            }
+//            int registerNew = regIndex++;
+//            Ident arraySym = IdentMapList.getIdentInAllMap(ident);
+//
+//            if(arraySym.dim != arrayParam.size()) throw new java.lang.Error("dim is not correspond");
+//            String registerString;
+//            if(arraySym.identType == IdentType.GLOBAL_ARRAY_CONST || arraySym.identType == IdentType.GLOBAL_ARRAY_VAR)
+//                registerString = "@" + arraySym.name;
+//            else registerString = arraySym.out();
+//
+//            outStr.append("\t%x" +registerNew + " = getelementptr " + arraySym.arrayType + ", " + arraySym.arrayType + "* " + registerString + ", i32 0");
+//            for(int i = 0; i < arraySym.dim; i++){
+//                outStr.append(", i32 %x" + arrayParam.get(i));
+//            }
+//            outStr.append("\n");
+//            return new ExpValue(registerNew);
+//        }
+//    }
 
-                    arrayParam.add(CodeExp(child).register);
+    public static ExpValue CodeLVal(AstNode node){
+        if(node.children.size() == 1){
+            String Ident = node.children.get(0).value;
+            // differ array and var
+            Ident sym = IdentMapList.getIdentInAllMap(Ident);
+            ExpValue expValue;
+            if(isArray(sym)){
+                int regNew = regIndex++;
+                String arrayType = sym.arrayType;
+                if(sym.identType == IdentType.FUNC_ARRAY){
+                    outStr.append("\t%x").append(regNew).append(" = load i32*, i32* * %x").append(sym.regIndex).append("\n");
+                    expValue = new ExpValue(regNew, "ptr");
+                    expValue.valueType = "array";
+                }
+                else {
+                    if(sym.identType == IdentType.GLOBAL_ARRAY_CONST || sym.identType == IdentType.GLOBAL_ARRAY_VAR){
+                        String regString = "@" + sym.name;
+                        outStr.append("\t%x").append(regNew).append(" = getelementptr ").append(arrayType).append(", ").append(arrayType).append("*").append(regString).append(", i32 0, i32 0\n");
+                        expValue = new ExpValue(regNew, "ptr");
+                        expValue.valueType = "array";
+                    }
+                    else {
+                        outStr.append("\t%x").append(regNew).append(" = getelementptr ").append(arrayType).append(", ").append(arrayType).append("* %x").append(sym.regIndex).append(", i32 0, i32 0\n");
+                        expValue = new ExpValue(regNew, "ptr");
+                        expValue.valueType = "array";
+                    }
 
                 }
+
+                return expValue;
             }
-            int registerNew = regIndex++;
+            else{
+                if(isConst(Ident)) isDefConst = true;
+                if(isDefConst){
+                    if(!isConst(Ident))
+                        throw new java.lang.Error("can not define const by var");
+                }
+                return new ExpValue(getSymReg(Ident));
+            }
+        }
+        else {
+            String ident = node.children.get(0).value;
+            ArrayList <Integer> arrayParam = new ArrayList<>();
+            for(AstNode child : node.children){
+                if(child.type.equals("<Exp>")){
+                    arrayParam.add(CodeExp(child).register);
+                }
+            }
             Ident arraySym = IdentMapList.getIdentInAllMap(ident);
 
+            // deal with func array
+            assert arraySym != null;
+            if(arraySym.identType == IdentType.FUNC_ARRAY){
+
+                // transform func array to real array
+                if(!arraySym.isTransformed) {
+                    arraySym.dim++;
+                    String arrayType = arraySym.arrayType;
+                    int regArray = regIndex++;
+                    outStr.append("\t%x").append(regArray).append(" = alloca ").append(arrayType).append("*\n");
+                    outStr.append("\tstore ").append(arrayType).append("* %x").append(arraySym.regIndex).append(", ")
+                            .append(arrayType).append("* * %").append(regArray).append("\n");
+                    arraySym.regIndex = regArray;
+                    arraySym.isTransformed = true;
+                }
+
+
+                int regVal = arraySym.regIndex;
+                int regNew = regIndex++;
+                String arrayType = arraySym.arrayType;
+                outStr.append("\t%x").append(regNew).append(" = load ").append(arrayType).append("*, ").append(arrayType).append("* * %x").append(regVal).append("\n");
+                regVal = regNew;
+                regNew = regIndex++;
+                outStr.append("\t%x").append(regNew).append(" = getelementptr ").append(arrayType).append(", ").append(arrayType).append("* %x").append(regVal);
+                for(int i = 0; i < arraySym.dim; i++){
+                    outStr.append(", i32 %x").append(arrayParam.get(i));
+                }
+                outStr.append("\n");
+                return new ExpValue(regNew);
+
+
+            }
+
+            // deal with normal array
             if(arraySym.dim != arrayParam.size()) throw new java.lang.Error("dim is not correspond");
             String registerString;
             if(arraySym.identType == IdentType.GLOBAL_ARRAY_CONST || arraySym.identType == IdentType.GLOBAL_ARRAY_VAR)
                 registerString = "@" + arraySym.name;
-            else registerString = arraySym.out();
+            else registerString = "%x"+arraySym.regIndex;
 
-            outStr.append("\t%x" +registerNew + " = getelementptr " + arraySym.arrayType + ", " + arraySym.arrayType + "* " + registerString + ", i32 0");
+            int registerNew = regIndex++;
+            outStr.append("\t%x").append(registerNew).append(" = getelementptr ").append(arraySym.arrayType).append(", ").append(arraySym.arrayType).append("* ").append(registerString).append(", i32 0");
             for(int i = 0; i < arraySym.dim; i++){
-                outStr.append(", i32 %x" + arrayParam.get(i));
+                outStr.append(", i32 %x").append(arrayParam.get(i));
             }
             outStr.append("\n");
             return new ExpValue(registerNew);
         }
     }
+
 
     static ExpValue CodeNumber(AstNode parent) {
         int value = Integer.parseInt(parent.value);
@@ -369,6 +470,12 @@ public class CalculateExpCode {
 
         if(!reg.equals(""))return reg;
         else throw new java.lang.Error("symbol used before declaration");
+    }
+
+    private static boolean isArray(Ident sym) {
+        return sym.identType == IdentType.ARRAY_CONST || sym.identType == IdentType.ARRAY_VAR
+                || sym.identType == IdentType.FUNC_ARRAY || sym.identType == IdentType.GLOBAL_ARRAY_CONST
+                || sym.identType == IdentType.GLOBAL_ARRAY_VAR;
     }
 
 }

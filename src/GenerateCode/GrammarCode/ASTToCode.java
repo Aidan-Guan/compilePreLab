@@ -3,13 +3,12 @@ package GenerateCode.GrammarCode;
 import AST.*;
 import ErrorSolution.ErrorSolu;
 import GrammarAnal.Expression.*;
-import TokenUtils.Ident;
-import TokenUtils.IdentMapList;
-import TokenUtils.IdentType;
-import TokenUtils.ValueType;
+import TokenUtils.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import static GenerateCode.ExpressionCode.CalculateExpCode.CodeExp;
 import static GenerateCode.GrammarCode.DeclareCode.*;
@@ -24,6 +23,7 @@ public class ASTToCode {
     public static boolean isDefConst = false;
     public static boolean isDefGlobal = false;
     public static boolean isArray = true;
+    public static boolean isFuncBlock = false;
     public static StringBuilder outStr = new StringBuilder();
 
 
@@ -85,21 +85,89 @@ public class ASTToCode {
         regIndex = 0;
 
         HashMap<String, Ident> newMap = new HashMap<>();
-        IdentMapList.addMap(newMap);
-    }
+        IdentMapList.addMap( "",newMap);
+        String type = CodeBType(parent.children.get(0));
+        String ident = parent.children.get(1).value;
+        ArrayList<String> params = new ArrayList<>();
 
-    static void CodeBlock(AstNode parent) {
-        HashMap<String, Ident> currMap = new HashMap<>();
-        IdentMapList.addMap(currMap);
+        outStr.append("define dso_local ").append(type).append(" @").append(ident).append("(");
+        ValueType funcValType = (type.equals("i32")? ValueType.INT : ValueType.VOID);
 
-        for (AstNode child: parent.children) {
+        isDefGlobal = true;
+        if (parent.children.size() == 6) {
+            params = CodeFuncFParams(parent.children.get(3));
+        }
+        isDefGlobal = false;
 
-            if (child.type.equals("<BlockItem>")) {
-                CodeBlockItem(child);
+        Ident newFunc = new Ident(ident, IdentType.FUNC, funcValType, params);
+        newFunc.isDeclared = true;
+
+        IdentMapList.getGlobalMap().put(ident, newFunc);
+        outStr.append("){\n");
+        regIndex++;
+
+        Set<Map.Entry<String, Ident>> entrySet = IdentMapList.getCurrentMap().entrySet();
+
+        for (Map.Entry<String, Ident>entry : entrySet) {
+            Ident sym = entry.getValue();
+            if (sym.identType == IdentType.FUNC_VAR) {
+                int newRegIndex = regIndex++;
+
+                outStr.append("\t%x").append(newRegIndex).append(" = alloca i32\n");
+                outStr.append("\tstore i32 %x").append(sym.regIndex).append(", i32* %x").append(newRegIndex).append("\n");
+
+                sym.regIndex = newRegIndex;
+                sym.identType = IdentType.VAR;
+            }
+            else if (sym.identType == IdentType.FUNC_ARRAY) {
+                if(!sym.isTransformed) {
+                    sym.dim++;
+                    String arrayType = sym.arrayType;
+                    int regArray = regIndex++;
+                    outStr.append("\t%x").append(regArray).append(" = alloca ").append(arrayType).append("*\n");
+                    outStr.append("\tstore ").append(arrayType).append("* %x").append(sym.regIndex).append(", ")
+                            .append(arrayType).append("* * %x").append(regArray).append("\n");
+                    sym.regIndex = regArray;
+                    sym.isTransformed = true;
+                }
             }
         }
 
+        isFuncBlock = true;
+        CodeBlock(parent.children.get(parent.children.size()-1));
+        isFuncBlock = false;
         IdentMapList.removeFisrtMap();
+        if(funcValType == ValueType.VOID)
+            outStr.append("\tret void\n");
+        outStr.append("}\n");
+
+    }
+
+    static void CodeBlock(AstNode parent) {
+
+        if (!isFuncBlock) {
+            IdentMapList.addMap(new HashMap<String, Ident>());
+        }
+        for (AstNode child: parent.children) {
+            if (child.type != null && child.type.equals("<BlockItem>"));
+            CodeBlockItem(child);
+        }
+
+        if (!isFuncBlock) {
+            IdentMapList.removeFisrtMap();
+        }
+
+//        HashMap<String, Ident> currMap = new HashMap<>();
+//        IdentMapList.addMap(currMap);
+//
+//        for (AstNode child: parent.children) {
+//
+//            if (child.type.equals("<BlockItem>")) {
+//                CodeBlockItem(child);
+//            }
+//        }
+//
+//        IdentMapList.removeFisrtMap();
     }
 
     static void CodeBlockItem (AstNode parent) {

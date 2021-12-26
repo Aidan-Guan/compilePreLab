@@ -21,6 +21,8 @@ public class Ident {
     public ArrayList<Integer> dimSize;
     public ArrayList<Integer> dimElse;
     public String arrayType;
+    public boolean isTransformed = false;
+
 
 
     /**
