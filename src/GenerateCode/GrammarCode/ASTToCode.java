@@ -389,6 +389,15 @@ public class ASTToCode {
         globalMap.put("putint", new Ident("putint", IdentType.FUNC, ValueType.VOID, params));
         globalMap.put("putch", new Ident("putch", IdentType.FUNC, ValueType.VOID, params));
 
+        params = new ArrayList<>();
+        params.add("i32*");
+        globalMap.put("getarray", new Ident("getarray", IdentType.FUNC, ValueType.INT, params));
+
+        params = new ArrayList<>();
+        params.add("i32");
+        params.add("i32*");
+        globalMap.put("putarray", new Ident("putarray", IdentType.FUNC, ValueType.VOID, params));
+
         IdentMapList.addMap(globalMap);
     }
 }

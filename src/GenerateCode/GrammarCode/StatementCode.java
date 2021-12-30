@@ -60,6 +60,7 @@ public class StatementCode {
                 outStr.append("\nblock" + fLabel + ":\n");
             }
             else if (parent.children.size() == 7) {
+                int returnNum = 0;
                 int nextLabel;
                 if(parent.nextLabel == -1){
                     nextLabel = blockIndex++;
@@ -73,6 +74,7 @@ public class StatementCode {
                 outStr.append("\nblock" + tLabel + ":\n");
 
                 CodeStmt(parent.children.get(4));
+                if (isReturn) returnNum++;
 
                 if (!isReturn && !hasLoopControl(parent.children.get(4)))
                     outStr.append("\tbr label %block" + nextLabel + "\n");
@@ -81,6 +83,7 @@ public class StatementCode {
 
                 outStr.append("\nblock" + fLabel + ":\n");
                 CodeStmt(parent.children.get(6));
+                if (isReturn) returnNum++;
 
                 if (!isReturn && !hasLoopControl(parent.children.get(6)) && !labels.contains(nextLabel)){
                     outStr.append("\tbr label %block" + nextLabel + "\n");
@@ -90,7 +93,7 @@ public class StatementCode {
                     isReturn = false;
                 }
 
-                if (!flag) outStr.append("\nblock" + nextLabel + ":\n");
+                if (!flag && returnNum < 2) outStr.append("\nblock" + nextLabel + ":\n");
             }
         }
         else if (value.equals("while")) {
