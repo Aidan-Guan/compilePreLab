@@ -259,7 +259,6 @@ public class CalculateExpCode {
     public static ExpValue CodeLVal(AstNode node){
         if(node.children.size() == 1){
             String Ident = node.children.get(0).value;
-            // differ array and var
             Ident sym = IdentMapList.getIdentInAllMap(Ident);
             ExpValue expValue;
             if(isArray(sym)){
@@ -416,18 +415,29 @@ public class CalculateExpCode {
         throw new java.lang.Error("symbol used before declaration");
     }
 
-    private static String getSymReg(String Ident){
+
+    public static String getSymReg(String Ident){
         Ident sym = IdentMapList.getIdentInAllMap(Ident);
         String reg = "";
         if(sym != null){
             if(sym.identType == IdentType.GLOBAL_CONST || sym.identType == IdentType.GLOBAL_VAR || sym.identType == IdentType.GLOBAL_ARRAY_CONST || sym.identType == IdentType.GLOBAL_ARRAY_VAR)
                 reg =  "@" + sym.name;
+            else if(sym.identType == IdentType.FUNC_VAR){
+                int newReg = regIndex++;
+                outStr.append("\t%x").append(newReg).append(" = alloca i32\n");
+                outStr.append("\tstore i32 %x").append(sym.regIndex).append(", i32* %x").append(newReg).append("\n");
+                sym.regIndex = newReg;
+                sym.identType = IdentType.VAR;
+                reg = "%x" + sym.regIndex;
+            }
             else reg = "%x" + sym.regIndex;
         }
+
 
         if(!reg.equals(""))return reg;
         else throw new java.lang.Error("symbol used before declaration");
     }
+
 
     private static boolean isArray(Ident sym) {
         return sym.identType == IdentType.ARRAY_CONST || sym.identType == IdentType.ARRAY_VAR

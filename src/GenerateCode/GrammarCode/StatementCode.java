@@ -41,6 +41,7 @@ public class StatementCode {
         }
 
         else if (value.equals("if")) {
+            labels = new ArrayList<>();
 
             int tLabel = blockIndex++;
             int fLabel = blockIndex++;
@@ -85,9 +86,15 @@ public class StatementCode {
                 CodeStmt(parent.children.get(6));
                 if (isReturn) returnNum++;
 
-                if (!isReturn && !hasLoopControl(parent.children.get(6)) && !labels.contains(nextLabel)){
-                    outStr.append("\tbr label %block" + nextLabel + "\n");
-                    labels.add(nextLabel);
+//                if (!isReturn && !hasLoopControl(parent.children.get(6)) && !labels.contains(nextLabel)){
+//                    outStr.append("\tbr label %block" + nextLabel + "\n");
+//                    labels.add(nextLabel);
+//                }
+                if (!isReturn && !hasLoopControl(parent.children.get(6))){
+                    if(!labels.contains(nextLabel)) {
+                        outStr.append("\tbr label %block").append(nextLabel).append("\n");
+                        labels.add(nextLabel);
+                    }
                 }
                 else {
                     isReturn = false;
