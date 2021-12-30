@@ -1,292 +1,172 @@
-int n;
+int ints[10000];
+int intt;
+int chas[10000];
+int chat;
+int i = 0, ii = 1;
+int c;
+int get[10000];
+int get2[10000];
 
-int bubblesort(int arr[]) {
-    int i;
-    int j;
-    i = 0;
-    while (i < n - 1) {
-        // Last i elements are already in place
-        j = 0;
-        while (j < n - i - 1) {
-            if (arr[j] > arr[j + 1]) {
-                // swap(&arr[j], &arr[j+1]);
-                int tmp;
-                tmp        = arr[j + 1];
-                arr[j + 1] = arr[j];
-                arr[j]     = tmp;
-            }
-            j = j + 1;
-        }
-        i = i + 1;
-    }
+int isdigit(int x) {
+    if (x >= 48 && x <= 57)
+        return 1;
     return 0;
 }
 
-int insertsort(int a[]) {
-    int i;
-    i = 1;
-    while (i < n) {
-        int temp;
-        temp = a[i];
-        int j;
-        j = i - 1;
-        while (j > -1 && temp < a[j]) {
-            a[j + 1] = a[j];
-            j        = j - 1;
-        }
-        a[j + 1] = temp;
-        i        = i + 1;
+int power(int b, int a) {
+    int result = 1;
+    while (a != 0) {
+        result = result * b;
+        a      = a - 1;
     }
-    return 0;
+    return result;
 }
 
-int QuickSort(int arr[], int low, int high) {
-    if (low < high) {
-        int i;
-        i = low;
-        int j;
-        j = high;
-        int k;
-        k = arr[low];
-        while (i < j) {
-            while (i < j && arr[j] > k - 1) {
-                j = j - 1;
-            }
-
-            if (i < j) {
-                arr[i] = arr[j];
-                i      = i + 1;
-            }
-
-            while (i < j && arr[i] < k) {
-                i = i + 1;
-            }
-
-            if (i < j) {
-                arr[j] = arr[i];
-                j      = j - 1;
-            }
-        }
-
-        arr[i] = k;
-        int tmp;
-        tmp = i - 1;
-        tmp = QuickSort(arr, low, tmp);
-        tmp = i + 1;
-        tmp = QuickSort(arr, tmp, high);
+int getstr(int get[]) {
+    int x      = getch();
+    int length = 0;
+    while (x != 13 && x != 10) {
+        get[length] = x;
+        length      = length + 1;
+        x           = getch();
     }
-    return 0;
+    return length;
 }
 
-int getMid(int arr[]) {
-    int mid;
-    if (n % 2 == 0) {
-        mid = n / 2;
-        return (arr[mid] + arr[mid - 1]) / 2;
-    } else {
-        mid = n / 2;
-        return arr[mid];
-    }
+void intpush(int x) {
+    intt       = intt + 1;
+    ints[intt] = x;
+}
+void chapush(int x) {
+    chat       = chat + 1;
+    chas[chat] = x;
+}
+int intpop() {
+    intt = intt - 1;
+    return ints[intt + 1];
+}
+int chapop() {
+    chat = chat - 1;
+    return chas[chat + 1];
+}
+void intadd(int x) {
+    ints[intt] = ints[intt] * 10;
+    ints[intt] = ints[intt] + x;
 }
 
-int getMost(int arr[]) {
-    int count[1000];
-    int i;
-    i = 0;
-    while (i < 1000) {
-        count[i] = 0;
-        i        = i + 1;
-    }
-    i = 0;
-    int max;
-    int number;
-    max = 0;
-    while (i < n) {
-        int num;
-        num        = arr[i];
-        count[num] = count[num] + 1;
-        if (count[num] > max) {
-            max    = count[num];
-            number = num;
-        }
-        i = i + 1;
-    }
-    return number;
-}
-
-int revert(int arr[]) {
-    int temp;
-    int i;
-    int j;
-    i = 0;
-    j = 0;
-    while (i < j) {
-        temp   = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-        i      = i + 1;
-        j      = j - 1;
-    }
-    return 0;
-}
-
-int arrCopy(int src[], int target[]) {
-    int i;
-    i = 0;
-    while (i < n) {
-        target[i] = src[i];
-        i         = i + 1;
-    }
-    return 0;
-}
-
-int calSum(int arr[], int stride) {
-    int sum;
-    sum = 0;
-    int i;
-    i = 0;
-    while (i < n) {
-        sum = sum + arr[i];
-        if (i % stride != stride - 1) {
-            arr[i] = 0;
-        } else {
-            arr[i] = sum;
-            sum    = 0;
-        }
-        i = i + 1;
-    }
-    return 0;
-}
-
-int avgPooling(int arr[], int stride) {
-    int sum;
-    int i;
-    i   = 0;
-    sum = 0;
-    int lastnum;
-    while (i < n) {
-        if (i < stride - 1) {
-            sum = sum + arr[i];
-        } else if (i == stride - 1) {
-            lastnum = arr[0];
-            arr[0]  = sum / stride;
-        } else {
-            sum                 = sum + arr[i] - lastnum;
-            lastnum             = arr[i - stride + 1];
-            arr[i - stride + 1] = sum / stride;
-        }
-        i = i + 1;
-    }
-    i = n - stride + 1;
-    while (i < n) {
-        arr[i] = 0;
-        i      = i + 1;
-    }
-    return 0;
+int find() {
+    c            = chapop();
+    get2[ii]     = 32;
+    get2[ii + 1] = c;
+    ii           = ii + 2;
+    if (chat == 0)
+        return 0;
+    return 1;
 }
 
 int main() {
-    n = 32;
-    int arr[32];
-    int result[32];
-    arr[0]  = 7;
-    arr[1]  = 23;
-    arr[2]  = 89;
-    arr[3]  = 26;
-    arr[4]  = 282;
-    arr[5]  = 254;
-    arr[6]  = 27;
-    arr[7]  = 5;
-    arr[8]  = 83;
-    arr[9]  = 273;
-    arr[10] = 574;
-    arr[11] = 905;
-    arr[12] = 354;
-    arr[13] = 657;
-    arr[14] = 935;
-    arr[15] = 264;
-    arr[16] = 639;
-    arr[17] = 459;
-    arr[18] = 29;
-    arr[19] = 68;
-    arr[20] = 929;
-    arr[21] = 756;
-    arr[22] = 452;
-    arr[23] = 279;
-    arr[24] = 58;
-    arr[25] = 87;
-    arr[26] = 96;
-    arr[27] = 36;
-    arr[28] = 39;
-    arr[29] = 28;
-    arr[30] = 1;
-    arr[31] = 290;
-    int t;
-    t = arrCopy(arr, result);
-    t = revert(result);
-    int i;
-    i = 0;
-    while (i < 32) {
-        t = result[i];
-        putint(t);
+    intt        = 0;
+    chat        = 0;
+    int lengets = getstr(get);
+    while (i < lengets) {
+        if (isdigit(get[i]) == 1) {
+            get2[ii] = get[i];
+            ii       = ii + 1;
+        } else {
+            if (get[i] == 40)
+                chapush(40);
+            if (get[i] == 94)
+                chapush(94);
+            if (get[i] == 41) {
+                c = chapop();
+                while (c != 40) {
+                    get2[ii]     = 32;
+                    get2[ii + 1] = c;
+                    ii           = ii + 2;
+                    c            = chapop();
+                }
+            }
+            if (get[i] == 43) {
+                while (chas[chat] == 43 || chas[chat] == 45 || chas[chat] == 42 || chas[chat] == 47 || chas[chat] == 37
+                       || chas[chat] == 94) {
+                    if (find() == 0)
+                        break;
+                }
+                chapush(43);
+            }
+            if (get[i] == 45) {
+                while (chas[chat] == 43 || chas[chat] == 45 || chas[chat] == 42 || chas[chat] == 47 || chas[chat] == 37
+                       || chas[chat] == 94) {
+                    if (find() == 0)
+                        break;
+                }
+                chapush(45);
+            }
+            if (get[i] == 42) {
+                while (chas[chat] == 42 || chas[chat] == 47 || chas[chat] == 37 || chas[chat] == 94) {
+                    if (find() == 0)
+                        break;
+                }
+                chapush(42);
+            }
+            if (get[i] == 47) {
+                while (chas[chat] == 42 || chas[chat] == 47 || chas[chat] == 37 || chas[chat] == 94) {
+                    if (find() == 0)
+                        break;
+                }
+                chapush(47);
+            }
+            if (get[i] == 37) {
+                while (chas[chat] == 42 || chas[chat] == 47 || chas[chat] == 37 || chas[chat] == 94) {
+                    if (find() == 0)
+                        break;
+                }
+                chapush(37);
+            }
+            get2[ii] = 32;
+            ii       = ii + 1;
+        }
         i = i + 1;
     }
-    t = bubblesort(result);
-    i = 0;
-    while (i < 32) {
-        t = result[i];
-        putint(t);
+    while (chat > 0) {
+        int c        = chapop();
+        get2[ii]     = 32;
+        get2[ii + 1] = c;
+        ii           = ii + 2;
+    }
+    get2[ii] = 64;
+    i        = 1;
+    while (get2[i] != 64) {
+        if (get2[i] == 43 || get2[i] == 45 || get2[i] == 42 || get2[i] == 47 || get2[i] == 37 || get2[i] == 94) {
+            int a = intpop();
+            int b = intpop();
+            int c;
+            if (get2[i] == 43)
+                c = a + b;
+            if (get2[i] == 45)
+                c = b - a;
+            if (get2[i] == 42)
+                c = a * b;
+            if (get2[i] == 47)
+                c = b / a;
+            if (get2[i] == 37)
+                c = b % a;
+            if (get2[i] == 94)
+                c = power(b, a);
+            intpush(c);
+        } else {
+            if (get2[i] != 32) {
+                intpush(get2[i] - 48);
+                ii = 1;
+                while (get2[i + ii] != 32) {
+                    intadd(get2[i + ii] - 48);
+                    ii = ii + 1;
+                }
+                i = i + ii - 1;
+            }
+        }
         i = i + 1;
     }
-    t = getMid(result);
-    putint(t);
-    t = getMost(result);
-    putint(t);
-
-    t = arrCopy(arr, result);
-    t = bubblesort(result);
-    i = 0;
-    while (i < 32) {
-        t = result[i];
-        putint(t);
-        i = i + 1;
-    }
-
-    t = arrCopy(arr, result);
-    t = insertsort(result);
-    i = 0;
-    while (i < 32) {
-        t = result[i];
-        putint(t);
-        i = i + 1;
-    }
-
-    t = arrCopy(arr, result);
-    i = 0;
-    t = 31;
-    t = QuickSort(result, i, t);
-    while (i < 32) {
-        t = result[i];
-        putint(t);
-        i = i + 1;
-    }
-
-    t = arrCopy(arr, result);
-    t = calSum(result, 4);
-    i = 0;
-    while (i < 32) {
-        t = result[i];
-        putint(t);
-        i = i + 1;
-    }
-
-    t = arrCopy(arr, result);
-    t = avgPooling(result, 3);
-    i = 0;
-    while (i < 32) {
-        t = result[i];
-        putint(t);
-        i = i + 1;
-    }
+    putint(ints[1]);
     return 0;
 }

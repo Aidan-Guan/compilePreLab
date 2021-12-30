@@ -53,7 +53,7 @@ public class StatementCode {
                 outStr.append("\nblock" + tLabel + ":\n");
 
                 CodeStmt(parent.children.get(4));
-                if (!isReturn && !hasLoopControl(parent.children.get(4)))
+                if (!isReturn && !hasContinueOrBreak(parent.children.get(4)))
                     outStr.append("\tbr label %block" + fLabel + "\n");
                 else
                     isReturn = false;
@@ -77,7 +77,7 @@ public class StatementCode {
                 CodeStmt(parent.children.get(4));
                 if (isReturn) returnNum++;
 
-                if (!isReturn && !hasLoopControl(parent.children.get(4)))
+                if (!isReturn && !hasContinueOrBreak(parent.children.get(4)))
                     outStr.append("\tbr label %block" + nextLabel + "\n");
                 else
                     isReturn = false;
@@ -90,7 +90,7 @@ public class StatementCode {
 //                    outStr.append("\tbr label %block" + nextLabel + "\n");
 //                    labels.add(nextLabel);
 //                }
-                if (!isReturn && !hasLoopControl(parent.children.get(6))){
+                if (!isReturn && !hasContinueOrBreak(parent.children.get(6))){
                     if(!labels.contains(nextLabel)) {
                         outStr.append("\tbr label %block").append(nextLabel).append("\n");
                         labels.add(nextLabel);
@@ -160,4 +160,19 @@ public class StatementCode {
         CodeLOrExp(parent.children.get(0), tLabel, fLabel);
     }
 
+    static boolean hasContinueOrBreak(AstNode parent){
+        boolean flag = false;
+        for(AstNode child : parent.children){
+            if (child.value!=null && (child.value.equals("continue") || child.value.equals("break"))){
+                return true;
+            }
+            else{
+                if( child.value!=null && (child.value.equals("if") || child.value.equals("while")))
+                    break;
+                if(hasContinueOrBreak(child))
+                    flag = true;
+            }
+        }
+        return flag;
+    }
 }
