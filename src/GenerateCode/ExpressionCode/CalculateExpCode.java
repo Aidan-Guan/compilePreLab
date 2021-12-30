@@ -240,7 +240,7 @@ public class CalculateExpCode {
             int regNew = expValue.register;
             if(!isDefGlobal && !(expValue.valueType != null && expValue.valueType.equals("ptr"))) {
                 regNew = regIndex++;
-                outStr.append("\t%").append(regNew).append(" = load i32, i32* ").append(regBefore).append("\n");
+                outStr.append("\t%x").append(regNew).append(" = load i32, i32* ").append(regBefore).append("\n");
             }
             return new ExpValue(regNew, "i32", Objects.requireNonNull(IdentMapList.getIdentInAllMap(ident)).value);
 
