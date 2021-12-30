@@ -96,7 +96,8 @@ public class CalculateExpCode {
                         if(!isDefGlobal)
                             outStr.append("\t%x" + newReg + " = sdiv i32 %x" + registerPre + ", %x" + registerNow + "\n");
                         registerPre = newReg;
-                        valuePre = valuePre / registerValue.value;
+                        if(registerValue.value != 0)
+                            valuePre = valuePre / registerValue.value;
                     }
                     case "%" -> {
                         int newReg = regIndex++;
