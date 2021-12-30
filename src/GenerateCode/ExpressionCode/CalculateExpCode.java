@@ -227,27 +227,23 @@ public class CalculateExpCode {
 
             ExpValue expValue = CodeLVal(parent.children.get(0));
             String regBefore;
-            if(expValue.valueType.equals("ident"))
+            if(expValue.type.equals("ident"))
                 regBefore = expValue.registerString;
             else
                 regBefore = "%x" + expValue.register;
             String ident = parent.children.get(0).children.get(0).value;
 //                isDefiningConst = false;
-            int regNew = regIndex++;
-            if(!isDefGlobal)
-                outStr.append("\t%x" + regNew + " = load i32, i32* " + regBefore + "\n");
+//            int regNew = regIndex++;
+//            if(!isDefGlobal)
+//                outStr.append("\t%x" + regNew + " = load i32, i32* " + regBefore + "\n");
+//            return new ExpValue(regNew, "i32", Objects.requireNonNull(IdentMapList.getIdentInAllMap(ident)).value);
+            int regNew = expValue.register;
+            if(!isDefGlobal && !(expValue.valueType != null && expValue.valueType.equals("ptr"))) {
+                regNew = regIndex++;
+                outStr.append("\t%").append(regNew).append(" = load i32, i32* ").append(regBefore).append("\n");
+            }
             return new ExpValue(regNew, "i32", Objects.requireNonNull(IdentMapList.getIdentInAllMap(ident)).value);
 
-
-//            String reg = CodeLVal(parent.children.get(0));
-//            String identName = parent.children.get(0).children.get(0).value;
-//            isDefConst = false;
-//
-//            if (!isDefGlobal) {
-//                outStr.append("\t%x" + regIndex + " = load i32, i32* " + reg + "\n");
-//                regIndex++;
-//            }
-//            return new ExpValue(regIndex-1, "i32", getIdentValue(identName));
 
         }
         else if (firstChild.value.equals("(")) {
@@ -257,54 +253,7 @@ public class CalculateExpCode {
         return null;
     }
 
-//    public static String CodeLVal(AstNode parent) {
-//        String identName = parent.children.get(0).value;
-//        if (CodeIsConst(identName)) { isDefConst = true; }
-//
-//        if (isDefConst && !CodeIsConst(identName)) {
-//            ErrorSolu.error();
-//        }
-//
-//        return CodeGetReg(identName);
-//    }
 
-//    public static ExpValue CodeLVal(AstNode parent){
-//        if(parent.children.size() == 1){
-//            String Ident = parent.children.get(0).value;
-//            if(isConst(Ident)) isDefConst = true;
-//            if(isDefConst){
-//                if(!isConst(Ident))
-//                    throw new java.lang.Error("can not define const by var");
-//            }
-//            return new ExpValue(getSymReg(Ident));
-//        }
-//        else {
-//            String ident = parent.children.get(0).value;
-//            ArrayList <Integer> arrayParam = new ArrayList<>();
-//            for(AstNode child : parent.children){
-//                if(child.type.equals("<Exp>")){
-//
-//                    arrayParam.add(CodeExp(child).register);
-//
-//                }
-//            }
-//            int registerNew = regIndex++;
-//            Ident arraySym = IdentMapList.getIdentInAllMap(ident);
-//
-//            if(arraySym.dim != arrayParam.size()) throw new java.lang.Error("dim is not correspond");
-//            String registerString;
-//            if(arraySym.identType == IdentType.GLOBAL_ARRAY_CONST || arraySym.identType == IdentType.GLOBAL_ARRAY_VAR)
-//                registerString = "@" + arraySym.name;
-//            else registerString = arraySym.out();
-//
-//            outStr.append("\t%x" +registerNew + " = getelementptr " + arraySym.arrayType + ", " + arraySym.arrayType + "* " + registerString + ", i32 0");
-//            for(int i = 0; i < arraySym.dim; i++){
-//                outStr.append(", i32 %x" + arrayParam.get(i));
-//            }
-//            outStr.append("\n");
-//            return new ExpValue(registerNew);
-//        }
-//    }
 
     public static ExpValue CodeLVal(AstNode node){
         if(node.children.size() == 1){
@@ -318,19 +267,19 @@ public class CalculateExpCode {
                 if(sym.identType == IdentType.FUNC_ARRAY){
                     outStr.append("\t%x").append(regNew).append(" = load i32*, i32* * %x").append(sym.regIndex).append("\n");
                     expValue = new ExpValue(regNew, "ptr");
-                    expValue.valueType = "array";
+                    expValue.type = "array";
                 }
                 else {
                     if(sym.identType == IdentType.GLOBAL_ARRAY_CONST || sym.identType == IdentType.GLOBAL_ARRAY_VAR){
                         String regString = "@" + sym.name;
                         outStr.append("\t%x").append(regNew).append(" = getelementptr ").append(arrayType).append(", ").append(arrayType).append("*").append(regString).append(", i32 0, i32 0\n");
                         expValue = new ExpValue(regNew, "ptr");
-                        expValue.valueType = "array";
+                        expValue.type = "array";
                     }
                     else {
                         outStr.append("\t%x").append(regNew).append(" = getelementptr ").append(arrayType).append(", ").append(arrayType).append("* %x").append(sym.regIndex).append(", i32 0, i32 0\n");
                         expValue = new ExpValue(regNew, "ptr");
-                        expValue.valueType = "array";
+                        expValue.type = "array";
                     }
 
                 }

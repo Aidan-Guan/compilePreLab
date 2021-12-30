@@ -4,6 +4,7 @@ public class ExpValue {
     public int register;
     public int value;
     public String valueType;
+    public String type;
     public String registerString;
 
     public ExpValue(int register, String valueType) {
@@ -18,13 +19,13 @@ public class ExpValue {
     }
 
     public ExpValue (String registerString) {
-        this.valueType = "ident";
+        this.type = "ident";
         this.registerString = registerString;
     }
 
     public ExpValue(int register) {
         this.register = register;
-        this.valueType = "array";
+        this.type = "array";
     }
 
     public String out() {

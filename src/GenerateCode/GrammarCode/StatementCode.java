@@ -22,7 +22,7 @@ public class StatementCode {
         if (type.equals("<LVal>")) {
             ExpValue expValue = CodeLVal(parent.children.get(0));
             String regIdent;
-            if(expValue.valueType.equals("ident"))
+            if(expValue.type.equals("ident"))
                 regIdent= expValue.registerString;
             else
                 regIdent = "%x" + expValue.register;
@@ -32,11 +32,6 @@ public class StatementCode {
             int regExp = CodeExp(parent.children.get(2)).register;
             outStr.append("\tstore i32 %x" + regExp + ", i32* " + regIdent + "\n");
 
-//            String reg = CodeLVal(parent.children.get(0));
-//
-//            if (isDefConst) ErrorSolu.error();
-//            ExpValue value1 = CodeExp(parent.children.get(2));
-//            outStr.append("\tstore i32 " + value1.out() + ", i32* " + reg + "\n");
         }
         else if (type.equals("<Block>")) {
             CodeBlock(parent.children.get(0));
