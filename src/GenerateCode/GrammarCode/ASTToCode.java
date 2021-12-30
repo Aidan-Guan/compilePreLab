@@ -171,9 +171,9 @@ public class ASTToCode {
             Ident newSym = new Ident(ident, IdentType.FUNC_VAR, ValueType.INT, regIdent);
             IdentMapList.getCurrentMap().put(ident, newSym);
             if(regIdent == 0)
-                outStr.append("i32 %").append(regIdent);
+                outStr.append("i32 %x").append(regIdent);
             else
-                outStr.append(", i32 %").append(regIdent);
+                outStr.append(", i32 %x").append(regIdent);
             regIndex = regIdent+1;
             return "i32";
 
