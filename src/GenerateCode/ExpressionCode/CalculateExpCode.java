@@ -14,6 +14,7 @@ import java.util.Objects;
 import static GenerateCode.GrammarCode.ASTToCode.*;
 
 public class CalculateExpCode {
+    public static boolean isFuncParam = false;
     public static ExpValue CodeExp(AstNode parent) {
         return CodeAddExp(parent.children.get(0));
     }
@@ -102,7 +103,8 @@ public class CalculateExpCode {
                         if(!isDefGlobal)
                             outStr.append("\t%x" + newReg + " = srem i32 %x" + registerPre + ", %x" + registerNow + "\n");
                         registerPre = newReg;
-                        valuePre = valuePre % registerValue.value;
+                        if(registerValue.value != 0)
+                            valuePre = valuePre % registerValue.value;
                     }
                 }
             }
@@ -201,7 +203,12 @@ public class CalculateExpCode {
         ArrayList<String> params = new ArrayList<>();
 
         for (AstNode child: parent.children) {
-            params.add(CodeExp(child).out());
+            if (child.type.equals("<Exp>")) {
+                isFuncParam = true;
+                params.add(CodeExp(child).out());
+                isFuncParam = false;
+
+            }
         }
         return params;
     }

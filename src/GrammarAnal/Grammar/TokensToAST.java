@@ -74,6 +74,8 @@ public class TokensToAST {
         addChild(currentSym, funcDefNode);
         getNextSym();
 
+
+
         if (!currentSym.value.equals(")") && !funcFParams(funcDefNode)) ErrorSolu.error();
 
 
@@ -98,6 +100,8 @@ public class TokensToAST {
         }
 
         while (currentSym.value.equals(",")) {
+            addChild(currentSym, NodeFuncFParams);
+            getNextSym();
             funcFParam(NodeFuncFParams);
         }
 

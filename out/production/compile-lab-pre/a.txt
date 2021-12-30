@@ -1,13 +1,11 @@
-int func1() {
-    return 555;
-}
-
-int func2() {
-    return 111;
+int foo(int a, int b) {
+    int t = a + b;
+    a = t - a;
+    b = t - b;
+    return a - b;
 }
 
 int main() {
-    int a = func1();
-    putint(a - func2());
+    putint(foo(1, 2, 3));
     return 0;
 }

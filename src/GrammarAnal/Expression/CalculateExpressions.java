@@ -103,6 +103,7 @@ public class CalculateExpressions {
 
         while (currentSym.value.equals(",")) {
             addChild(currentSym, NodeFuncParams);
+            getNextSym();
             Exp(NodeFuncParams);
         }
 
