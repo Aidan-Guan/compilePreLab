@@ -132,7 +132,7 @@ public class CalculateExpCode {
                     int regNew = regIndex++;
                     int value = value1.value;
                     if(!isDefGlobal)
-                        outStr.append("\t%x" + regNew + " = sub i32 0, %x" + regBefore + "\n");
+                        outStr.append("\t%x").append(regNew).append(" = sub i32 0, %x").append(regBefore).append("\n");
                     return new ExpValue(regNew, "i32", 0-value);
                 }
                 case "+" -> {
@@ -140,9 +140,9 @@ public class CalculateExpCode {
                 }
                 case "!" -> {
                     ExpValue value1 = CodeUnaryExp(parent.children.get(1));
-                    outStr.append("\t%x" + regIndex + " = icmp eq i32 " + value1.out() + ", 0\n");
+                    outStr.append("\t%x").append(regIndex).append(" = icmp eq i32 ").append(value1.out()).append(", 0\n");
                     regIndex++;
-                    outStr.append("\t%x" + regIndex + " = zext i1 %x" + (regIndex-1) + " to i32\n");
+                    outStr.append("\t%x").append(regIndex).append(" = zext i1 %x").append(regIndex - 1).append(" to i32\n");
                     regIndex++;
                     return new ExpValue(regIndex-1, "i32");
                 }
@@ -186,7 +186,7 @@ public class CalculateExpCode {
                     ident.isDeclared = true;
                 }
                 // 函数调用
-                outStr.append("\t%x" + regNew + " = call i32 @" + ident.name + "(" + out + ")\n");
+                outStr.append("\t%x").append(regNew).append(" = call i32 @").append(ident.name).append("(").append(out).append(")\n");
                 return new ExpValue(regNew, "i32");
             }
             else if (ident.valueType == ValueType.VOID) {
@@ -194,7 +194,7 @@ public class CalculateExpCode {
                     outStr.insert(0, "declare void @" + ident.name + "(" + outDecl + ")\n");
                     ident.isDeclared = true;
                 }
-                outStr.append("\tcall void @" + ident.name + "(" + out + ")\n");
+                outStr.append("\tcall void @").append(ident.name).append("(").append(out).append(")\n");
             }
         }
         return null;
@@ -233,11 +233,7 @@ public class CalculateExpCode {
             else
                 regBefore = "%x" + expValue.register;
             String ident = parent.children.get(0).children.get(0).value;
-//                isDefiningConst = false;
-//            int regNew = regIndex++;
-//            if(!isDefGlobal)
-//                outStr.append("\t%x" + regNew + " = load i32, i32* " + regBefore + "\n");
-//            return new ExpValue(regNew, "i32", Objects.requireNonNull(IdentMapList.getIdentInAllMap(ident)).value);
+
             int regNew = expValue.register;
             if(!isDefGlobal && !(expValue.valueType != null && expValue.valueType.equals("ptr"))) {
                 regNew = regIndex++;
@@ -256,60 +252,56 @@ public class CalculateExpCode {
 
 
 
-    public static ExpValue CodeLVal(AstNode node){
-        if(node.children.size() == 1){
-            String Ident = node.children.get(0).value;
-            Ident sym = IdentMapList.getIdentInAllMap(Ident);
+    public static ExpValue CodeLVal(AstNode parent){
+        if(parent.children.size() == 1){
+            String identName = parent.children.get(0).value;
+            Ident ident = IdentMapList.getIdentInAllMap(identName);
             ExpValue expValue;
-            if(isArray(sym)){
+            assert ident != null;
+            if(isArray(ident)){
                 int regNew = regIndex++;
-                String arrayType = sym.arrayType;
-                if(sym.identType == IdentType.FUNC_ARRAY){
-                    outStr.append("\t%x").append(regNew).append(" = load i32*, i32* * %x").append(sym.regIndex).append("\n");
+                String arrayType = ident.arrayType;
+                if(ident.identType == IdentType.FUNC_ARRAY){
+                    outStr.append("\t%x").append(regNew).append(" = load i32*, i32* * %x").append(ident.regIndex).append("\n");
                     expValue = new ExpValue(regNew, "ptr");
                     expValue.type = "array";
                 }
                 else {
-                    if(sym.identType == IdentType.GLOBAL_ARRAY_CONST || sym.identType == IdentType.GLOBAL_ARRAY_VAR){
-                        String regString = "@" + sym.name;
+                    if (ident.identType == IdentType.GLOBAL_ARRAY_CONST || ident.identType == IdentType.GLOBAL_ARRAY_VAR){
+                        String regString = "@" + ident.name;
                         outStr.append("\t%x").append(regNew).append(" = getelementptr ").append(arrayType).append(", ").append(arrayType).append("*").append(regString).append(", i32 0, i32 0\n");
-                        expValue = new ExpValue(regNew, "ptr");
-                        expValue.type = "array";
                     }
                     else {
-                        outStr.append("\t%x").append(regNew).append(" = getelementptr ").append(arrayType).append(", ").append(arrayType).append("* %x").append(sym.regIndex).append(", i32 0, i32 0\n");
-                        expValue = new ExpValue(regNew, "ptr");
-                        expValue.type = "array";
+                        outStr.append("\t%x").append(regNew).append(" = getelementptr ").append(arrayType).append(", ").append(arrayType).append("* %x").append(ident.regIndex).append(", i32 0, i32 0\n");
                     }
+                    expValue = new ExpValue(regNew, "ptr");
+                    expValue.type = "array";
 
                 }
 
                 return expValue;
             }
             else{
-                if(isConst(Ident)) isDefConst = true;
-                if(isDefConst){
-                    if(!isConst(Ident))
-                        throw new java.lang.Error("can not define const by var");
+                if(isConst(identName)) isDefConst = true;
+                if(isDefConst && !isConst(identName)){
+                    ErrorSolu.error();
                 }
-                return new ExpValue(getSymReg(Ident));
+                return new ExpValue(getSymReg(identName));
             }
         }
         else {
-            String ident = node.children.get(0).value;
+            String ident = parent.children.get(0).value;
             ArrayList <Integer> arrayParam = new ArrayList<>();
-            for(AstNode child : node.children){
+            for(AstNode child : parent.children){
                 if(child.type.equals("<Exp>")){
                     arrayParam.add(CodeExp(child).register);
                 }
             }
             Ident arraySym = IdentMapList.getIdentInAllMap(ident);
 
-            // deal with func array
             assert arraySym != null;
             if(arraySym.identType == IdentType.FUNC_ARRAY){
 
-                // transform func array to real array
                 if(!arraySym.isTransformed) {
                     arraySym.dim++;
                     String arrayType = arraySym.arrayType;
@@ -338,8 +330,7 @@ public class CalculateExpCode {
 
             }
 
-            // deal with normal array
-            if(arraySym.dim != arrayParam.size()) throw new java.lang.Error("dim is not correspond");
+            if(arraySym.dim != arrayParam.size()) ErrorSolu.error();
             String registerString;
             if(arraySym.identType == IdentType.GLOBAL_ARRAY_CONST || arraySym.identType == IdentType.GLOBAL_ARRAY_VAR)
                 registerString = "@" + arraySym.name;
@@ -355,7 +346,6 @@ public class CalculateExpCode {
         }
     }
 
-
     static ExpValue CodeNumber(AstNode parent) {
         int value = Integer.parseInt(parent.value);
 
@@ -366,71 +356,35 @@ public class CalculateExpCode {
         return new ExpValue(regIndex-1, "i32", value);
     }
 
-    static String CodeGetReg(String identName) {
+    private static boolean isConst(String identName){
         Ident ident = IdentMapList.getIdentInAllMap(identName);
-        String reg = "";
-
-        if (ident != null) {
-            if(ident.identType == IdentType.GLOBAL_CONST || ident.identType == IdentType.GLOBAL_VAR)
-                reg =  "@" + ident.name;
-            else reg = ident.out();
-        }
-
-        if (!reg.equals(""))
-            return reg;
-
-        ErrorSolu.error();
-        return null;
-    }
-
-    static boolean CodeIsConst (String identName) {
-        Ident ident = IdentMapList.getIdentInAllMap(identName);
-
-        if (ident != null) {
-            return ident.identType == IdentType.CONST || ident.identType == IdentType.GLOBAL_CONST;
-        }
-
-        ErrorSolu.error();
-        return false;
-    }
-
-    static int getIdentValue (String identName) {
-        Ident ident = IdentMapList.getGlobalMap().get(identName);
-        if (ident != null) {
-            return ident.value;
-        }
-        return -1;
-    }
-
-    private static boolean isConst(String Ident){
-        Ident sym = IdentMapList.getIdentInAllMap(Ident);
-        if(sym != null){
-            return sym.identType == IdentType.CONST || sym.identType == IdentType.GLOBAL_CONST || sym.identType == IdentType.ARRAY_CONST || sym.identType ==IdentType.GLOBAL_ARRAY_CONST;
+        if(ident != null){
+            return ident.identType == IdentType.CONST || ident.identType == IdentType.GLOBAL_CONST || ident.identType == IdentType.ARRAY_CONST || ident.identType ==IdentType.GLOBAL_ARRAY_CONST;
         }
         else {
-            if (IdentMapList.getIdentInAllMap(Ident)!=null) {
-                return  sym.identType == IdentType.CONST || sym.identType == IdentType.GLOBAL_CONST || sym.identType == IdentType.ARRAY_CONST || sym.identType ==IdentType.GLOBAL_ARRAY_CONST;
+            if (IdentMapList.getIdentInAllMap(identName)!=null) {
+                return  ident.identType == IdentType.CONST || ident.identType == IdentType.GLOBAL_CONST || ident.identType == IdentType.ARRAY_CONST || ident.identType ==IdentType.GLOBAL_ARRAY_CONST;
             }
         }
         throw new java.lang.Error("symbol used before declaration");
     }
 
 
-    public static String getSymReg(String Ident){
-        Ident sym = IdentMapList.getIdentInAllMap(Ident);
+    public static String getSymReg(String identName){
+        Ident ident = IdentMapList.getIdentInAllMap(identName);
         String reg = "";
-        if(sym != null){
-            if(sym.identType == IdentType.GLOBAL_CONST || sym.identType == IdentType.GLOBAL_VAR || sym.identType == IdentType.GLOBAL_ARRAY_CONST || sym.identType == IdentType.GLOBAL_ARRAY_VAR)
-                reg =  "@" + sym.name;
-            else if(sym.identType == IdentType.FUNC_VAR){
+        if(ident != null){
+            if(ident.identType == IdentType.GLOBAL_CONST || ident.identType == IdentType.GLOBAL_VAR || ident.identType == IdentType.GLOBAL_ARRAY_CONST || ident.identType == IdentType.GLOBAL_ARRAY_VAR)
+                reg =  "@" + ident.name;
+            else if(ident.identType == IdentType.FUNC_VAR){
                 int newReg = regIndex++;
                 outStr.append("\t%x").append(newReg).append(" = alloca i32\n");
-                outStr.append("\tstore i32 %x").append(sym.regIndex).append(", i32* %x").append(newReg).append("\n");
-                sym.regIndex = newReg;
-                sym.identType = IdentType.VAR;
-                reg = "%x" + sym.regIndex;
+                outStr.append("\tstore i32 %x").append(ident.regIndex).append(", i32* %x").append(newReg).append("\n");
+                ident.regIndex = newReg;
+                ident.identType = IdentType.VAR;
+                reg = "%x" + ident.regIndex;
             }
-            else reg = "%x" + sym.regIndex;
+            else reg = "%x" + ident.regIndex;
         }
 
 
