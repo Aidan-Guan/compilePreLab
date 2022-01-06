@@ -71,18 +71,10 @@ public class ASTToCode {
         outStr.append("}\n");
     }
 
-//    static void CodeFuncDef(AstNode parent) {
-//        outStr.append("define dso_local i32 @main(){\n");
-//
-//        CodeBlock(parent.children.get(4));
-//
-//        outStr.append("}\n");
-//    }
-
-    static String CodeBType(AstNode node){
-        if (node.children.get(0).value.equals("int"))
+    static String CodeBType(AstNode parent){
+        if (parent.children.get(0).value.equals("int"))
             return "i32";
-        else if (node.children.get(0).value.equals("void"))
+        else if (parent.children.get(0).value.equals("void"))
             return "void";
         else
             throw new java.lang.Error("unknown func type");
@@ -191,7 +183,6 @@ public class ASTToCode {
                 }
             }
 
-            // get array type;
             StringBuilder arrayType = new StringBuilder();
             for(int i = 0; i < dim; i++){
                 if (i == 0)
@@ -232,18 +223,6 @@ public class ASTToCode {
         if (!isFuncBlock) {
             IdentMapList.removeFisrtMap();
         }
-
-//        HashMap<String, Ident> currMap = new HashMap<>();
-//        IdentMapList.addMap(currMap);
-//
-//        for (AstNode child: parent.children) {
-//
-//            if (child.type.equals("<BlockItem>")) {
-//                CodeBlockItem(child);
-//            }
-//        }
-//
-//        IdentMapList.removeFisrtMap();
     }
 
     static void CodeBlockItem (AstNode parent) {
@@ -365,18 +344,6 @@ public class ASTToCode {
             return value.register;
         }
     }
-
-    public static AstNode getWhileBlock (AstNode node) {
-        AstNode child = node;
-        while (true) {
-            AstNode parent = child.parent;
-            if (parent.children.size()>0 && parent.children.get(0).value!=null && parent.children.get(0).value.equals("while")) {
-                return parent;
-            }
-            child = parent;
-        }
-    }
-
 
     private static void identMapInit () {
         HashMap<String, Ident> globalMap = new HashMap<>();
