@@ -242,7 +242,7 @@ public class DeclareCode {
 
         HashMap<String, Ident> identMap = IdentMapList.getCurrentMap();
 
-        if(parent.children.size() == 1 || parent.children.get(1).type.equals("ASSIGN")){
+        if(parent.children.size() == 1 || parent.children.get(1).value.equals("=")){
             Ident newSym = new Ident(identName, IdentType.CONST, ValueType.INT, regIndex++);
             identMap.put(identName, newSym);
 
@@ -269,10 +269,10 @@ public class DeclareCode {
                     ExpValue newVal = CodeConstExp(child);
                     dimSize.add(newVal.value);
                 }
-                else if (child.value.equals("[")) {
+                else if (child.value!=null && child.value.equals("[")) {
                     dim++;
                 }
-                else if (child.value.equals("=")) {
+                else if (child.value!=null && child.value.equals("=")) {
                     isAssign = true;
                 }
             }
@@ -319,32 +319,32 @@ public class DeclareCode {
     }
 
 
-    public static ExpValue CodeConstInitVal(AstNode node){
+    public static ExpValue CodeConstInitVal(AstNode parent){
         if (!isDefGlobal) {
-            if(node.children.size() == 1){
-                return CodeConstExp(node.children.get(0));
+            if(parent.children.size() == 1){
+                return CodeConstExp(parent.children.get(0));
             }
             else {
                 int pos = 0;
-                int dep = node.dep;
-                ArrayList <Integer> arrayInfo = node.arrayInfo;
-                for(AstNode child : node.children){
+                int dep = parent.dep;
+                ArrayList <Integer> arrayInfo = parent.arrayInfo;
+                for(AstNode child : parent.children){
 
                     if (child.type.equals("<ConstInitVal>")) {
-                        child.arraySym = node.arraySym;
+                        child.arraySym = parent.arraySym;
                         if (child.children.size() > 1){
-                            arrayInfo.set(node.dep, pos);
+                            arrayInfo.set(parent.dep, pos);
                             child.arrayInfo = arrayInfo;
-                            child.dep = node.dep+1;
+                            child.dep = parent.dep+1;
                             CodeConstInitVal(child);
                         }
                         else {
                             arrayInfo.set(arrayInfo.size() - 1, pos);
                             child.arrayInfo = arrayInfo;
-                            child.dep = node.dep+1;
-                            int dim = node.arraySym.dim;
+                            child.dep = parent.dep+1;
+                            int dim = parent.arraySym.dim;
                             int registerNew = regIndex++;
-                            Ident arraySym = node.arraySym;
+                            Ident arraySym = parent.arraySym;
                             outStr.append("\t%x" +registerNew + " = getelementptr " + arraySym.arrayType + ", " + arraySym.arrayType + "* " + arraySym.out() + ", i32 0");
                             for(int i = 0; i < dim; i++){
                                 outStr.append(", i32 " + arrayInfo.get(i));
@@ -356,7 +356,7 @@ public class DeclareCode {
                         }
 
                     }
-                    else if (child.value.equals("[")) {
+                    else if (child.value.equals("{")) {
                         dep++;
                         if(arrayInfo.size() < dep)
                             arrayInfo.add(-1);
@@ -369,15 +369,15 @@ public class DeclareCode {
 
         }
         else {
-            if(node.children.size() == 1){
-                ExpValue exp = CodeExp(node.children.get(0));
+            if(parent.children.size() == 1){
+                ExpValue exp = CodeExp(parent.children.get(0));
                 if (isArray)
                     outStr.append(" " +  exp.value);
                 return exp;
             }
             else {
-                Ident arraySym = node.arraySym;
-                int pos = 0, dep = node.dep;
+                Ident arraySym = parent.arraySym;
+                int pos = 0, dep = parent.dep;
                 int thisDimSize = arraySym.dimSize.get(dep);
                 int dimSum = arraySym.dim;
                 String arrayType = "";
@@ -390,10 +390,10 @@ public class DeclareCode {
                 }
                 outStr.append("[");
 
-                for(AstNode child : node.children){
+                for(AstNode child : parent.children){
                     if(child.type.equals("<ConstInitVal>")){
-                        child.arraySym = node.arraySym;
-                        child.dep = node.dep+1;
+                        child.arraySym = parent.arraySym;
+                        child.dep = parent.dep+1;
                         if(pos != 0)
                             outStr.append(",");
                         outStr.append(arrayType);
