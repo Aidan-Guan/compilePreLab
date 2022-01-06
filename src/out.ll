@@ -1226,4 +1226,154 @@ define dso_local i32 @main(){
 	call void @putint(i32 %x112)
 	%x113 = add i32 0, 0
 	ret i32 %x113
+}declare void @putint(i32)
+define dso_local i32 @main(){
+	%x1 = add i32 0, 4
+	%x2 = add i32 0, 2
+	%x3 = alloca [4 x [2 x i32]]
+	%x4 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x3, i32 0, i32 0, i32 0
+	%x5 = add i32 0, 1
+	store i32 %x5, i32* %x4
+	%x6 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x3, i32 0, i32 0, i32 1
+	%x7 = add i32 0, 2
+	store i32 %x7, i32* %x6
+	%x8 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x3, i32 0, i32 1, i32 0
+	%x9 = add i32 0, 3
+	store i32 %x9, i32* %x8
+	%x10 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x3, i32 0, i32 1, i32 1
+	%x11 = add i32 0, 4
+	store i32 %x11, i32* %x10
+	%x12 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x3, i32 0, i32 2, i32 0
+	%x13 = add i32 0, 5
+	store i32 %x13, i32* %x12
+	%x14 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x3, i32 0, i32 2, i32 1
+	%x15 = add i32 0, 6
+	store i32 %x15, i32* %x14
+	%x16 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x3, i32 0, i32 3, i32 0
+	%x17 = add i32 0, 7
+	store i32 %x17, i32* %x16
+	%x18 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x3, i32 0, i32 3, i32 1
+	%x19 = add i32 0, 8
+	store i32 %x19, i32* %x18
+	%x20 = alloca i32
+	%x21 = add i32 0, 3
+	store i32 %x21, i32* %x20
+	%x22 = add i32 0, 4
+	%x23 = add i32 0, 2
+	%x24 = alloca [4 x [2 x i32]]
+	%x25 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x24, i32 0, i32 0, i32 0
+	%x26 = add i32 0, 1
+	store i32 %x26, i32* %x25
+	%x27 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x24, i32 0, i32 0, i32 1
+	%x28 = add i32 0, 2
+	store i32 %x28, i32* %x27
+	%x29 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x24, i32 0, i32 1, i32 0
+	%x30 = add i32 0, 3
+	store i32 %x30, i32* %x29
+	%x31 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x24, i32 0, i32 1, i32 1
+	%x32 = add i32 0, 4
+	store i32 %x32, i32* %x31
+	%x33 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x24, i32 0, i32 2, i32 0
+	%x34 = add i32 0, 5
+	store i32 %x34, i32* %x33
+	%x35 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x24, i32 0, i32 2, i32 1
+	%x36 = add i32 0, 6
+	store i32 %x36, i32* %x35
+	%x37 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x24, i32 0, i32 3, i32 0
+	%x38 = add i32 0, 7
+	store i32 %x38, i32* %x37
+	%x39 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x24, i32 0, i32 3, i32 1
+	%x40 = add i32 0, 8
+	store i32 %x40, i32* %x39
+	%x41 = load i32, i32* %x20
+	%x42 = add i32 0, 1
+	%x43 = add i32 %x41, %x42
+	%x44 = add i32 0, 2
+	%x45 = alloca [4 x [2 x i32]]
+	%x46 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x45, i32 0, i32 0, i32 0
+	%x47 = add i32 0, 1
+	store i32 %x47, i32* %x46
+	%x48 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x45, i32 0, i32 0, i32 1
+	%x49 = add i32 0, 2
+	store i32 %x49, i32* %x48
+	%x50 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x45, i32 0, i32 1, i32 0
+	%x51 = add i32 0, 3
+	store i32 %x51, i32* %x50
+	%x52 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x45, i32 0, i32 1, i32 1
+	%x53 = add i32 0, 0
+	store i32 %x53, i32* %x52
+	%x54 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x45, i32 0, i32 2, i32 0
+	%x55 = add i32 0, 5
+	store i32 %x55, i32* %x54
+	%x56 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x45, i32 0, i32 2, i32 1
+	%x57 = add i32 0, 0
+	store i32 %x57, i32* %x56
+	%x58 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x45, i32 0, i32 3, i32 0
+	%x59 = add i32 0, 3
+	%x60 = add i32 0, 0
+	%x61 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x3, i32 0, i32 %x59, i32 %x60
+	%x62 = load i32, i32* %x61
+	store i32 %x62, i32* %x58
+	%x63 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x45, i32 0, i32 3, i32 1
+	%x64 = add i32 0, 8
+	store i32 %x64, i32* %x63
+	%x65 = add i32 0, 4
+	%x66 = add i32 0, 2
+	%x67 = add i32 0, 1
+	%x68 = alloca [4 x [2 x [1 x i32]]]
+	%x69 = getelementptr  [4 x [2 x [1 x i32]]],  [4 x [2 x [1 x i32]]]* %x68, i32 0, i32 0, i32 0, i32 0
+	%x70 = add i32 0, 2
+	%x71 = add i32 0, 1
+	%x72 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x45, i32 0, i32 %x70, i32 %x71
+	%x73 = load i32, i32* %x72
+	store i32 %x73, i32* %x69
+	%x74 = getelementptr  [4 x [2 x [1 x i32]]],  [4 x [2 x [1 x i32]]]* %x68, i32 0, i32 0, i32 1, i32 0
+	%x75 = add i32 0, 2
+	%x76 = add i32 0, 1
+	%x77 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x24, i32 0, i32 %x75, i32 %x76
+	%x78 = load i32, i32* %x77
+	store i32 %x78, i32* %x74
+	%x79 = getelementptr  [4 x [2 x [1 x i32]]],  [4 x [2 x [1 x i32]]]* %x68, i32 0, i32 1, i32 0, i32 0
+	%x80 = add i32 0, 3
+	store i32 %x80, i32* %x79
+	%x81 = getelementptr  [4 x [2 x [1 x i32]]],  [4 x [2 x [1 x i32]]]* %x68, i32 0, i32 1, i32 1, i32 0
+	%x82 = add i32 0, 4
+	store i32 %x82, i32* %x81
+	%x83 = getelementptr  [4 x [2 x [1 x i32]]],  [4 x [2 x [1 x i32]]]* %x68, i32 0, i32 2, i32 0, i32 0
+	%x84 = add i32 0, 5
+	store i32 %x84, i32* %x83
+	%x85 = getelementptr  [4 x [2 x [1 x i32]]],  [4 x [2 x [1 x i32]]]* %x68, i32 0, i32 2, i32 1, i32 0
+	%x86 = add i32 0, 6
+	store i32 %x86, i32* %x85
+	%x87 = getelementptr  [4 x [2 x [1 x i32]]],  [4 x [2 x [1 x i32]]]* %x68, i32 0, i32 3, i32 0, i32 0
+	%x88 = add i32 0, 7
+	store i32 %x88, i32* %x87
+	%x89 = getelementptr  [4 x [2 x [1 x i32]]],  [4 x [2 x [1 x i32]]]* %x68, i32 0, i32 3, i32 1, i32 0
+	%x90 = add i32 0, 8
+	store i32 %x90, i32* %x89
+	%x91 = add i32 0, 3
+	%x92 = add i32 0, 1
+	%x93 = add i32 0, 0
+	%x94 = getelementptr  [4 x [2 x [1 x i32]]],  [4 x [2 x [1 x i32]]]* %x68, i32 0, i32 %x91, i32 %x92, i32 %x93
+	%x95 = load i32, i32* %x94
+	%x96 = add i32 0, 0
+	%x97 = add i32 0, 0
+	%x98 = add i32 0, 0
+	%x99 = getelementptr  [4 x [2 x [1 x i32]]],  [4 x [2 x [1 x i32]]]* %x68, i32 0, i32 %x96, i32 %x97, i32 %x98
+	%x100 = load i32, i32* %x99
+	%x101 = add i32 %x95, %x100
+	%x102 = add i32 0, 0
+	%x103 = add i32 0, 1
+	%x104 = add i32 0, 0
+	%x105 = getelementptr  [4 x [2 x [1 x i32]]],  [4 x [2 x [1 x i32]]]* %x68, i32 0, i32 %x102, i32 %x103, i32 %x104
+	%x106 = load i32, i32* %x105
+	%x107 = add i32 %x101, %x106
+	%x108 = add i32 0, 3
+	%x109 = add i32 0, 0
+	%x110 = getelementptr  [4 x [2 x i32]],  [4 x [2 x i32]]* %x45, i32 0, i32 %x108, i32 %x109
+	%x111 = load i32, i32* %x110
+	%x112 = add i32 %x107, %x111
+	call void @putint(i32 %x112)
+	%x113 = add i32 0, 0
+	ret i32 %x113
 }

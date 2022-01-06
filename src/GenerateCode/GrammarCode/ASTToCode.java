@@ -69,16 +69,11 @@ public class ASTToCode {
         outStr.append("}\n");
     }
 
-<<<<<<< HEAD
-    static String CodeBType(AstNode parent){
-        if (parent.children.get(0).value.equals("int"))
-=======
 
     static String CodeBType(AstNode node){
         if (node.children.get(0).value.equals("int"))
->>>>>>> all-arrs
             return "i32";
-        else if (parent.children.get(0).value.equals("void"))
+        else if (node.children.get(0).value.equals("void"))
             return "void";
         else
             throw new java.lang.Error("unknown func type");
@@ -227,10 +222,6 @@ public class ASTToCode {
         if (!isFuncBlock) {
             IdentMapList.removeFisrtMap();
         }
-<<<<<<< HEAD
-=======
-
->>>>>>> all-arrs
     }
 
     static void CodeBlockItem (AstNode parent) {
@@ -352,10 +343,6 @@ public class ASTToCode {
         }
     }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> all-arrs
     private static void identMapInit () {
         HashMap<String, Ident> globalMap = new HashMap<>();
 

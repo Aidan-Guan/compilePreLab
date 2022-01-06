@@ -27,11 +27,8 @@ public class DeclareCode {
 
     static void CodeVarDef(AstNode parent){
         String Ident = parent.children.get(0).value;
-<<<<<<< HEAD
-=======
 
         // global
->>>>>>> all-arrs
         if(isDefGlobal){
             HashMap<String, Ident> globalMap = IdentMapList.getGlobalMap();
             if(parent.children.size() == 1 || parent.children.get(1).value.equals("=")){
@@ -100,10 +97,7 @@ public class DeclareCode {
 
             if(parent.children.size() > 1){
                 ExpValue newVal = CodeInitVal(parent.children.get(2));
-<<<<<<< HEAD
-=======
                 assert newVal != null;
->>>>>>> all-arrs
                 int registerComing = newVal.register;
                 newSym.value = newVal.value;
                 outStr.append("\tstore i32 " + "%x").append(registerComing).append(", i32* ").append(newSym.out()).append("\n");
