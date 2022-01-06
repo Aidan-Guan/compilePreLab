@@ -147,7 +147,8 @@ public class StatementCode {
             if(parent.children.size() > 2) {
                 int returnReg = CodeExp(parent.children.get(1)).register;
                 outStr.append("\tret i32 %x").append(returnReg).append("\n");
-            }else{
+            }
+            else{
                 outStr.append("\tret void\n");
             }
         }

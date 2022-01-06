@@ -45,6 +45,13 @@ public class TokensToAST {
             FuncDef(compUnitNode);
         }
 
+        while (currentSym.value.equals("int") || currentSym.value.equals("const")) {
+            if (showFutureSym(2).value.equals("("))
+                break;
+
+            Decl(root);
+        }
+
         if (MainFuncDef(compUnitNode)) {
             addGrammar("<CompUnit>");
         }

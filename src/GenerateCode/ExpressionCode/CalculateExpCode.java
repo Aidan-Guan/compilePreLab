@@ -300,9 +300,14 @@ public class CalculateExpCode {
             }
             else{
                 if(isConst(identName)) isDefConst = true;
+                if (identName.equals("b")) {
+                    System.out.println("22");
+                }
+                // identName - b
                 if(isDefConst && !isConst(identName)){
                     ErrorSolu.error();
                 }
+                isDefConst = false;
                 return new ExpValue(getSymReg(identName));
             }
         }
