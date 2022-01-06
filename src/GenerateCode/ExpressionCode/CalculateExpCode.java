@@ -15,6 +15,8 @@ import static GenerateCode.GrammarCode.ASTToCode.*;
 
 public class CalculateExpCode {
     public static boolean isFuncParam = false;
+    public static boolean isFuncParamArray = false;
+
     public static ExpValue CodeExp(AstNode parent) {
         return CodeAddExp(parent.children.get(0));
     }
@@ -160,7 +162,7 @@ public class CalculateExpCode {
             ArrayList<String> paramsType = ident.funcParams;
 
             if (parent.children.get(2).type.equals("<FuncRParams>")) {
-                params = FuncRParams(parent.children.get(2));
+                params = FuncRParams(parent.children.get(2), paramsType);
             }
 
             String out = "";
@@ -200,15 +202,30 @@ public class CalculateExpCode {
         return null;
     }
 
-    static ArrayList<String> FuncRParams(AstNode parent) {
+//    static ArrayList<String> FuncRParams(AstNode parent) {
+//        ArrayList<String> params = new ArrayList<>();
+//
+//        for (AstNode child: parent.children) {
+//            if (child.type.equals("<Exp>")) {
+//                isFuncParam = true;
+//                params.add(CodeExp(child).out());
+//                isFuncParam = false;
+//
+//            }
+//        }
+//        return params;
+//    }
+
+    public static ArrayList<String> FuncRParams(AstNode node, ArrayList<String>paramType){
         ArrayList<String> params = new ArrayList<>();
-
-        for (AstNode child: parent.children) {
-            if (child.type.equals("<Exp>")) {
-                isFuncParam = true;
-                params.add(CodeExp(child).out());
-                isFuncParam = false;
-
+        int i = 0;
+        for(AstNode child: node.children){
+            if(child.type.equals("<Exp>")) {
+                if(!paramType.get(i++).equals("i32"))
+                    isFuncParamArray = true;
+                params.add("%x" + CodeExp(child).register);
+                if(isFuncParamArray)
+                    isFuncParamArray = false;
             }
         }
         return params;
@@ -235,7 +252,7 @@ public class CalculateExpCode {
             String ident = parent.children.get(0).children.get(0).value;
 
             int regNew = expValue.register;
-            if(!isDefGlobal && !(expValue.valueType != null && expValue.valueType.equals("ptr"))) {
+            if(!isDefGlobal && !(expValue.valueType != null && expValue.valueType.equals("ptr")) && !isFuncParamArray) {
                 regNew = regIndex++;
                 outStr.append("\t%x").append(regNew).append(" = load i32, i32* ").append(regBefore).append("\n");
             }
@@ -328,6 +345,21 @@ public class CalculateExpCode {
                 return new ExpValue(regNew);
 
 
+            }
+
+            if(isFuncParamArray){
+                String registerString;
+                if(arraySym.identType == IdentType.GLOBAL_ARRAY_CONST || arraySym.identType == IdentType.GLOBAL_ARRAY_VAR)
+                    registerString = "@" + arraySym.name;
+                else registerString = "%x"+ arraySym.regIndex;
+
+                int registerNew = regIndex++;
+                outStr.append("\t%x").append(registerNew).append(" = getelementptr ").append(arraySym.arrayType).append(", ").append(arraySym.arrayType).append("* ").append(registerString).append(", i32 0");
+                for (Integer integer : arrayParam) {
+                    outStr.append(", i32 %x").append(integer);
+                }
+                outStr.append(", i32 0\n");
+                return new ExpValue(registerNew);
             }
 
             if(arraySym.dim != arrayParam.size()) ErrorSolu.error();
