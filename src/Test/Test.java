@@ -42,9 +42,6 @@ public class Test {
         myLex(fileLoc);
 
         tokens = LexAnal.getAllTokens(in);
-        for (Token i : tokens) {
-            System.out.println(i.toString());
-        }
 
         AstNode ASTRoot = generateAST(tokens);
 

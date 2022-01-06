@@ -2,7 +2,6 @@ package GenerateCode.GrammarCode;
 
 import AST.AstNode;
 import ErrorSolution.ErrorSolu;
-import GenerateCode.ExpressionCode.CondExpCode;
 import GrammarAnal.Expression.ExpValue;
 import TokenUtils.Ident;
 import TokenUtils.IdentMapList;
@@ -28,6 +27,11 @@ public class DeclareCode {
 
     static void CodeVarDef(AstNode parent){
         String Ident = parent.children.get(0).value;
+<<<<<<< HEAD
+=======
+
+        // global
+>>>>>>> all-arrs
         if(isDefGlobal){
             HashMap<String, Ident> globalMap = IdentMapList.getGlobalMap();
             if(parent.children.size() == 1 || parent.children.get(1).value.equals("=")){
@@ -63,15 +67,13 @@ public class DeclareCode {
                 Ident newSym = new Ident(Ident, IdentType.GLOBAL_ARRAY_VAR, ValueType.INT, dim, dimSize, regIndex++);
                 globalMap.put(Ident, newSym);
 
-                String arrayType = "";
+                StringBuilder arrayType = new StringBuilder();
                 for(int i = 0; i < dim; i++){
-                    arrayType += " [" + dimSize.get(i) + " x";
+                    arrayType.append(" [").append(dimSize.get(i)).append(" x");
                 }
-                arrayType += " i32";
-                for (int i = 0; i < dim; i++){
-                    arrayType += "]";
-                }
-                newSym.arrayType = arrayType;
+                arrayType.append(" i32");
+                arrayType.append("]".repeat(Math.max(0, dim)));
+                newSym.arrayType = arrayType.toString();
 
                 outStr.append("@").append(Ident).append(" = dso_local global").append(arrayType).append(" ");
                 if (!isAssign){
@@ -94,13 +96,17 @@ public class DeclareCode {
         if(parent.children.size() == 1 || parent.children.get(1).value.equals("=")){
             Ident newSym = new Ident(Ident, IdentType.VAR, ValueType.INT, regIndex++);
             currentMap.put(Ident, newSym);
-            outStr.append("\t" + newSym.out() + " = alloca i32\n");
+            outStr.append("\t").append(newSym.out()).append(" = alloca i32\n");
 
             if(parent.children.size() > 1){
                 ExpValue newVal = CodeInitVal(parent.children.get(2));
+<<<<<<< HEAD
+=======
+                assert newVal != null;
+>>>>>>> all-arrs
                 int registerComing = newVal.register;
                 newSym.value = newVal.value;
-                outStr.append("\tstore i32 " + "%x" + registerComing + ", i32* " + newSym.out() + "\n");
+                outStr.append("\tstore i32 " + "%x").append(registerComing).append(", i32* ").append(newSym.out()).append("\n");
             }
         }
         else if(parent.children.get(1).value.equals("[")){
@@ -125,24 +131,24 @@ public class DeclareCode {
             newSym.dimElse = newSym.dimSize;
 
             currentMap.put(Ident, newSym);
-            outStr.append("\t" + newSym.out() + " = alloca");
-            String arrayType = "";
+            outStr.append("\t").append(newSym.out()).append(" = alloca");
+            StringBuilder arrayType = new StringBuilder();
             for(int i = 0; i < dim; i++){
                 if (dimSize.get(i)<0) {
                     ErrorSolu.error();
                 }
-                outStr.append(" [" + dimSize.get(i) + " x");
-                arrayType += " [" + dimSize.get(i) + " x";
+                outStr.append(" [").append(dimSize.get(i)).append(" x");
+                arrayType.append(" [").append(dimSize.get(i)).append(" x");
             }
             outStr.append(" i32");
-            arrayType += " i32";
+            arrayType.append(" i32");
 
             for (int i = 0; i < dim; i++){
                 outStr.append("]");
-                arrayType += "]";
+                arrayType.append("]");
             }
             outStr.append("\n");
-            newSym.arrayType = arrayType;
+            newSym.arrayType = arrayType.toString();
 
             // 对数组进行赋值
             if(isAssign){
@@ -168,9 +174,6 @@ public class DeclareCode {
 
     public static void CodeConstDef(AstNode parent){
         String identName = parent.children.get(0).value;
-//        if(!isInTable(Ident));
-//        SymbolTable table = tables.size() == 0 ? globalTable : tables.get(tables.size()-1);
-
         if(isDefGlobal){
             HashMap<String, Ident> globalMap = IdentMapList.getGlobalMap();
 
@@ -180,10 +183,10 @@ public class DeclareCode {
                 int value = 0;
                 if(parent.children.size() > 1) {
                     isArray = false;
-                    value = CodeConstInitVal(parent.children.get(2)).value;
+                    value = Objects.requireNonNull(CodeConstInitVal(parent.children.get(2))).value;
                     isArray = true;
                 }
-                outStr.append("@" + identName + " = dso_local global i32 " + value + "\n");
+                outStr.append("@").append(identName).append(" = dso_local global i32 ").append(value).append("\n");
                 newSym.value = value;
                 globalMap.put(identName, newSym);
                 return;
@@ -206,18 +209,16 @@ public class DeclareCode {
                 Ident newSym = new Ident(identName, IdentType.GLOBAL_ARRAY_CONST, ValueType.INT, dim, dimSize, regIndex++);
 
                 globalMap.put(identName, newSym);
-                String arrayType = "";
+                StringBuilder arrayType = new StringBuilder();
                 for(int i = 0; i < dim; i++){
-                    arrayType += " [" + dimSize.get(i) + " x";
+                    arrayType.append(" [").append(dimSize.get(i)).append(" x");
                 }
 
-                arrayType += " i32";
-                for (int i = 0; i < dim; i++){
-                    arrayType += "]";
-                }
-                newSym.arrayType = arrayType;
+                arrayType.append(" i32");
+                arrayType.append("]".repeat(Math.max(0, dim)));
+                newSym.arrayType = arrayType.toString();
 
-                outStr.append("@" + identName + " = dso_local constant" + arrayType + " ");
+                outStr.append("@").append(identName).append(" = dso_local constant").append(arrayType).append(" ");
                 if (!isAssign){
                     outStr.append("zeroinitializer\n");
                 }
@@ -236,20 +237,21 @@ public class DeclareCode {
 
         HashMap<String, Ident> identMap = IdentMapList.getCurrentMap();
 
-        if(parent.children.size() == 1 || parent.children.get(1).type.equals("ASSIGN")){
+        if(parent.children.size() == 1 || parent.children.get(1).value.equals("=")){
             Ident newSym = new Ident(identName, IdentType.CONST, ValueType.INT, regIndex++);
             identMap.put(identName, newSym);
 
-            outStr.append("\t" + newSym.out() + " = alloca i32\n");
+            outStr.append("\t").append(newSym.out()).append(" = alloca i32\n");
 
             isDefConst = true;
             if(parent.children.size() > 1){
                 isArray = false;
                 ExpValue newVal = CodeConstInitVal(parent.children.get(2));
                 isArray = true;
+                assert newVal != null;
                 int registerComing = newVal.register;
                 newSym.value = newVal.value;
-                outStr.append("\tstore i32 " + "%x" + registerComing + ", i32* " + newSym.out() + "\n");
+                outStr.append("\tstore i32 " + "%x").append(registerComing).append(", i32* ").append(newSym.out()).append("\n");
             }
             isDefConst = false;
         }
@@ -263,10 +265,10 @@ public class DeclareCode {
                     ExpValue newVal = CodeConstExp(child);
                     dimSize.add(newVal.value);
                 }
-                else if (child.value.equals("[")) {
+                else if (child.value!=null && child.value.equals("[")) {
                     dim++;
                 }
-                else if (child.value.equals("=")) {
+                else if (child.value!=null && child.value.equals("=")) {
                     isAssign = true;
                 }
             }
@@ -274,27 +276,23 @@ public class DeclareCode {
             Ident newSym = new Ident(identName, IdentType.ARRAY_CONST, ValueType.INT, dim, dimSize, regIndex++);
             identMap.put(identName, newSym);
 
-            outStr.append("\t" + newSym.out() + " = alloca");
+            outStr.append("\t").append(newSym.out()).append(" = alloca");
 
-            String arrayType = "";
+            StringBuilder arrayType = new StringBuilder();
             for(int i = 0; i < dim; i++){
-                outStr.append(" [" + dimSize.get(i) + " x");
-                arrayType += " [" + dimSize.get(i) + " x";
+                outStr.append(" [").append(dimSize.get(i)).append(" x");
+                arrayType.append(" [").append(dimSize.get(i)).append(" x");
             }
 
             outStr.append(" i32");
-            arrayType += " i32";
+            arrayType.append(" i32");
             for (int i = 0; i < dim; i++){
                 outStr.append("]");
-                arrayType += "]";
+                arrayType.append("]");
             }
             outStr.append("\n");
-            newSym.arrayType = arrayType;
+            newSym.arrayType = arrayType.toString();
 
-            int arraySize = 1;
-            for(int i = 0; i < dim; i++){
-                arraySize *= dimSize.get(i);
-            }
 
             // 对数组进行赋值
             if(isAssign){
@@ -313,44 +311,45 @@ public class DeclareCode {
     }
 
 
-    public static ExpValue CodeConstInitVal(AstNode node){
+    public static ExpValue CodeConstInitVal(AstNode parent){
         if (!isDefGlobal) {
-            if(node.children.size() == 1){
-                return CodeConstExp(node.children.get(0));
+            if(parent.children.size() == 1){
+                return CodeConstExp(parent.children.get(0));
             }
             else {
                 int pos = 0;
-                int dep = node.dep;
-                ArrayList <Integer> arrayInfo = node.arrayInfo;
-                for(AstNode child : node.children){
+                int dep = parent.dep;
+                ArrayList <Integer> arrayInfo = parent.arrayInfo;
+                for(AstNode child : parent.children){
 
                     if (child.type.equals("<ConstInitVal>")) {
-                        child.arraySym = node.arraySym;
+                        child.arraySym = parent.arraySym;
                         if (child.children.size() > 1){
-                            arrayInfo.set(node.dep, pos);
+                            arrayInfo.set(parent.dep, pos);
                             child.arrayInfo = arrayInfo;
-                            child.dep = node.dep+1;
+                            child.dep = parent.dep+1;
                             CodeConstInitVal(child);
                         }
                         else {
                             arrayInfo.set(arrayInfo.size() - 1, pos);
                             child.arrayInfo = arrayInfo;
-                            child.dep = node.dep+1;
-                            int dim = node.arraySym.dim;
+                            child.dep = parent.dep+1;
+                            int dim = parent.arraySym.dim;
                             int registerNew = regIndex++;
-                            Ident arraySym = node.arraySym;
-                            outStr.append("\t%x" +registerNew + " = getelementptr " + arraySym.arrayType + ", " + arraySym.arrayType + "* " + arraySym.out() + ", i32 0");
+                            Ident arraySym = parent.arraySym;
+                            outStr.append("\t%x").append(registerNew).append(" = getelementptr ").append(arraySym.arrayType).append(", ").append(arraySym.arrayType).append("* ").append(arraySym.out()).append(", i32 0");
                             for(int i = 0; i < dim; i++){
-                                outStr.append(", i32 " + arrayInfo.get(i));
+                                outStr.append(", i32 ").append(arrayInfo.get(i));
                             }
                             outStr.append("\n");
 
                             ExpValue expValue = CodeConstInitVal(child);
-                            outStr.append("\tstore i32 %x" + expValue.register + ", i32* %x" + registerNew + "\n");
+                            assert expValue != null;
+                            outStr.append("\tstore i32 %x").append(expValue.register).append(", i32* %x").append(registerNew).append("\n");
                         }
 
                     }
-                    else if (child.value.equals("[")) {
+                    else if (child.value.equals("{")) {
                         dep++;
                         if(arrayInfo.size() < dep)
                             arrayInfo.add(-1);
@@ -363,31 +362,29 @@ public class DeclareCode {
 
         }
         else {
-            if(node.children.size() == 1){
-                ExpValue exp = CodeExp(node.children.get(0));
+            if(parent.children.size() == 1){
+                ExpValue exp = CodeExp(parent.children.get(0));
                 if (isArray)
-                    outStr.append(" " +  exp.value);
+                    outStr.append(" ").append(exp.value);
                 return exp;
             }
             else {
-                Ident arraySym = node.arraySym;
-                int pos = 0, dep = node.dep;
+                Ident arraySym = parent.arraySym;
+                int pos = 0, dep = parent.dep;
                 int thisDimSize = arraySym.dimSize.get(dep);
                 int dimSum = arraySym.dim;
-                String arrayType = "";
+                StringBuilder arrayType = new StringBuilder();
                 for(int i = dep + 1; i < dimSum; i++){
-                    arrayType += " [" + arraySym.dimSize.get(i) + " x";
+                    arrayType.append(" [").append(arraySym.dimSize.get(i)).append(" x");
                 }
-                arrayType += " i32";
-                for (int i = dep + 1; i < dimSum; i++){
-                    arrayType += "]";
-                }
+                arrayType.append(" i32");
+                arrayType.append("]".repeat(Math.max(0, dimSum - (dep + 1))));
                 outStr.append("[");
 
-                for(AstNode child : node.children){
+                for(AstNode child : parent.children){
                     if(child.type.equals("<ConstInitVal>")){
-                        child.arraySym = node.arraySym;
-                        child.dep = node.dep+1;
+                        child.arraySym = parent.arraySym;
+                        child.dep = parent.dep+1;
                         if(pos != 0)
                             outStr.append(",");
                         outStr.append(arrayType);
@@ -405,10 +402,10 @@ public class DeclareCode {
                     if(pos != 0){
                         outStr.append(",");
                     }
-                    if(!arrayType.equals(" i32"))
-                        outStr.append(arrayType + " zeroinitializer");
+                    if(!arrayType.toString().equals(" i32"))
+                        outStr.append(arrayType).append(" zeroinitializer");
                     else
-                        outStr.append( arrayType + " " + 0);
+                        outStr.append(arrayType).append(" ").append(0);
                     thisDimSize--;
                     pos++;
                 }
@@ -419,8 +416,5 @@ public class DeclareCode {
     }
 
 
-//    static ExpValue CodeConstInitVal (AstNode parent) {
-//        return CodeExp(parent.children.get(0));
-//    }
 
 }

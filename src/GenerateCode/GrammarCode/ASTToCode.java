@@ -37,27 +37,25 @@ public class ASTToCode {
 
     static void CodeCompUnit (AstNode parent) {
         for (AstNode child: parent.children) {
-            if (child.type.equals("<MainFuncDef>")) {
-                CodeMainFuncDef(child);
+            switch (child.type) {
+                case "<MainFuncDef>" -> CodeMainFuncDef(child);
+                case "<VarDecl>" -> {
+                    isDefGlobal = true;
+                    isDefConst = true;
+                    CodeVarDecl(child);
+                    isDefGlobal = false;
+                    isDefConst = false;
+                }
+                case "<ConstDecl>" -> {
+                    isDefGlobal = true;
+                    isDefConst = true;
+                    CodeConstDecl(child);
+                    isDefGlobal = false;
+                    isDefConst = false;
+                }
+                case "<FuncDef>" -> CodeFuncDef(child);
+                default -> ErrorSolu.error();
             }
-            else if (child.type.equals("<VarDecl>")) {
-                isDefGlobal = true;
-                isDefConst = true;
-                CodeVarDecl(child);
-                isDefGlobal = false;
-                isDefConst = false;
-            }
-            else if (child.type.equals("<ConstDecl>")) {
-                isDefGlobal = true;
-                isDefConst = true;
-                CodeConstDecl(child);
-                isDefGlobal = false;
-                isDefConst = false;
-            }
-            else if (child.type.equals("<FuncDef>")) {
-                CodeFuncDef(child);
-            }
-            else { ErrorSolu.error(); }
         }
     }
 
@@ -71,8 +69,14 @@ public class ASTToCode {
         outStr.append("}\n");
     }
 
+<<<<<<< HEAD
     static String CodeBType(AstNode parent){
         if (parent.children.get(0).value.equals("int"))
+=======
+
+    static String CodeBType(AstNode node){
+        if (node.children.get(0).value.equals("int"))
+>>>>>>> all-arrs
             return "i32";
         else if (parent.children.get(0).value.equals("void"))
             return "void";
@@ -205,7 +209,7 @@ public class ASTToCode {
             IdentMapList.getCurrentMap().put(ident, newSym);
             newSym.arrayType = arrayType.toString();
             regIndex = regIdent+1;
-            return arrayType.toString() + "*";
+            return arrayType + "*";
         }
         return null;
     }
@@ -213,7 +217,7 @@ public class ASTToCode {
     static void CodeBlock(AstNode parent) {
 
         if (!isFuncBlock) {
-            IdentMapList.addMap(new HashMap<String, Ident>());
+            IdentMapList.addMap(new HashMap<>());
         }
         for (AstNode child: parent.children) {
             if (child.type != null && child.type.equals("<BlockItem>"))
@@ -223,6 +227,10 @@ public class ASTToCode {
         if (!isFuncBlock) {
             IdentMapList.removeFisrtMap();
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> all-arrs
     }
 
     static void CodeBlockItem (AstNode parent) {
@@ -259,14 +267,15 @@ public class ASTToCode {
                             int dim = parent.arraySym.dim;
                             int registerNew = regIndex++;
                             Ident arraySym = parent.arraySym;
-                            outStr.append("\t%x" +registerNew + " = getelementptr " + arraySym.arrayType + ", " + arraySym.arrayType + "* " + arraySym.out() + ", i32 0");
+                            outStr.append("\t%x").append(registerNew).append(" = getelementptr ").append(arraySym.arrayType).append(", ").append(arraySym.arrayType).append("* ").append(arraySym.out()).append(", i32 0");
                             for(int i = 0; i < dim; i++){
-                                outStr.append(", i32 " + arrayInfo.get(i));
+                                outStr.append(", i32 ").append(arrayInfo.get(i));
                             }
                             outStr.append("\n");
 
                             ExpValue expValue = CodeInitVal(child);
-                            outStr.append("\tstore i32 %x" + expValue.register + ", i32* %x" + registerNew + "\n");
+                            assert expValue != null;
+                            outStr.append("\tstore i32 %x").append(expValue.register).append(", i32* %x").append(registerNew).append("\n");
                         }
                     }
                     else if (child.value.equals(",")) {
@@ -284,7 +293,7 @@ public class ASTToCode {
             if(parent.children.size() == 1){
                 ExpValue exp = CodeExp(parent.children.get(0));
                 if(isArray)
-                    outStr.append(" " +  exp.value);
+                    outStr.append(" ").append(exp.value);
                 return exp;
             }
             else {
@@ -292,14 +301,12 @@ public class ASTToCode {
                 int pos = 0, dep = parent.dep;
                 int thisDimSize = arraySym.dimSize.get(dep);
                 int dimSum = arraySym.dim;
-                String arrayType = "";
+                StringBuilder arrayType = new StringBuilder();
                 for(int i = dep + 1; i < dimSum; i++){
-                    arrayType += " [" + arraySym.dimSize.get(i) + " x";
+                    arrayType.append(" [").append(arraySym.dimSize.get(i)).append(" x");
                 }
-                arrayType += " i32";
-                for (int i = dep + 1; i < dimSum; i++){
-                    arrayType += "]";
-                }
+                arrayType.append(" i32");
+                arrayType.append("]".repeat(Math.max(0, dimSum - (dep + 1))));
                 outStr.append("[");
                 for(AstNode child : parent.children){
 
@@ -321,10 +328,10 @@ public class ASTToCode {
                     if(pos != 0){
                         outStr.append(",");
                     }
-                    if(!arrayType.equals(" i32"))
-                        outStr.append(arrayType + " zeroinitializer");
+                    if(!arrayType.toString().equals(" i32"))
+                        outStr.append(arrayType).append(" zeroinitializer");
                     else
-                        outStr.append(arrayType + " " + 0);
+                        outStr.append(arrayType).append(" ").append(0);
                     thisDimSize--;
                     pos++;
                 }
@@ -337,7 +344,7 @@ public class ASTToCode {
     public static int i32Toi1(ExpValue value) {
         if (value.valueType.equals("i32")) {
             int reg = regIndex++;
-            outStr.append("\t%x" + reg + " = icmp ne i32 " + value.out() + ", 0\n");
+            outStr.append("\t%x").append(reg).append(" = icmp ne i32 ").append(value.out()).append(", 0\n");
             return reg;
         }
         else {
@@ -345,6 +352,10 @@ public class ASTToCode {
         }
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> all-arrs
     private static void identMapInit () {
         HashMap<String, Ident> globalMap = new HashMap<>();
 
